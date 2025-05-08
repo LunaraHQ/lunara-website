@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 
@@ -56,7 +55,6 @@ export default function HomeContent() {
     initLayer(canvas1.current, 1, 150)
     initLayer(canvas2.current, 0.5, 100)
   }, [])
-
   return (
     <>
       <motion.div style={{ background }} className="fixed inset-0 -z-30" />
@@ -64,7 +62,6 @@ export default function HomeContent() {
       <canvas ref={canvas2} className="fixed inset-0 -z-20 opacity-40" />
 
       <main className="relative z-10 text-white font-sans">
-
         {/* Logo Feature Cards */}
         <section id="features" className="py-24 px-6 max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
           {features.map((f, i) => (
@@ -109,7 +106,7 @@ export default function HomeContent() {
             ].map((p, i) => (
               <div
                 key={i}
-                className={\`p-6 rounded-xl \${p.highlight ? 'bg-purple-500 text-white' : 'bg-white/10 text-gray-200'}\`}
+                className={`p-6 rounded-xl ${p.highlight ? 'bg-purple-500 text-white' : 'bg-white/10 text-gray-200'}`}
               >
                 <h3 className="text-xl font-semibold mb-2">{p.name}</h3>
                 <div className="text-4xl font-extrabold mb-4">€{p.price}</div>
@@ -125,7 +122,6 @@ export default function HomeContent() {
             ))}
           </div>
         </section>
-
         {/* Founder Vision Section */}
         <section className="py-24 bg-gradient-to-br from-black via-purple-950 to-black text-center px-8">
           <h2 className="text-3xl font-bold text-white mb-4">A Founder’s Vision</h2>
@@ -137,10 +133,9 @@ export default function HomeContent() {
           <p className="max-w-3xl mx-auto mt-4 text-gray-400">
             Lunara helps you launch custom funnels, capture behavioral insights, and empower your
             clients to retain and convert with confidence. Built for SaaS teams who care about what
-            happens *after* the sale.
+            happens <em>after</em> the sale.
           </p>
         </section>
-
       </main>
     </>
   )
