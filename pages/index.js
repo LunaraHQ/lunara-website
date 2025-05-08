@@ -1,8 +1,17 @@
 // pages/index.js
 import Head from 'next/head'
+import dynamic from 'next/dynamic'
 import HeroSection from '../components/HeroSection'
 import HomeContent from '../components/HomeContent'
-import Footer from '../components/Footer'
+
+// Lazy-load below-the-fold components
+const HowItWorks = dynamic(() => import('../components/HowItWorks'), {
+  ssr: false,
+  loading: () => <p className="text-center text-gray-500">Loading…</p>,
+})
+const Footer = dynamic(() => import('../components/Footer'), {
+  ssr: false,
+})
 
 export default function Home() {
   return (
@@ -21,6 +30,7 @@ export default function Home() {
       <main id="main-content">
         <HeroSection />
         <HomeContent />
+        <HowItWorks />
       </main>
 
       <Footer />
