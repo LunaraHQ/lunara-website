@@ -1,21 +1,32 @@
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
+import NavBar from '../components/NavBar'
+import HeroSection from '../components/HeroSection'
+import FeatureGrid from '../components/FeatureGrid'
+import HowItWorks from '../components/HowItWorks'
+import PricingTable from '../components/PricingTable'
+import Footer from '../components/Footer'
+import ThemeToggle from '../components/ThemeToggle'
 
-// Client-only import so Framer Motion hooks don’t run on the server
+// Defer heavy HomeContent (starfield + asteroid) to client
 const HomeContent = dynamic(() => import('../components/HomeContent'), {
   ssr: false,
 })
 
-export default function IndexPage() {
+export default function Home() {
   return (
     <>
       <Head>
         <title>Lunara · Space-Age Funnels</title>
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
       </Head>
-
-      {/* Everything else lives in HomeContent */}
+      <NavBar />
       <HomeContent />
+      <HeroSection />
+      <FeatureGrid />
+      <HowItWorks />
+      <PricingTable />
+      <Footer />
+      <ThemeToggle />
     </>
   )
 }
