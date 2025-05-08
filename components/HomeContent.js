@@ -2,21 +2,32 @@ import { useEffect, useRef, useState } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 
 const features = [
-  { title: 'Adaptive Funnels', desc: 'Personalized journeys for every visitor.' },
-  { title: 'Unified Dashboard', desc: 'Track everything in one smart console.' },
-  { title: 'Bank-Grade Security', desc: 'SOC-2, GDPR, and zero-trust by default.' },
+  {
+    title: 'Adaptive Funnels',
+    desc: 'Personalized journeys for every visitor.',
+    icon: '/icons/rocket.svg',
+  },
+  {
+    title: 'Unified Dashboard',
+    desc: 'Track everything in one smart console.',
+    icon: '/icons/dashboard.svg',
+  },
+  {
+    title: 'Bank-Grade Security',
+    desc: 'SOC-2, GDPR, and zero-trust by default.',
+    icon: '/icons/shield.svg',
+  },
 ]
 
-const logos = [
-  '/logos/brand1.svg',
-  '/logos/brand2.svg',
-  '/logos/brand3.svg',
-  '/logos/brand4.svg',
+const valueProps = [
+  { title: 'Built for Growth', desc: 'Scales effortlessly from startup to enterprise.' },
+  { title: 'AI that Learns', desc: 'Funnels improve automatically based on user behavior.' },
+  { title: 'You Own Everything', desc: 'Your data. Your brand. No vendor lock-in.' },
 ]
 
 export default function HomeContent() {
   const { scrollY } = useScroll()
-  const hue = useTransform(scrollY, [0, 500], [260, 300], { clamp: false }) // purple shift
+  const hue = useTransform(scrollY, [0, 500], [260, 300], { clamp: false })
   const hueSpring = useSpring(hue, { stiffness: 10, damping: 50 })
   const background = useTransform(hueSpring, h => `hsl(${h}, 30%, 8%)`)
 
@@ -81,7 +92,7 @@ export default function HomeContent() {
           </button>
         </section>
 
-        {/* Features */}
+        {/* Features with icons */}
         <section className="py-24 px-6 max-w-6xl mx-auto grid md:grid-cols-3 gap-8">
           {features.map((f, i) => (
             <motion.div
@@ -92,20 +103,24 @@ export default function HomeContent() {
               viewport={{ once: true }}
               className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl text-center"
             >
+              <img src={f.icon} alt={f.title} className="mx-auto mb-4 h-12 w-12" />
               <h3 className="text-2xl font-semibold mb-2">{f.title}</h3>
               <p className="text-gray-300">{f.desc}</p>
             </motion.div>
           ))}
         </section>
 
-        {/* Trusted By */}
-        <section className="py-12 px-6 bg-white/5">
-          <h2 className="text-center text-lg text-gray-400 mb-6">
-            Trusted by forward-thinking teams
+        {/* Why Lunara */}
+        <section className="py-20 bg-white/5">
+          <h2 className="text-3xl font-bold text-center text-purple-300 mb-10">
+            Why Lunara?
           </h2>
-          <div className="flex justify-center flex-wrap gap-8 opacity-80 grayscale hover:grayscale-0 transition-all">
-            {logos.map((src, i) => (
-              <img key={i} src={src} alt={`Logo ${i}`} className="h-10" />
+          <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8 px-6">
+            {valueProps.map((v, i) => (
+              <div key={i} className="text-center">
+                <h3 className="text-xl font-semibold mb-2">{v.title}</h3>
+                <p className="text-gray-300">{v.desc}</p>
+              </div>
             ))}
           </div>
         </section>
@@ -116,7 +131,7 @@ export default function HomeContent() {
             <div className="bg-gray-900 rounded-2xl p-8 w-full max-w-2xl shadow-lg relative">
               <button
                 onClick={() => setModalOpen(false)}
-                className="absolute top-4 right-4 text-white hover:text-purple-400"
+                className="absolute top-4 right-4 text-white hover:text-purple-400 text-2xl"
               >
                 ×
               </button>
