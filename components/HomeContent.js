@@ -1,17 +1,25 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 
-const rotatingWords = ['founders', 'growth teams', 'startups', 'enterprises']
+const features = [
+  { title: 'Adaptive Funnels', desc: 'Personalized journeys for every visitor.' },
+  { title: 'Unified Dashboard', desc: 'Track everything in one smart console.' },
+  { title: 'Bank-Grade Security', desc: 'SOC-2, GDPR, and zero-trust by default.' },
+]
+
+const logos = [
+  '/logos/brand1.svg',
+  '/logos/brand2.svg',
+  '/logos/brand3.svg',
+  '/logos/brand4.svg',
+]
 
 export default function HomeContent() {
   const { scrollY } = useScroll()
-
-  // Background hue shift
-  const hue = useTransform(scrollY, [0, 500], [0, 360], { clamp: false })
+  const hue = useTransform(scrollY, [0, 500], [260, 300], { clamp: false }) // purple shift
   const hueSpring = useSpring(hue, { stiffness: 10, damping: 50 })
-  const background = useTransform(hueSpring, h => `hsl(${h}, 20%, 5%)`)
+  const background = useTransform(hueSpring, h => `hsl(${h}, 30%, 8%)`)
 
-  // Starfield layers
   const canvas1 = useRef(null)
   const canvas2 = useRef(null)
   useEffect(() => {
@@ -45,173 +53,119 @@ export default function HomeContent() {
     initLayer(canvas2.current, 0.5, 100)
   }, [])
 
-  // Word rotator logic
-  const [index, setIndex] = useState(0)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex(i => (i + 1) % rotatingWords.length)
-    }, 2000)
-    return () => clearInterval(interval)
-  }, [])
+  const [modalOpen, setModalOpen] = useState(false)
 
   return (
     <>
-      {/* Background gradient */}
-      <motion.div
-        style={{ background }}
-        className="fixed inset-0 -z-30 transition-colors duration-500"
-      />
-
-      {/* Starfields */}
-      <canvas ref={canvas1} className="fixed inset-0 -z-20 opacity-70" />
-      <canvas ref={canvas2} className="fixed inset-0 -z-20 opacity-50" />
+      <motion.div style={{ background }} className="fixed inset-0 -z-30" />
+      <canvas ref={canvas1} className="fixed inset-0 -z-20 opacity-60" />
+      <canvas ref={canvas2} className="fixed inset-0 -z-20 opacity-40" />
 
       <main className="relative z-10 text-white font-sans">
         {/* Hero */}
-        <section
-          id="hero"
-          className="h-screen flex flex-col items-center justify-center text-center px-6"
-        >
-          {/* Glow headline */}
-          <h1 className="text-6xl md:text-7xl font-extrabold mb-4 text-white animate-pulse">
+        <section className="h-screen flex flex-col items-center justify-center text-center px-6">
+          <h1 className="text-6xl md:text-7xl font-extrabold mb-4 text-white drop-shadow-md animate-pulse">
             Lunara
           </h1>
-
-          {/* Rotating subheadline */}
-          <p className="text-2xl md:text-3xl text-gray-300 mb-4">
-            AI Funnels built for{' '}
-            <span className="text-blue-400 font-semibold transition-all duration-500">
-              {rotatingWords[index]}
-            </span>
+          <p className="text-xl md:text-2xl text-purple-300 mb-4">
+            AI-powered funnels built for orbit
           </p>
-
-          {/* Built-for strip */}
-          <p className="text-md md:text-lg text-gray-400 max-w-md mb-6">
-            Built for growth leaders, founders, and teams that move fast.
+          <p className="text-md md:text-lg text-gray-400 mb-6 max-w-md">
+            Built for scale, designed for clarity, secured for enterprise.
           </p>
-
-          {/* CTA */}
-          <a
-            href="#features"
-            className="bg-blue-500 hover:bg-blue-600 px-8 py-3 rounded-full font-semibold transition transform hover:scale-105 active:scale-95"
+          <button
+            onClick={() => setModalOpen(true)}
+            className="bg-gradient-to-br from-purple-400 to-purple-600 text-white font-semibold px-6 py-3 rounded-full shadow-xl hover:scale-105 transition relative overflow-hidden"
           >
-            Explore Features
-          </a>
+            View Pricing
+          </button>
         </section>
 
-        {/* Features Grid */}
-        <section
-          id="features"
-          className="py-32 px-6 max-w-6xl mx-auto grid md:grid-cols-3 gap-8"
-        >
-          {[
-            {
-              icon: '/icons/rocket.svg',
-              title: 'Adaptive Funnels',
-              desc: 'Personalized journeys that evolve with your users.',
-            },
-            {
-              icon: '/icons/dashboard.svg',
-              title: 'Unified Dashboard',
-              desc: 'Everything you need—CRM, analytics, automations.',
-            },
-            {
-              icon: '/icons/shield.svg',
-              title: 'Enterprise-Grade Security',
-              desc: 'SOC-2, GDPR, and zero-trust from day one.',
-            },
-          ].map(f => (
+        {/* Features */}
+        <section className="py-24 px-6 max-w-6xl mx-auto grid md:grid-cols-3 gap-8">
+          {features.map((f, i) => (
             <motion.div
-              key={f.title}
-              initial={{ opacity: 0, y: 50 }}
+              key={i}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.5 }}
               viewport={{ once: true }}
-              className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 text-center"
+              className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl text-center"
             >
-              <img
-                src={f.icon}
-                alt={f.title}
-                className="mx-auto mb-4 h-16 w-16"
-              />
               <h3 className="text-2xl font-semibold mb-2">{f.title}</h3>
               <p className="text-gray-300">{f.desc}</p>
             </motion.div>
           ))}
         </section>
 
-        {/* Pricing Table */}
-        <section
-          id="pricing"
-          className="py-32 px-6 bg-black/80"
-        >
-          <h2 className="text-4xl font-bold text-center mb-12">
-            Pricing Plans
+        {/* Trusted By */}
+        <section className="py-12 px-6 bg-white/5">
+          <h2 className="text-center text-lg text-gray-400 mb-6">
+            Trusted by forward-thinking teams
           </h2>
-          <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8">
-            {[
-              {
-                name: 'Starter',
-                price: 29,
-                features: ['5 funnels', 'Basic analytics', 'Email support'],
-                popular: false,
-              },
-              {
-                name: 'Scale',
-                price: 99,
-                features: [
-                  'Unlimited funnels',
-                  'Advanced analytics',
-                  'Priority support',
-                ],
-                popular: true,
-              },
-              {
-                name: 'Enterprise',
-                price: 299,
-                features: [
-                  'Dedicated account manager',
-                  'SLA & compliance',
-                  'Custom integrations',
-                ],
-                popular: false,
-              },
-            ].map(p => (
-              <motion.div
-                key={p.name}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
-                className={`p-8 rounded-2xl shadow-lg ${
-                  p.popular
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-white/10 text-gray-100'
-                }`}
-              >
-                {p.popular && (
-                  <div className="text-sm uppercase mb-2">Most Popular</div>
-                )}
-                <h3 className="text-2xl font-semibold mb-4">
-                  {p.name}
-                </h3>
-                <div className="text-5xl font-extrabold mb-4">
-                  ${p.price}
-                </div>
-                <ul className="space-y-2 mb-6">
-                  {p.features.map(f => (
-                    <li key={f} className="flex items-center">
-                      <span className="mr-2">✓</span> {f}
-                    </li>
-                  ))}
-                </ul>
-                <button className="w-full bg-white text-black font-semibold py-2 rounded-full hover:bg-gray-200 transition">
-                  Choose Plan
-                </button>
-              </motion.div>
+          <div className="flex justify-center flex-wrap gap-8 opacity-80 grayscale hover:grayscale-0 transition-all">
+            {logos.map((src, i) => (
+              <img key={i} src={src} alt={`Logo ${i}`} className="h-10" />
             ))}
           </div>
         </section>
+
+        {/* Pricing Modal */}
+        {modalOpen && (
+          <div className="fixed inset-0 z-40 bg-black/70 flex items-center justify-center p-6">
+            <div className="bg-gray-900 rounded-2xl p-8 w-full max-w-2xl shadow-lg relative">
+              <button
+                onClick={() => setModalOpen(false)}
+                className="absolute top-4 right-4 text-white hover:text-purple-400"
+              >
+                ×
+              </button>
+              <h2 className="text-3xl font-bold mb-6 text-purple-300 text-center">
+                Choose Your Plan
+              </h2>
+              <div className="grid md:grid-cols-3 gap-6">
+                {[
+                  {
+                    name: 'Starter',
+                    price: 29,
+                    features: ['Up to 5 funnels', 'Basic analytics', 'Email support'],
+                  },
+                  {
+                    name: 'Scale',
+                    price: 99,
+                    features: ['Unlimited funnels', 'Advanced analytics', 'Priority support'],
+                    highlight: true,
+                  },
+                  {
+                    name: 'Enterprise',
+                    price: 299,
+                    features: ['Dedicated manager', 'SLA & SSO', 'Custom integrations'],
+                  },
+                ].map((p, i) => (
+                  <div
+                    key={i}
+                    className={`p-6 rounded-xl ${
+                      p.highlight
+                        ? 'bg-purple-500 text-white'
+                        : 'bg-white/10 text-gray-200'
+                    }`}
+                  >
+                    <h3 className="text-xl font-semibold mb-2">{p.name}</h3>
+                    <div className="text-4xl font-extrabold mb-4">${p.price}</div>
+                    <ul className="mb-6 space-y-2 text-sm">
+                      {p.features.map((f, j) => (
+                        <li key={j}>• {f}</li>
+                      ))}
+                    </ul>
+                    <button className="w-full bg-white text-black py-2 rounded-full font-semibold hover:bg-gray-100 transition">
+                      Select
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </>
   )
