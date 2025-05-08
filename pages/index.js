@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
 
-// Load the heavy animation & canvas bits only on the client
 const HomeContent = dynamic(() => import('../components/HomeContent'), {
   ssr: false,
 })
