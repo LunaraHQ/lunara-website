@@ -1,18 +1,23 @@
 import { useEffect, useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 
 export default function Home() {
   const containerRef = useRef(null);
   const { scrollY } = useScroll();
 
-  const cometX = useTransform(scrollY, [0, 4000], ["0%", "100%"]);
-  const cometY = useTransform(scrollY, [0, 4000], ["0px", "3000px"]);
+  // Map scroll progress to pixel values (90% of width/height)
+  const rawX = useTransform(scrollY, [0, 4000], [0, window.innerWidth * 0.9]);
+  const rawY = useTransform(scrollY, [0, 4000], [0, window.innerHeight * 0.9]);
+  // Smooth it with spring physics
+  const cometX = useSpring(rawX, { stiffness: 120, damping: 25, mass: 0.8 });
+  const cometY = useSpring(rawY, { stiffness: 120, damping: 25, mass: 0.8 });
 
   useEffect(() => {
     const canvas = document.getElementById("starfield");
     const ctx = canvas?.getContext("2d");
     const layers = [[], [], []];
     const speeds = [0.3, 0.2, 0.1];
+
     layers.forEach((layer, i) => {
       for (let j = 0; j < 60; j++) {
         layer.push({
@@ -23,10 +28,12 @@ export default function Home() {
         });
       }
     });
+
     const animate = () => {
       if (!ctx) return;
       ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+
       layers.forEach((stars) =>
         stars.forEach((star) => {
           star.y += star.speed;
@@ -37,8 +44,10 @@ export default function Home() {
           ctx.fill();
         })
       );
+
       requestAnimationFrame(animate);
     };
+
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     animate();
@@ -95,16 +104,27 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Comet Trail */}
+      {/* Comet Trail (soft glow) */}
       <motion.div
-        className="w-24 h-24 bg-gradient-to-br from-blue-400/40 to-transparent rounded-full absolute top-0 left-0 blur-2xl opacity-50 -z-10"
-        style={{ x: cometX, y: cometY }}
+        className="absolute top-0 left-0 w-28 h-28 rounded-full blur-3xl opacity-40 will-change-transform -z-20"
+        style={{
+          x: cometX,
+          y: cometY,
+          background:
+            "radial-gradient(circle at center, rgba(56,189,248,0.6), transparent 70%)",
+        }}
+        transition={{ type: "spring", stiffness: 100, damping: 20 }}
       />
 
       {/* Comet Core */}
       <motion.div
-        className="w-10 h-10 bg-gradient-to-br from-white to-blue-400 rounded-full absolute top-0 left-0 shadow-2xl"
-        style={{ x: cometX, y: cometY }}
+        className="absolute top-0 left-0 w-12 h-12 rounded-full shadow-lg will-change-transform"
+        style={{
+          x: cometX,
+          y: cometY,
+          background: "linear-gradient(135deg, #ffffff, #38bdf8)",
+        }}
+        transition={{ type: "spring", stiffness: 120, damping: 25 }}
       />
 
       {/* Feature Sections */}
