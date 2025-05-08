@@ -11,10 +11,8 @@ export default function Home() {
   useEffect(() => {
     const canvas = document.getElementById("starfield");
     const ctx = canvas?.getContext("2d");
-
     const layers = [[], [], []];
     const speeds = [0.3, 0.2, 0.1];
-
     layers.forEach((layer, i) => {
       for (let j = 0; j < 60; j++) {
         layer.push({
@@ -25,12 +23,10 @@ export default function Home() {
         });
       }
     });
-
     const animate = () => {
       if (!ctx) return;
       ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-
       layers.forEach((stars) =>
         stars.forEach((star) => {
           star.y += star.speed;
@@ -41,10 +37,8 @@ export default function Home() {
           ctx.fill();
         })
       );
-
       requestAnimationFrame(animate);
     };
-
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     animate();
@@ -140,11 +134,12 @@ export default function Home() {
         <input
           type="email"
           placeholder="Enter your email"
-          className="px-4 py-2 rounded-lg text-black"
+          className="border border-white px-4 py-2 rounded-2xl text-black"
         />
         <button className="mt-4 bg-white text-black px-6 py-2 rounded-2xl font-semibold shadow-lg">
           Notify Me
         </button>
       </section>
     </div>
-);
+  );
+}
