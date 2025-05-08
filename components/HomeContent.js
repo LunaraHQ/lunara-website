@@ -1,45 +1,56 @@
 import { useEffect, useRef } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
-/* ---------- Lucide icons ---------- */
 import { Funnel, LayoutDashboard, ShieldCheck } from 'lucide-react'
 
-/* ---------- Data for logo cards ---------- */
-const logos = [
-  { title: 'Adaptive Funnels', icon: Funnel },
-  { title: 'Unified Dashboard', icon: LayoutDashboard },
-  { title: 'Bank-Grade Security', icon: ShieldCheck },
+/* --- Data: icon + caption --- */
+const features = [
+  {
+    title: 'Adaptive Funnels',
+    desc: 'Guided journeys that learn & improve.',
+    icon: Funnel,
+  },
+  {
+    title: 'Unified Dashboard',
+    desc: 'All your analytics in one console.',
+    icon: LayoutDashboard,
+  },
+  {
+    title: 'Bank-Grade Security',
+    desc: 'SOC-2 & GDPR compliance out-of-the-box.',
+    icon: ShieldCheck,
+  },
 ]
 
 export default function HomeContent() {
-  /* animated hue-shift background */
+  /* hue-shift background */
   const { scrollY } = useScroll()
   const hue = useTransform(scrollY, [0, 500], [260, 300], { clamp: false })
   const hueSpring = useSpring(hue, { stiffness: 10, damping: 50 })
   const background = useTransform(hueSpring, h => `hsl(${h}, 30%, 8%)`)
 
-  /* starfield canvases */
+  /* starfield */
   const canvas1 = useRef(null)
   const canvas2 = useRef(null)
   useEffect(() => {
     if (typeof window === 'undefined') return
-    const initLayer = (canvas, speed, count) => {
-      const ctx = canvas.getContext('2d')
+    const init = (c, speed, count) => {
+      const ctx = c.getContext('2d')
       const stars = Array.from({ length: count }, () => ({
         x: Math.random() * window.innerWidth,
         y: Math.random() * window.innerHeight,
         r: Math.random() * 1.2 + 0.2,
         s: Math.random() * 0.2 + 0.05,
       }))
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
+      c.width = window.innerWidth
+      c.height = window.innerHeight
       const draw = () => {
         ctx.fillStyle = 'rgba(0,0,0,0.1)'
-        ctx.fillRect(0, 0, canvas.width, canvas.height)
-        stars.forEach(star => {
-          star.y += star.s * speed
-          if (star.y > canvas.height) star.y = 0
+        ctx.fillRect(0, 0, c.width, c.height)
+        stars.forEach(s => {
+          s.y += s.s * speed
+          if (s.y > c.height) s.y = 0
           ctx.beginPath()
-          ctx.arc(star.x, star.y, star.r, 0, 2 * Math.PI)
+          ctx.arc(s.x, s.y, s.r, 0, 2 * Math.PI)
           ctx.fillStyle = 'white'
           ctx.fill()
         })
@@ -47,8 +58,8 @@ export default function HomeContent() {
       }
       draw()
     }
-    initLayer(canvas1.current, 1, 150)
-    initLayer(canvas2.current, 0.5, 100)
+    init(canvas1.current, 1, 150)
+    init(canvas2.current, 0.5, 100)
   }, [])
 
   return (
@@ -58,21 +69,20 @@ export default function HomeContent() {
       <canvas ref={canvas2} className="fixed inset-0 -z-20 opacity-40" />
 
       <main className="relative z-10 text-white font-sans">
-
-        {/* ---------- Logo feature cards ---------- */}
+        {/* --- Feature cards with captions --- */}
         <section
           id="features"
           className="py-24 px-6 max-w-7xl mx-auto grid md:grid-cols-3 gap-8"
         >
-          {logos.map(({ title, icon: Icon }, i) => (
+          {features.map(({ title, desc, icon: Icon }, idx) => (
             <motion.div
-              key={i}
+              key={idx}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
               viewport={{ once: true }}
-              className="group relative bg-black/60 backdrop-blur-md rounded-2xl
-                         flex items-center justify-center aspect-square
+              className="group bg-black/60 backdrop-blur-md rounded-2xl p-8
+                         flex flex-col items-center text-center aspect-square
                          transform transition-all duration-300
                          hover:scale-105 hover:-translate-y-1 hover:shadow-xl"
             >
@@ -82,11 +92,15 @@ export default function HomeContent() {
                            transition duration-300"
                 strokeWidth={1.4}
               />
+              <h3 className="mt-6 text-xl font-semibold">{title}</h3>
+              <p className="mt-2 text-gray-300 text-sm max-w-[14rem]">
+                {desc}
+              </p>
             </motion.div>
           ))}
         </section>
 
-        {/* ---------- Pricing section ---------- */}
+        {/* --- Pricing (unchanged) --- */}
         <section id="pricing" className="py-20 bg-white/5 text-center">
           <h2 className="text-3xl font-bold text-purple-300 mb-8">
             Simple, Scalable Pricing
