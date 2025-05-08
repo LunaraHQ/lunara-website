@@ -5,17 +5,17 @@ const features = [
   {
     title: 'Adaptive Funnels',
     desc: 'Personalized journeys for every visitor.',
-    icon: '/icons/rocket.svg',
+    icon: '/icons/icon_funnel.png',
   },
   {
     title: 'Unified Dashboard',
     desc: 'Track everything in one smart console.',
-    icon: '/icons/dashboard.svg',
+    icon: '/icons/icon_dashboard.png',
   },
   {
     title: 'Bank-Grade Security',
     desc: 'SOC-2, GDPR, and zero-trust by default.',
-    icon: '/icons/shield.svg',
+    icon: '/icons/icon_security.png',
   },
 ]
 
@@ -36,7 +36,7 @@ export default function HomeContent() {
   useEffect(() => {
     if (typeof window === 'undefined') return
     const initLayer = (canvas, speed, count) => {
-      const ctx = canvas.getContext('2d')
+      const ctx = canvas.getContext(' '2d')
       const stars = Array.from({ length: count }, () => ({
         x: Math.random() * window.innerWidth,
         y: Math.random() * window.innerHeight,
@@ -166,7 +166,7 @@ export default function HomeContent() {
                     }`}
                   >
                     <h3 className="text-xl font-semibold mb-2">{p.name}</h3>
-                    <div className="text-4xl font-extrabold mb-4">${p.price}</div>
+                    <div className="text-4xl font-extrabold mb-4">€{p.price}</div>
                     <ul className="mb-6 space-y-2 text-sm">
                       {p.features.map((f, j) => (
                         <li key={j}>• {f}</li>
