@@ -1,23 +1,35 @@
 import Link from 'next/link'
-import { Twitter, Linkedin, Github } from 'lucide-react'
 
 export default function Footer() {
   return (
-    <footer className="py-12 bg-gray-900 text-gray-400 px-6">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center">
-        <div className="mb-6 md:mb-0">
-          <Link href="/"><a className="text-2xl font-bold">Lunara</a></Link>
-          <p className="mt-2 text-sm">&copy; {new Date().getFullYear()} Lunara, Inc.</p>
+    <footer className="bg-black/50 text-gray-400 py-10 mt-32 border-t border-white/10">
+      <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8 text-sm">
+        <div>
+          <Link href="/" className="text-2xl font-bold text-white">Lunara</Link>
+          <p className="mt-2 text-gray-500">© {new Date().getFullYear()} LunaraHQ. All rights reserved.</p>
         </div>
-        <div className="flex space-x-4 mb-6 md:mb-0">
-          <Link href="/about"><a>About Us</a></Link>
-          <Link href="/contact"><a>Contact</a></Link>
-          <Link href="/privacy"><a>Privacy Policy</a></Link>
+        <div>
+          <h3 className="text-white font-semibold mb-2">Company</h3>
+          <ul className="space-y-1">
+            <li><Link href="/about">About Us</Link></li>
+            <li><Link href="/contact">Contact</Link></li>
+            <li><Link href="/privacy">Privacy Policy</Link></li>
+          </ul>
         </div>
-        <div className="flex space-x-4">
-          <a href="#"><Twitter /></a>
-          <a href="#"><Linkedin /></a>
-          <a href="#"><Github /></a>
+        <div>
+          <h3 className="text-white font-semibold mb-2">Follow</h3>
+          <ul className="space-y-1">
+            <li>
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+                Twitter
+              </a>
+            </li>
+            <li>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
+                LinkedIn
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
     </footer>
