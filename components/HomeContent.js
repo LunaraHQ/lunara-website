@@ -1,36 +1,16 @@
+// components/HomeContent.js
 import { useEffect, useRef } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 
 export default function HomeContent() {
   const { scrollY } = useScroll()
 
-  // 1) Background hue shift
+  // Background hue shift
   const hue = useTransform(scrollY, [0, 500], [0, 360], { clamp: false })
   const hueSpring = useSpring(hue, { stiffness: 10, damping: 50 })
   const background = useTransform(hueSpring, h => `hsl(${h}, 20%, 5%)`)
 
-  // 2) Base trajectory for our asteroid
-  const baseX = useTransform(scrollY, [0, 3000], ['0vw', '-30vw'])
-  const baseY = useTransform(scrollY, [0, 3000], ['40vh', '-80vh'])
-
-  // 3) Natural floating jitter
-  const jitterX = useTransform(scrollY, [0,1000,2000,3000], [0,60,-60,0])
-  const jitterY = useTransform(scrollY, [0,1000,2000,3000], [0,-30,30,0])
-
-  // 4) Combine trajectory + jitter, then spring it smooth
-  const finalX = useSpring(
-    useTransform([baseX, jitterX], ([x, j]) => `calc(${x} + ${j}px)`),
-    { stiffness: 120, damping: 25 }
-  )
-  const finalY = useSpring(
-    useTransform([baseY, jitterY], ([y, j]) => `calc(${y} + ${j}px)`),
-    { stiffness: 120, damping: 25 }
-  )
-
-  // 5) Spin 3 full rotations over the scroll
-  const rotate = useTransform(scrollY, [0, 3000], [0, 1080], { clamp: false })
-
-  // 6) Starfield layers
+  // Starfield layers
   const canvas1 = useRef(null)
   const canvas2 = useRef(null)
   useEffect(() => {
@@ -76,77 +56,185 @@ export default function HomeContent() {
       <canvas ref={canvas1} className="fixed inset-0 -z-20 opacity-70" />
       <canvas ref={canvas2} className="fixed inset-0 -z-20 opacity-50" />
 
-      {/* Textured asteroid */}
-      <motion.div
-        style={{ x: finalX, y: finalY, rotate }}
-        className="
-          fixed left-1/2 -translate-x-1/2
-          bottom-[30vh]
-          w-[50vw] h-[50vw] max-w-lg max-h-lg
-        "
-      >
-        <img
-          src="/asteroid-texture.png"
-          alt="Asteroid"
-          className="w-full h-full object-cover rounded-full shadow-2xl"
-          style={{ filter: 'drop-shadow(0 0 30px rgba(0,0,0,0.7))' }}
-        />
-      </motion.div>
-
-      {/* Page content */}
       <main className="relative z-10 text-white">
         {/* Hero Section */}
-        <section className="h-screen flex flex-col items-center justify-center text-center px-4">
+        <section
+          id="hero"
+          className="h-screen flex flex-col items-center justify-center text-center px-4"
+        >
           <h1 className="text-6xl font-extrabold mb-4">Lunara</h1>
           <p className="text-xl max-w-md mb-8">
             Next-gen sales funnels powered by AI, launched into orbit.
           </p>
-          <button className="bg-blue-500 hover:bg-blue-600 px-8 py-3 rounded-full font-semibold transition">
-            Get Started
-          </button>
+          <a
+            href="#features"
+            className="underline hover:text-blue-400 text-lg"
+          >
+            Explore Features
+          </a>
         </section>
 
-        {/* Features */}
-        <section className="py-32 px-6 max-w-4xl mx-auto space-y-16">
+        {/* Features Grid */}
+        <section
+          id="features"
+          className="py-32 px-6 max-w-6xl mx-auto grid md:grid-cols-3 gap-8"
+        >
           {[
             {
-              title: 'Adaptive Lead Funnels',
-              desc: 'Guide prospects through a cosmic, AI-driven journey.',
+              icon: '/icons/rocket.svg',
+              title: 'Adaptive Funnels',
+              desc: 'Personalized journeys that evolve with your users.',
             },
             {
-              title: 'Unified Control Center',
-              desc: 'One dashboard for CRM, analytics, and automations in real time.',
+              icon: '/icons/dashboard.svg',
+              title: 'Unified Dashboard',
+              desc: 'Everything you need—CRM, analytics, automations.',
             },
             {
-              title: 'Enterprise Security',
-              desc: 'Bank-grade encryption, SOC-2 compliance, zero-trust from day one.',
+              icon: '/icons/shield.svg',
+              title: 'Enterprise-Grade Security',
+              desc: 'SOC-2, GDPR, and zero-trust from day one.',
             },
-          ].map((f, i) => (
+          ].map(f => (
             <motion.div
-              key={i}
-              initial={{ opacity: 0, x: i % 2 ? 80 : -80 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
+              key={f.title}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
               viewport={{ once: true }}
-              className="bg-white/10 backdrop-blur-sm rounded-2xl p-8"
+              className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 text-center"
             >
-              <h2 className="text-3xl font-bold mb-2">{f.title}</h2>
-              <p className="text-white/80">{f.desc}</p>
+              <img
+                src={f.icon}
+                alt={f.title}
+                className="mx-auto mb-4 h-16 w-16"
+              />
+              <h3 className="text-2xl font-semibold mb-2">{f.title}</h3>
+              <p className="text-gray-300">{f.desc}</p>
             </motion.div>
           ))}
         </section>
 
-        {/* Call to Action */}
-        <section className="h-screen flex items-center justify-center px-4">
-          <motion.button
-            initial={{ scale: 0.9, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            className="bg-blue-500 hover:bg-blue-600 px-8 py-4 rounded-full font-semibold shadow-lg"
-          >
-            Request Early Access
-          </motion.button>
+        {/* How It Works */}
+        <section
+          id="howitworks"
+          className="py-32 bg-gray-900 px-6"
+        >
+          <h2 className="text-4xl font-bold text-center mb-12">
+            How It Works
+          </h2>
+          <div className="max-w-4xl mx-auto space-y-12">
+            {[
+              {
+                number: 1,
+                title: 'Sign Up',
+                desc: 'Create your free Lunara account in under 60 seconds.',
+              },
+              {
+                number: 2,
+                title: 'Connect & Configure',
+                desc: 'Link your CRM, set goals, and personalize your funnel.',
+              },
+              {
+                number: 3,
+                title: 'Launch & Optimize',
+                desc: 'Go live and let our AI continuously A/B test.',
+              },
+            ].map(s => (
+              <motion.div
+                key={s.number}
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+                className="flex items-center space-x-6"
+              >
+                <div className="text-4xl font-extrabold text-blue-500">
+                  {s.number}
+                </div>
+                <div>
+                  <h3 className="text-2xl font-semibold">{s.title}</h3>
+                  <p className="text-gray-300">{s.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </section>
+
+        {/* Pricing Table */}
+        <section
+          id="pricing"
+          className="py-32 px-6 bg-black/80"
+        >
+          <h2 className="text-4xl font-bold text-center mb-12">
+            Pricing Plans
+          </h2>
+          <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8">
+            {[
+              {
+                name: 'Starter',
+                price: 29,
+                features: ['5 funnels', 'Basic analytics', 'Email support'],
+                popular: false,
+              },
+              {
+                name: 'Scale',
+                price: 99,
+                features: [
+                  'Unlimited funnels',
+                  'Advanced analytics',
+                  'Priority support',
+                ],
+                popular: true,
+              },
+              {
+                name: 'Enterprise',
+                price: 299,
+                features: [
+                  'Dedicated account manager',
+                  'SLA & compliance',
+                  'Custom integrations',
+                ],
+                popular: false,
+              },
+            ].map(p => (
+              <motion.div
+                key={p.name}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+                className={`p-8 rounded-2xl shadow-lg ${
+                  p.popular
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-white/10 text-gray-100'
+                }`}
+              >
+                {p.popular && (
+                  <div className="text-sm uppercase mb-2">Most Popular</div>
+                )}
+                <h3 className="text-2xl font-semibold mb-4">
+                  {p.name}
+                </h3>
+                <div className="text-5xl font-extrabold mb-4">
+                  ${p.price}
+                </div>
+                <ul className="space-y-2 mb-6">
+                  {p.features.map(f => (
+                    <li key={f} className="flex items-center">
+                      <span className="mr-2">✓</span> {f}
+                    </li>
+                  ))}
+                </ul>
+                <button className="w-full bg-white text-black font-semibold py-2 rounded-full hover:bg-gray-200 transition">
+                  Choose Plan
+                </button>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* Footer will render below via Footer component */}
       </main>
     </>
   )
