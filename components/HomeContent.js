@@ -5,32 +5,50 @@ import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 export default function HomeContent() {
   const { scrollY } = useScroll()
 
-  // Hue spring (0→360 over first 500px)
+  // 1) Background hue shift
   const hue = useTransform(scrollY, [0, 500], [0, 360], { clamp: false })
   const hueSpring = useSpring(hue, { stiffness: 10, damping: 50 })
-  const background = useTransform(hueSpring, (h) => `hsl(${h}, 20%, 5%)`)
+  const background = useTransform(
+    hueSpring,
+    (h) => `hsl(${h}, 20%, 5%)`
+  )
 
-  // Main comet path (diagonal)
-  const x = useTransform(scrollY, [0, 3000], ['10%', '90%'])
-  const y = useTransform(scrollY, [0, 3000], ['10%', '90%'])
-  const cometX = useSpring(x, { stiffness: 120, damping: 25 })
-  const cometY = useSpring(y, { stiffness: 120, damping: 25 })
+  // 2) Comet base trajectory: from center-bottom into roaming across the screen
+  const baseX = useTransform(scrollY, [0, 3000], ['0vw', '-30vw'])
+  const baseY = useTransform(scrollY, [0, 3000], ['40vh', '-80vh'])
 
-  // Jitter perpendicular to path for a floating effect
-  const jitter = useTransform(
+  // 3) Floating jitter for natural motion
+  const jitterX = useTransform(
     scrollY,
     [0, 1000, 2000, 3000],
-    [0, 30, -30, 0]  // px of offset
+    [0, 60, -60, 0]
   )
-  const xWithJitter = useTransform(
-    [cometX, jitter],
-    ([cx, j]) => `calc(${cx} + ${j}px)`
+  const jitterY = useTransform(
+    scrollY,
+    [0, 1000, 2000, 3000],
+    [0, -30, 30, 0]
   )
 
-  // Rotate comet 2 full revolutions over the scroll
-  const rotate = useTransform(scrollY, [0, 3000], [0, 720], { clamp: false })
+  // 4) Combine base trajectory + jitter, then spring it for smoothness
+  const finalX = useSpring(
+    useTransform(
+      [baseX, jitterX],
+      ([x, j]) => `calc(${x} + ${j}px)`
+    ),
+    { stiffness: 120, damping: 25 }
+  )
+  const finalY = useSpring(
+    useTransform(
+      [baseY, jitterY],
+      ([y, j]) => `calc(${y} + ${j}px)`
+    ),
+    { stiffness: 120, damping: 25 }
+  )
 
-  // Starfield setup
+  // 5) Spin: 3 revolutions (1080°) across the scroll range
+  const rotate = useTransform(scrollY, [0, 3000], [0, 1080], { clamp: false })
+
+  // 6) Starfield layers (unchanged)
   const canvas1 = useRef(null)
   const canvas2 = useRef(null)
   useEffect(() => {
@@ -66,28 +84,37 @@ export default function HomeContent() {
 
   return (
     <>
-      {/* Background gradient */}
+      {/* 1. Background gradient */}
       <motion.div
         style={{ background }}
         className="fixed inset-0 -z-30 transition-colors duration-500"
       />
 
-      {/* Starfields */}
+      {/* 2. Starfields */}
       <canvas ref={canvas1} className="fixed inset-0 -z-20 opacity-70" />
       <canvas ref={canvas2} className="fixed inset-0 -z-20 opacity-50" />
 
-      {/* Drifting, spinning, floating comet */}
+      {/* 3. Drifting, spinning, floating comet */}
       <motion.div
         style={{
-          x: xWithJitter,
-          y: cometY,
-          rotate
+          x: finalX,
+          y: finalY,
+          rotate,
         }}
-        className="fixed w-16 h-16 rounded-full shadow-2xl"
+        className="fixed left-1/2 -translate-x-1/2 bottom-[30vh]"
       >
-        <div className="w-full h-full bg-gradient-to-br from-white to-blue-400 rounded-full blur-xl opacity-80" />
+        <div
+          className="
+            w-[50vw] h-[50vw]
+            max-w-lg max-h-lg
+            rounded-full
+            bg-gradient-to-br from-white to-blue-400
+            blur-xl opacity-80 shadow-2xl
+          "
+        />
       </motion.div>
 
+      {/* 4. Page content */}
       <main className="relative z-10 text-white">
         {/* Hero */}
         <section className="h-screen flex flex-col items-center justify-center text-center px-4">
@@ -103,9 +130,18 @@ export default function HomeContent() {
         {/* Features */}
         <section className="py-32 px-6 max-w-4xl mx-auto space-y-16">
           {[
-            { title: 'Adaptive Lead Funnels', desc: 'Intelligently guide prospects through a personalized cosmic journey.' },
-            { title: 'Unified Control Center', desc: 'One dashboard to track CRM, analytics, and automations in real time.' },
-            { title: 'Enterprise Security', desc: 'Bank-grade encryption, SOC-2 compliance, zero-trust from day one.' }
+            {
+              title: 'Adaptive Lead Funnels',
+              desc: 'Guide prospects through a cosmic, AI-driven journey.',
+            },
+            {
+              title: 'Unified Control Center',
+              desc: 'One dashboard for CRM, analytics, and automations in real time.',
+            },
+            {
+              title: 'Enterprise Security',
+              desc: 'Bank-grade encryption, SOC-2 compliance, zero-trust from day one.',
+            },
           ].map((f, i) => (
             <motion.div
               key={i}
