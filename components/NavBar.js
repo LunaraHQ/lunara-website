@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Menu } from 'lucide-react'
 import useScrollSpy from '../hooks/useScrollSpy'
 
-const sections = ['features','howitworks','pricing','contact'];
+const sections = ['features', 'howitworks', 'pricing', 'contact'];
 
 export default function NavBar() {
   const [scrolled, setScrolled] = useState(false);
@@ -23,7 +23,7 @@ export default function NavBar() {
       }`}
     >
       <div className="max-w-6xl mx-auto flex items-center justify-between p-4">
-        <Link href="/"><a className="text-2xl font-bold">Lunara</a></Link>
+        <Link href="/" className="text-2xl font-bold">Lunara</Link>
         <div className="hidden md:flex space-x-6">
           {sections.map(id => (
             <a
@@ -35,12 +35,12 @@ export default function NavBar() {
                   : 'hover:text-blue-300'
               }`}
             >
-              {id.replace(/([A-Z])/g, ' $1').replace(/^./, s=>s.toUpperCase())}
+              {id.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase())}
             </a>
           ))}
         </div>
         <Menu className="md:hidden" />
       </div>
     </nav>
-  )
+  );
 }
