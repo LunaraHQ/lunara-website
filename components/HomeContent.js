@@ -36,7 +36,7 @@ export default function HomeContent() {
   useEffect(() => {
     if (typeof window === 'undefined') return
     const initLayer = (canvas, speed, count) => {
-      const ctx = canvas.getContext(' '2d')
+      const ctx = canvas.getContext('2d')
       const stars = Array.from({ length: count }, () => ({
         x: Math.random() * window.innerWidth,
         y: Math.random() * window.innerHeight,
