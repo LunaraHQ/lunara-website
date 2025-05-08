@@ -1,6 +1,7 @@
-// components/HomeContent.js
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
+
+const rotatingWords = ['founders', 'growth teams', 'startups', 'enterprises']
 
 export default function HomeContent() {
   const { scrollY } = useScroll()
@@ -44,6 +45,15 @@ export default function HomeContent() {
     initLayer(canvas2.current, 0.5, 100)
   }, [])
 
+  // Word rotator logic
+  const [index, setIndex] = useState(0)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex(i => (i + 1) % rotatingWords.length)
+    }, 2000)
+    return () => clearInterval(interval)
+  }, [])
+
   return (
     <>
       {/* Background gradient */}
@@ -56,19 +66,34 @@ export default function HomeContent() {
       <canvas ref={canvas1} className="fixed inset-0 -z-20 opacity-70" />
       <canvas ref={canvas2} className="fixed inset-0 -z-20 opacity-50" />
 
-      <main className="relative z-10 text-white">
-        {/* Hero Section */}
+      <main className="relative z-10 text-white font-sans">
+        {/* Hero */}
         <section
           id="hero"
-          className="h-screen flex flex-col items-center justify-center text-center px-4"
+          className="h-screen flex flex-col items-center justify-center text-center px-6"
         >
-          <h1 className="text-6xl font-extrabold mb-4">Lunara</h1>
-          <p className="text-xl max-w-md mb-8">
-            Next-gen sales funnels powered by AI, launched into orbit.
+          {/* Glow headline */}
+          <h1 className="text-6xl md:text-7xl font-extrabold mb-4 text-white animate-pulse">
+            Lunara
+          </h1>
+
+          {/* Rotating subheadline */}
+          <p className="text-2xl md:text-3xl text-gray-300 mb-4">
+            AI Funnels built for{' '}
+            <span className="text-blue-400 font-semibold transition-all duration-500">
+              {rotatingWords[index]}
+            </span>
           </p>
+
+          {/* Built-for strip */}
+          <p className="text-md md:text-lg text-gray-400 max-w-md mb-6">
+            Built for growth leaders, founders, and teams that move fast.
+          </p>
+
+          {/* CTA */}
           <a
             href="#features"
-            className="underline hover:text-blue-400 text-lg"
+            className="bg-blue-500 hover:bg-blue-600 px-8 py-3 rounded-full font-semibold transition transform hover:scale-105 active:scale-95"
           >
             Explore Features
           </a>
@@ -113,52 +138,6 @@ export default function HomeContent() {
               <p className="text-gray-300">{f.desc}</p>
             </motion.div>
           ))}
-        </section>
-
-        {/* How It Works */}
-        <section
-          id="howitworks"
-          className="py-32 bg-gray-900 px-6"
-        >
-          <h2 className="text-4xl font-bold text-center mb-12">
-            How It Works
-          </h2>
-          <div className="max-w-4xl mx-auto space-y-12">
-            {[
-              {
-                number: 1,
-                title: 'Sign Up',
-                desc: 'Create your free Lunara account in under 60 seconds.',
-              },
-              {
-                number: 2,
-                title: 'Connect & Configure',
-                desc: 'Link your CRM, set goals, and personalize your funnel.',
-              },
-              {
-                number: 3,
-                title: 'Launch & Optimize',
-                desc: 'Go live and let our AI continuously A/B test.',
-              },
-            ].map(s => (
-              <motion.div
-                key={s.number}
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
-                className="flex items-center space-x-6"
-              >
-                <div className="text-4xl font-extrabold text-blue-500">
-                  {s.number}
-                </div>
-                <div>
-                  <h3 className="text-2xl font-semibold">{s.title}</h3>
-                  <p className="text-gray-300">{s.desc}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
         </section>
 
         {/* Pricing Table */}
@@ -233,8 +212,6 @@ export default function HomeContent() {
             ))}
           </div>
         </section>
-
-        {/* Footer will render below via Footer component */}
       </main>
     </>
   )
