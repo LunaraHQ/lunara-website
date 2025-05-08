@@ -1,3 +1,4 @@
+// pages/index.js
 import Head from 'next/head'
 import HeroSection from '../components/HeroSection'
 import HomeContent from '../components/HomeContent'
@@ -8,13 +9,20 @@ export default function Home() {
     <>
       <Head>
         <title>Lunara – Launch Beyond</title>
-        <meta name="description" content="Lunara is your sales-focused SaaS funnel builder. Launch from the moon." />
+        <meta
+          name="description"
+          content="Lunara is your sales-focused SaaS funnel builder. Launch from the moon."
+        />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <HeroSection />
-      <HomeContent />
+      {/* Main content anchor for Skip link */}
+      <main id="main-content">
+        <HeroSection />
+        <HomeContent />
+      </main>
+
       <Footer />
     </>
   )
