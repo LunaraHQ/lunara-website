@@ -5,13 +5,8 @@ import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 export default function Home() {
   const { scrollY } = useScroll()
 
-  // Dynamic hue shift: 0→360° every 10 seconds
-  const hue = useTransform(
-    scrollY,
-    [0, 500],
-    [0, 360],
-    { clamp: false }
-  )
+  // Dynamic hue shift: 0→360° over first 500px of scroll
+  const hue = useTransform(scrollY, [0, 500], [0, 360], { clamp: false })
   const hueSpring = useSpring(hue, { stiffness: 10, damping: 50 })
 
   // Comet motion path
@@ -64,7 +59,8 @@ export default function Home() {
       {/* Background gradient */}
       <motion.div
         style={{
-          background: hueSpring.interpolate(h => `hsl(${h}, 20%, 5%)`)
+          // use `.to()` instead of the old `.interpolate()`
+          background: hueSpring.to(h => `hsl(${h}, 20%, 5%)`)
         }}
         className="fixed inset-0 -z-30 transition-colors duration-500"
       />
