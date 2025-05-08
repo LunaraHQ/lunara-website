@@ -5,28 +5,37 @@ import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 export default function HomeContent() {
   const { scrollY } = useScroll()
 
-  // 1) Hue spring (0→360 over first 500px)
+  // Hue spring (0→360 over first 500px)
   const hue = useTransform(scrollY, [0, 500], [0, 360], { clamp: false })
   const hueSpring = useSpring(hue, { stiffness: 10, damping: 50 })
+  const background = useTransform(hueSpring, (h) => `hsl(${h}, 20%, 5%)`)
 
-  // Map that spring into an HSL string
-  const background = useTransform(
-    hueSpring,
-    (h) => `hsl(${h}, 20%, 5%)`
-  )
-
-  // 2) Comet path
+  // Main comet path (diagonal)
   const x = useTransform(scrollY, [0, 3000], ['10%', '90%'])
   const y = useTransform(scrollY, [0, 3000], ['10%', '90%'])
   const cometX = useSpring(x, { stiffness: 120, damping: 25 })
   const cometY = useSpring(y, { stiffness: 120, damping: 25 })
 
-  // 3) Starfield layers
+  // Jitter perpendicular to path for a floating effect
+  const jitter = useTransform(
+    scrollY,
+    [0, 1000, 2000, 3000],
+    [0, 30, -30, 0]  // px of offset
+  )
+  const xWithJitter = useTransform(
+    [cometX, jitter],
+    ([cx, j]) => `calc(${cx} + ${j}px)`
+  )
+
+  // Rotate comet 2 full revolutions over the scroll
+  const rotate = useTransform(scrollY, [0, 3000], [0, 720], { clamp: false })
+
+  // Starfield setup
   const canvas1 = useRef(null)
   const canvas2 = useRef(null)
   useEffect(() => {
     if (typeof window === 'undefined') return
-    const initLayer = (canvas, speedFactor, count) => {
+    const initLayer = (canvas, speed, count) => {
       const ctx = canvas.getContext('2d')
       const stars = Array.from({ length: count }, () => ({
         x: Math.random() * window.innerWidth,
@@ -40,7 +49,7 @@ export default function HomeContent() {
         ctx.fillStyle = 'rgba(0,0,0,0.1)'
         ctx.fillRect(0, 0, canvas.width, canvas.height)
         stars.forEach((star) => {
-          star.y += star.s * speedFactor
+          star.y += star.s * speed
           if (star.y > canvas.height) star.y = 0
           ctx.beginPath()
           ctx.arc(star.x, star.y, star.r, 0, 2 * Math.PI)
@@ -67,9 +76,13 @@ export default function HomeContent() {
       <canvas ref={canvas1} className="fixed inset-0 -z-20 opacity-70" />
       <canvas ref={canvas2} className="fixed inset-0 -z-20 opacity-50" />
 
-      {/* Drifting Comet */}
+      {/* Drifting, spinning, floating comet */}
       <motion.div
-        style={{ x: cometX, y: cometY }}
+        style={{
+          x: xWithJitter,
+          y: cometY,
+          rotate
+        }}
         className="fixed w-16 h-16 rounded-full shadow-2xl"
       >
         <div className="w-full h-full bg-gradient-to-br from-white to-blue-400 rounded-full blur-xl opacity-80" />
