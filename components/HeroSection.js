@@ -1,21 +1,50 @@
+
+import { motion } from 'framer-motion'
+
 export default function HeroSection() {
   return (
-    <section
-      id="hero"
-      className="h-screen flex flex-col items-center justify-center text-center px-4 bg-gradient-to-b from-black/0 to-black"
-    >
-      <h1 className="text-6xl md:text-8xl font-extrabold mb-4">Launch Your Funnels Into Orbit</h1>
-      <p className="text-xl md:text-2xl max-w-2xl mb-8">
-        AI-powered, data-driven, and designed for conversion. Get started in minutes.
-      </p>
-      <div className="space-x-4">
+    <section className="relative h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden">
+      <motion.div
+        className="absolute inset-0 -z-10 bg-gradient-to-b from-black via-purple-900 to-black opacity-30"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.2 }}
+      />
+      <motion.h1
+        className="text-6xl md:text-7xl font-extrabold mb-4 text-white drop-shadow-xl"
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+      >
+        Lunara
+      </motion.h1>
+      <motion.p
+        className="text-xl md:text-2xl text-purple-300 mb-4 max-w-xl"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 1 }}
+      >
+        AI-powered funnels built for orbit.
+      </motion.p>
+      <motion.p
+        className="text-md md:text-lg text-gray-400 mb-6 max-w-md"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4, duration: 1 }}
+      >
+        Scalable. Secure. Stunningly simple.
+      </motion.p>
+      <div className="flex gap-4">
         <a
           href="#pricing"
-          className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-full font-semibold transition"
+          className="bg-gradient-to-br from-purple-500 to-purple-700 text-white font-semibold px-6 py-3 rounded-full shadow-xl hover:scale-105 transition"
         >
           Get Started
         </a>
-        <a href="#features" className="underline hover:text-blue-400">
+        <a
+          href="#features"
+          className="border border-purple-400 text-purple-300 font-semibold px-6 py-3 rounded-full hover:bg-purple-900/30 transition"
+        >
           Learn More
         </a>
       </div>

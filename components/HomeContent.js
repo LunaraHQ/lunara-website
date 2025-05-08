@@ -1,3 +1,4 @@
+
 import { useEffect, useRef, useState } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 
@@ -63,26 +64,6 @@ export default function HomeContent() {
       <canvas ref={canvas2} className="fixed inset-0 -z-20 opacity-40" />
 
       <main className="relative z-10 text-white font-sans">
-        {/* Hero */}
-        <section className="h-screen flex flex-col items-center justify-center text-center px-6">
-          <h1 className="text-6xl md:text-7xl font-extrabold mb-4 text-white drop-shadow-md animate-pulse">
-            Lunara
-          </h1>
-          <p className="text-xl md:text-2xl text-purple-300 mb-4">
-            AI-powered funnels built for orbit
-          </p>
-          <p className="text-md md:text-lg text-gray-400 mb-6 max-w-md">
-            Built for scale, designed for clarity, secured for enterprise.
-          </p>
-          <button
-            onClick={() => {}}
-            className="bg-gradient-to-br from-purple-400 to-purple-600 text-white font-semibold px-6 py-3 rounded-full shadow-xl hover:scale-105 transition relative overflow-hidden"
-          >
-            View Pricing
-          </button>
-        </section>
-
-        {/* Logo-Only Feature Cards */}
         <section className="py-24 px-6 max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
           {features.map((f, i) => (
             <motion.div
@@ -96,7 +77,7 @@ export default function HomeContent() {
               <img
                 src={f.icon}
                 alt={f.title}
-                className="w-3/4 h-3/4 object-contain opacity-60 group-hover:opacity-100 transition duration-300"
+                className="w-4/5 h-4/5 object-contain opacity-60 group-hover:opacity-100 transition duration-300"
               />
             </motion.div>
           ))}
