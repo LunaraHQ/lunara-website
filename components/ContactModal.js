@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-export default function ContactModal() {
+export default function ContactModal({ children = 'Contact Us' }) {
   const [isOpen, setIsOpen] = useState(false)
 
   function handleSubmit(e) {
@@ -12,13 +12,13 @@ export default function ContactModal() {
 
   return (
     <>
-      {/* Trigger Button */}
-      <button
+      {/* Trigger Link */}
+      <span
         onClick={() => setIsOpen(true)}
-        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+        className="cursor-pointer hover:underline"
       >
-        Contact Us
-      </button>
+        {children}
+      </span>
 
       {/* Modal Overlay */}
       <AnimatePresence>
