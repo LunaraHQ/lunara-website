@@ -1,46 +1,62 @@
 // components/NavBar.js
+import { useState } from 'react'
+import { useSession, signIn, signOut } from 'next-auth/react'
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
-import { Menu } from 'lucide-react'
-import useScrollSpy from '../hooks/useScrollSpy'
-
-const sections = ['features', 'howitworks', 'pricing', 'contact'];
+import ContactModal from './ContactModal'
 
 export default function NavBar() {
-  const [scrolled, setScrolled] = useState(false);
-  const active = useScrollSpy(sections, 100);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  const { data: session, status } = useSession()
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <nav
-      className={`fixed w-full z-20 top-0 transition-colors backdrop-blur-md ${
-        scrolled ? 'bg-black/60' : 'bg-transparent'
-      }`}
-    >
-      <div className="max-w-6xl mx-auto flex items-center justify-between p-4">
-        <Link href="/" className="text-2xl font-bold">Lunara</Link>
-        <div className="hidden md:flex space-x-6">
-          {sections.map(id => (
-            <a
-              key={id}
-              href={`#${id}`}
-              className={`relative pb-1 ${
-                active === id
-                  ? 'text-blue-400 after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-blue-400'
-                  : 'hover:text-blue-300'
-              }`}
-            >
-              {id.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase())}
-            </a>
-          ))}
+    <>
+      <nav className="bg-white shadow-md px-6 py-4 flex justify-between items-center">
+        <div className="flex items-center space-x-8">
+          <Link href="/"><a className="text-2xl font-bold">Lunara</a></Link>
+          <Link href="/#features"><a className="hover:underline">Features</a></Link>
+          <Link href="/#howitworks"><a className="hover:underline">Howitworks</a></Link>
+          <Link href="/#pricing"><a className="hover:underline">Pricing</a></Link>
+          {/* Open the contact modal instead of navigating away */}
+          <button
+            onClick={() => setIsOpen(true)}
+            className="hover:underline"
+          >
+            Contact
+          </button>
         </div>
-        <Menu className="md:hidden" />
-      </div>
-    </nav>
-  );
+
+        <div className="space-x-4">
+          {status === 'loading' ? null : session ? (
+            <>
+              <span className="text-gray-700">Hello, {session.user.name}</span>
+              <button
+                onClick={() => signOut()}
+                className="text-gray-700 hover:underline"
+              >
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => signIn()}
+                className="text-gray-700 hover:underline"
+              >
+                Log In
+              </button>
+              <button
+                onClick={() => signIn()}
+                className="text-gray-700 hover:underline"
+              >
+                Sign Up
+              </button>
+            </>
+          )}
+        </div>
+      </nav>
+
+      {/* Mount your existing ContactModal and control via isOpen */}
+      <ContactModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+    </>
+  )
 }
