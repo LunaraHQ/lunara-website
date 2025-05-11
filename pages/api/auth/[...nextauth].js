@@ -1,41 +1,40 @@
 // pages/api/auth/[...nextauth].js
 import NextAuth from 'next-auth'
-import GitHubProvider from 'next-auth/providers/github'
+import CredentialsProvider from 'next-auth/providers/credentials'
+import { createClient } from '@supabase/supabase-js'
+
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+)
 
 export default NextAuth({
-  // 1. Register your auth providers
   providers: [
-    GitHubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
+    CredentialsProvider({
+      name: 'Email & Password',
+      credentials: {
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' },
+      },
+      async authorize(credentials) {
+        const { email, password } = credentials
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        })
+        if (error || !data.user) {
+          return null
+        }
+        return { id: data.user.id, email: data.user.email }
+      },
     }),
-    // …add more providers here if you wish…
   ],
 
-  // 2. Use JSON Web Tokens for session instead of database sessions
-  session: {
-    strategy: 'jwt',
-  },
-
-  // 3. Secure your NextAuth with a secret
+  session: { strategy: 'jwt' },
   secret: process.env.NEXTAUTH_SECRET,
 
-  // 4. Point NextAuth to your custom sign-in/sign-out pages
   pages: {
-    signIn: '/auth/signin',    // Users will be redirected here to log in
-    signOut: '/auth/signout',  // Optional: custom sign-out page
-    error:  '/auth/error',     // Optional: custom error page
-  },
-
-  // 5. Optional callbacks to include user ID in the token/session
-  callbacks: {
-    async jwt({ token, user }) {
-      if (user) token.id = user.id
-      return token
-    },
-    async session({ session, token }) {
-      session.user.id = token.id
-      return session
-    },
+    signIn: '/auth/signin',
+    error:  '/auth/error',
   },
 })
