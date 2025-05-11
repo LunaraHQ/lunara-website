@@ -7,7 +7,7 @@ import { SessionProvider } from 'next-auth/react'
 import NavBar from '../components/NavBar'
 
 function MyApp({ Component, pageProps }) {
-  // Example: Plausible analytics setup
+  // Plausible analytics setup
   useEffect(() => {
     window.plausible = window.plausible || function () {
       (window.plausible.q = window.plausible.q || []).push(arguments)
@@ -25,21 +25,12 @@ function MyApp({ Component, pageProps }) {
           Skip to content
         </a>
 
-        {/* Your analytics or chat scripts */}
+        {/* Plausible script */}
         <Script
           strategy="afterInteractive"
           src="https://plausible.io/js/plausible.js"
           data-domain="lunara.com"
         />
-        {/* Uncomment and replace with your Intercom or other chat loader if needed */}
-        {/*
-        <Script id="intercom" strategy="afterInteractive">
-          {`
-            window.intercomSettings = { app_id: "your_app_id" };
-            (function(){ /* intercom loader code */ })();
-          `}
-        </Script>
-        */}
 
         {/* Navigation Bar */}
         <NavBar />
