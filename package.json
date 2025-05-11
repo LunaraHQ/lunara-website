@@ -9,6 +9,7 @@
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@sendgrid/mail": "^8.1.5",
+    "@supabase/supabase-js": "^2.49.4",
     "autoprefixer": "^10.4.14",
     "framer-motion": "^12.10.5",
     "lucide-react": "^0.508.0",
