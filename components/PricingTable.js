@@ -1,37 +1,56 @@
+// components/PricingTable.js
+import React from 'react'
+
 const plans = [
-  { name: 'Starter', price: 29, features: ['5 funnels', 'Basic analytics', 'Email support'], popular: false },
-  { name: 'Scale', price: 99, features: ['Unlimited funnels', 'Advanced analytics', 'Priority support'], popular: true },
-  { name: 'Enterprise', price: 299, features: ['Dedicated account manager', 'SLA & compliance', 'Custom integrations'], popular: false },
+  {
+    name: 'Starter',
+    price: 29,
+    features: ['5 funnels', 'Basic analytics', 'Email support'],
+  },
+  {
+    name: 'Scale',
+    price: 99,
+    featured: true,
+    features: ['Unlimited funnels', 'Advanced analytics', 'Priority support'],
+  },
+  {
+    name: 'Enterprise',
+    price: 299,
+    features: ['Dedicated account manager', 'SLA & compliance', 'Custom integrations'],
+  },
 ]
 
 export default function PricingTable() {
   return (
-    <section id="pricing" className="py-32 px-6 bg-black/80">
-      <h2 className="text-4xl font-bold text-center mb-12">Pricing Plans</h2>
-      <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8">
-        {plans.map((p) => (
-          <div
-            key={p.name}
-            className={`p-8 rounded-2xl shadow-lg ${
-              p.popular ? 'bg-blue-500 text-white' : 'bg-white/10 text-gray-100'
-            }`}
-          >
-            {p.popular && <div className="text-sm uppercase mb-2">Most Popular</div>}
-            <h3 className="text-2xl font-semibold mb-4">{p.name}</h3>
-            <div className="text-5xl font-extrabold mb-4">${p.price}</div>
-            <ul className="space-y-2 mb-6">
-              {p.features.map((f) => (
-                <li key={f} className="flex items-center">
-                  <span className="mr-2">✓</span> {f}
-                </li>
-              ))}
-            </ul>
-            <button className="w-full bg-white text-black font-semibold py-2 rounded-full hover:bg-gray-200 transition">
-              Choose Plan
-            </button>
+    <div className="grid gap-8 sm:grid-cols-3">
+      {plans.map((plan) => (
+        <div
+          key={plan.name}
+          className={`rounded-2xl p-6 ${
+            plan.featured
+              ? 'bg-blue-600 text-white'
+              : 'bg-gray-800 text-gray-200'
+          } shadow-lg`}
+        >
+          {plan.featured && (
+            <p className="text-sm font-semibold uppercase mb-2">Most Popular</p>
+          )}
+          <h3 className="text-xl font-semibold mb-4">{plan.name}</h3>
+          <div className="text-4xl font-bold mb-4">
+            €{plan.price}
           </div>
-        ))}
-      </div>
-    </section>
+          <ul className="mb-6 space-y-2">
+            {plan.features.map((feat) => (
+              <li key={feat} className="flex items-center">
+                <span className="mr-2">✓</span> {feat}
+              </li>
+            ))}
+          </ul>
+          <button className="w-full py-2 rounded-full bg-white text-gray-900 font-medium hover:opacity-90 transition">
+            Choose Plan
+          </button>
+        </div>
+      ))}
+    </div>
   )
 }
