@@ -1,7 +1,32 @@
-
+// components/HeroSection.js
+import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 
 export default function HeroSection() {
+  const [email, setEmail] = useState('')
+  const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
+    try {
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+      if (!res.ok) throw new Error('Network response was not ok')
+      setSubmitted(true)
+    } catch (err) {
+      setError('Oops! Something went wrong.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <section className="relative h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden">
       <motion.div
@@ -34,20 +59,43 @@ export default function HeroSection() {
       >
         Scalable. Secure. Stunningly simple.
       </motion.p>
-      <div className="flex gap-4">
-        <a
-          href="#pricing"
-          className="bg-gradient-to-br from-purple-500 to-purple-700 text-white font-semibold px-6 py-3 rounded-full shadow-xl hover:scale-105 transition"
+
+      {/* Waitlist form */}
+      {submitted ? (
+        <motion.p
+          className="text-lg text-green-400"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
         >
-          Get Started
-        </a>
-        <a
-          href="#features"
-          className="border border-purple-400 text-purple-300 font-semibold px-6 py-3 rounded-full hover:bg-purple-900/30 transition"
+          🎉 Thanks! Check your inbox for confirmation.
+        </motion.p>
+      ) : (
+        <motion.form
+          onSubmit={handleSubmit}
+          className="flex flex-col sm:flex-row gap-4"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 1 }}
         >
-          Learn More
-        </a>
-      </div>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+            required
+            className="w-full sm:flex-1 px-4 py-3 rounded-full border border-gray-600 bg-gray-800 placeholder-gray-500 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+          />
+          <button
+            type="submit"
+            disabled={loading}
+            className="bg-gradient-to-br from-purple-500 to-purple-700 text-white font-semibold px-6 py-3 rounded-full shadow-xl hover:scale-105 transition disabled:opacity-50"
+          >
+            {loading ? 'Joining...' : 'Join Waitlist'}
+          </button>
+        </motion.form>
+      )}
+      {error && <p className="mt-2 text-red-500">{error}</p>}
     </section>
   )
 }
