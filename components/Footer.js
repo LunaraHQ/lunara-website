@@ -32,6 +32,16 @@ export default function Footer() {
               </ContactModal>
             </li>
             <li>
+              <Link href="/terms">
+                <a className="hover:underline">Terms of Service</a>
+              </Link>
+            </li>
+            <li>
+              <Link href="/cookie-policy">
+                <a className="hover:underline">Cookie Policy</a>
+              </Link>
+            </li>
+            <li>
               <Link href="/privacy">
                 <a className="hover:underline">Privacy Policy</a>
               </Link>
