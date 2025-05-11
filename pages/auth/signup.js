@@ -1,9 +1,19 @@
 // pages/auth/signup.js
-import React from 'react'
+import React, { useState } from 'react'
 import Head from 'next/head'
-import { getProviders, signIn } from 'next-auth/react'
+import { signIn } from 'next-auth/react'
 
-export default function SignUp({ providers }) {
+export default function SignUp() {
+  const [email, setEmail] = useState('')
+  const [sent, setSent] = useState(false)
+
+  const handleEmailSignUp = async (e) => {
+    e.preventDefault()
+    // trigger the same magic link flow
+    await signIn('email', { email, callbackUrl: '/' })
+    setSent(true)
+  }
+
   return (
     <>
       <Head>
@@ -11,32 +21,35 @@ export default function SignUp({ providers }) {
       </Head>
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white px-6">
         <h1 className="text-4xl font-extrabold mb-6">Create your Lunara account</h1>
-        <p className="mb-8 text-gray-400">Choose a provider to get started</p>
+        <p className="mb-8 text-gray-400">Enter your email, and we’ll send you a magic link to get started.</p>
 
-        <div className="space-y-4 w-full max-w-xs">
-          {Object.values(providers).map((provider) => (
+        <div className="w-full max-w-xs space-y-4">
+          <form onSubmit={handleEmailSignUp} className="flex flex-col space-y-3">
+            <input
+              type="email"
+              required
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-3 rounded-lg bg-gray-800 placeholder-gray-500 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+            />
             <button
-              key={provider.name}
-              onClick={() => signIn(provider.id, { callbackUrl: '/' })}
-              className="w-full flex items-center justify-center gap-3 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-medium transition"
+              type="submit"
+              disabled={sent}
+              className="w-full py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-medium transition disabled:opacity-50"
             >
-              Sign up with {provider.name}
+              {sent ? 'Link Sent!' : 'Send Magic Link'}
             </button>
-          ))}
-        </div>
+          </form>
 
-        <p className="mt-12 text-sm text-gray-500">
-          Already have an account?{' '}
-          <a href="/auth/signin" className="underline">
-            Sign in
-          </a>
-        </p>
+          <p className="mt-6 text-sm text-gray-500 text-center">
+            Already have a link?{' '}
+            <a href="/auth/signin" className="underline">
+              Sign in
+            </a>
+          </p>
+        </div>
       </div>
     </>
   )
-}
-
-export async function getServerSideProps() {
-  const providers = await getProviders()
-  return { props: { providers } }
 }
