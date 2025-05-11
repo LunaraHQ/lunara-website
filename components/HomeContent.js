@@ -1,7 +1,14 @@
 // components/HomeContent.js
 import { useEffect, useRef } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
-import { Funnel, LayoutDashboard, ShieldCheck, Cloud, Lock } from 'lucide-react'
+import {
+  Funnel,
+  LayoutDashboard,
+  ShieldCheck,
+  Cloud,
+  Lock,
+} from 'lucide-react'
+import PricingTable from './PricingTable'
 
 const features = [
   {
@@ -80,23 +87,16 @@ export default function HomeContent() {
         aria-hidden="true"
       />
 
-      <main id="main-content" role="main" className="relative z-10 text-white font-sans">
+      <main id="main-content" className="relative z-10 text-white font-sans">
         {/* Features */}
         <section
           id="features"
-          role="region"
-          aria-labelledby="features-heading"
           className="py-24 px-6 max-w-7xl mx-auto grid md:grid-cols-3 gap-8"
         >
-          <h2 id="features-heading" className="sr-only">
-            Our Key Features
-          </h2>
+          <h2 className="sr-only">Our Key Features</h2>
           {features.map(({ title, desc, icon: Icon }, idx) => (
             <motion.div
               key={idx}
-              role="button"
-              tabIndex={0}
-              aria-label={title}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
@@ -108,7 +108,9 @@ export default function HomeContent() {
                 strokeWidth={1.4}
               />
               <h3 className="mt-6 text-xl font-semibold">{title}</h3>
-              <p className="mt-2 text-gray-200 text-sm max-w-[14rem]">{desc}</p>
+              <p className="mt-2 text-gray-200 text-sm max-w-[14rem]">
+                {desc}
+              </p>
             </motion.div>
           ))}
         </section>
@@ -116,8 +118,8 @@ export default function HomeContent() {
         {/* Tech & Security */}
         <section
           id="security"
-          aria-labelledby="security-heading"
           className="py-20 px-6 bg-gray-900"
+          aria-labelledby="security-heading"
         >
           <h2
             id="security-heading"
@@ -150,9 +152,8 @@ export default function HomeContent() {
         {/* Pricing */}
         <section
           id="pricing"
-          role="region"
-          aria-labelledby="pricing-heading"
           className="py-20 bg-white/5 text-center"
+          aria-labelledby="pricing-heading"
         >
           <h2
             id="pricing-heading"
@@ -160,7 +161,9 @@ export default function HomeContent() {
           >
             Simple, Scalable Pricing
           </h2>
-          {/* …pricing cards… */}
+          <div className="max-w-4xl mx-auto px-6">
+            <PricingTable />
+          </div>
         </section>
       </main>
     </>
