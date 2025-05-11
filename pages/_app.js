@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 import Script from 'next/script'
 import { SessionProvider } from 'next-auth/react'
 import NavBar from '../components/NavBar'
+import CookieBanner from '../components/CookieBanner'  // ← added
 
 function MyApp({ Component, pageProps }) {
   // Plausible analytics setup
@@ -37,6 +38,9 @@ function MyApp({ Component, pageProps }) {
 
         {/* Main page content */}
         <Component {...pageProps} />
+
+        {/* Cookie consent banner */}
+        <CookieBanner />
       </ThemeProvider>
     </SessionProvider>
   )
