@@ -1,7 +1,7 @@
 // components/Footer.js
 import React from 'react'
 import Link from 'next/link'
-import ContactModal from './ContactModal'  // ← added
+import ContactModal from './ContactModal'
 
 export default function Footer() {
   return (
@@ -28,7 +28,7 @@ export default function Footer() {
             </li>
             <li>
               <ContactModal>
-                <a className="hover:underline">Contact Us</a>
+                <a className="text-gray-400 hover:underline">Contact Us</a>
               </ContactModal>
             </li>
             <li>
