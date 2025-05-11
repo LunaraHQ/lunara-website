@@ -5,10 +5,8 @@ import { createClient } from '@supabase/supabase-js'
 import { useRouter } from 'next/router'
 
 const supabase = createClient(
-  process.env.NEXTAUTH_URL  
-    ? `${process.env.NEXTAUTH_URL}/api` 
-    : process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 )
 
 export default function SignUp() {
@@ -83,7 +81,8 @@ export default function SignUp() {
           </form>
         )}
         <p className="mt-4 text-sm text-gray-500">
-          Already have an account? <a href="/auth/signin" className="underline">Sign In</a>
+          Already have an account?{' '}
+          <a href="/auth/signin" className="underline">Sign In</a>
         </p>
       </div>
     </>
