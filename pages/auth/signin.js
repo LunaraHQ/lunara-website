@@ -1,30 +1,47 @@
 // pages/auth/signin.js
-
+import React from 'react'
+import Head from 'next/head'
 import { getProviders, signIn } from 'next-auth/react'
 
-export default function SignIn({ providers }) {
+export default function SignIn({ providers, callbackUrl }) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
-      <div className="space-y-6 p-8 bg-white rounded-lg shadow-lg">
-        <h1 className="text-3xl font-semibold text-center">
-          Sign in to LunaraHQ
-        </h1>
-        {providers &&
-          Object.values(providers).map((provider) => (
+    <>
+      <Head>
+        <title>Sign In | Lunara</title>
+      </Head>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white px-6">
+        <h1 className="text-4xl font-extrabold mb-6">Welcome back to Lunara</h1>
+        <p className="mb-8 text-gray-400">Sign in to access your dashboard</p>
+
+        <div className="space-y-4 w-full max-w-xs">
+          {Object.values(providers).map((provider) => (
             <button
               key={provider.name}
-              onClick={() => signIn(provider.id)}
-              className="w-full bg-gray-800 text-white py-2 rounded-lg hover:bg-gray-900 transition"
+              onClick={() =>
+                signIn(provider.id, { callbackUrl: callbackUrl || '/' })
+              }
+              className="w-full flex items-center justify-center gap-3 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-medium transition"
             >
               Sign in with {provider.name}
             </button>
           ))}
+        </div>
+
+        <p className="mt-12 text-sm text-gray-500">
+          Don’t have an account?{' '}
+          <a href="/auth/signup" className="underline">
+            Sign up
+          </a>
+        </p>
       </div>
-    </div>
+    </>
   )
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
   const providers = await getProviders()
-  return { props: { providers } }
+  const callbackUrl = context.query.callbackUrl || '/'
+  return {
+    props: { providers, callbackUrl: decodeURIComponent(callbackUrl) },
+  }
 }
