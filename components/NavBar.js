@@ -6,34 +6,24 @@ import ContactModal from './ContactModal'
 
 export default function NavBar() {
   const { data: session, status } = useSession()
-  const [isOpen, setIsOpen] = useState(false)
+  const [isContactOpen, setContactOpen] = useState(false)
 
   return (
     <>
       <nav className="bg-gradient-to-r from-purple-800 to-purple-600 text-white px-8 py-4 flex justify-between items-center">
-        {/* Left side logo */}
         <div className="flex items-center space-x-12">
-          <Link href="/">
-            <a className="text-2xl font-extrabold">Lunara</a>
-          </Link>
-          <Link href="/#features">
-            <a className="hover:underline">Features</a>
-          </Link>
-          <Link href="/#howitworks">
-            <a className="hover:underline">How It Works</a>
-          </Link>
-          <Link href="/#pricing">
-            <a className="hover:underline">Pricing</a>
-          </Link>
+          <Link href="/"><a className="text-2xl font-extrabold">Lunara</a></Link>
+          <Link href="/#features"><a className="hover:underline">Features</a></Link>
+          <Link href="/#howitworks"><a className="hover:underline">How It Works</a></Link>
+          <Link href="/#pricing"><a className="hover:underline">Pricing</a></Link>
           <button
-            onClick={() => setIsOpen(true)}
+            onClick={() => setContactOpen(true)}
             className="hover:underline"
           >
             Contact
           </button>
         </div>
 
-        {/* Right side auth buttons */}
         <div className="flex items-center space-x-4">
           {status === 'loading' ? null : session ? (
             <>
@@ -64,8 +54,12 @@ export default function NavBar() {
         </div>
       </nav>
 
-      {/* Contact modal mount */}
-      <ContactModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      {/* Controlled Contact modal (no extra trigger) */}
+      <ContactModal
+        isOpen={isContactOpen}
+        onOpen={() => setContactOpen(true)}
+        onClose={() => setContactOpen(false)}
+      />
     </>
   )
 }
