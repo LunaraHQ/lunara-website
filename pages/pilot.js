@@ -1,7 +1,6 @@
 // pages/pilot.js
 import React, { useState } from 'react'
 import Head from 'next/head'
-import NavBar from '../components/NavBar'
 import Footer from '../components/Footer'
 
 export default function PilotPage() {
@@ -27,7 +26,7 @@ export default function PilotPage() {
       })
       if (!res.ok) throw new Error('Network response was not ok')
       setSubmitted(true)
-    } catch (err) {
+    } catch {
       setError('Submission failed. Please try again.')
     } finally {
       setLoading(false)
@@ -40,8 +39,6 @@ export default function PilotPage() {
         <title>Pilot Program | Lunara</title>
         <meta name="description" content="Apply for Lunara’s exclusive Pilot Program." />
       </Head>
-
-      <NavBar />
 
       <main className="min-h-screen bg-gray-50 py-20 px-6">
         <div className="max-w-lg mx-auto bg-white p-8 rounded-xl shadow">
