@@ -16,6 +16,7 @@ export default function NavBar() {
           <Link href="/#features"><a className="hover:underline">Features</a></Link>
           <Link href="/#howitworks"><a className="hover:underline">How It Works</a></Link>
           <Link href="/#pricing"><a className="hover:underline">Pricing</a></Link>
+          <Link href="/pilot"><a className="hover:underline">Pilot Program</a></Link>
           <button
             onClick={() => setContactOpen(true)}
             className="hover:underline"
