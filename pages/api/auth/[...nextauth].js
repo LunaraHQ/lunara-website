@@ -1,0 +1,19 @@
+// pages/api/auth/[...nextauth].js
+import NextAuth from 'next-auth'
+import GitHubProvider from 'next-auth/providers/github'
+
+export default NextAuth({
+  providers: [
+    GitHubProvider({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
+    }),
+  ],
+  secret: process.env.NEXTAUTH_SECRET,
+  session: { strategy: 'jwt' },
+  pages: {
+    signIn: '/auth/signin',
+    signOut: '/auth/signout',
+    error: '/auth/error',
+  },
+})
