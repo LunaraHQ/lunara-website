@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import ContactModal from '@/components/ContactModal'
+import ContactModal from './ContactModal'  // ← now relative!
 
 export default function Footer() {
   return (
@@ -24,7 +24,6 @@ export default function Footer() {
               </Link>
             </li>
             <li>
-              {/* This button opens the popup */}
               <ContactModal />
             </li>
             <li>

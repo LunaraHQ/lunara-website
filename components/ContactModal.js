@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+import { Button } from './ui/button'
+import { Input } from './ui/input'
+import { Textarea } from './ui/textarea'
 import {
   Dialog,
   DialogContent,
@@ -11,7 +11,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogTrigger,
-} from '@/components/ui/dialog'
+} from './ui/dialog'
 
 export default function ContactModal() {
   const [isOpen, setIsOpen] = useState(false)
@@ -65,4 +65,11 @@ export default function ContactModal() {
             </div>
 
             <DialogFooter>
-              <Button
+              <Button type="submit">Send Message</Button>
+            </DialogFooter>
+          </form>
+        </motion.div>
+      </DialogContent>
+    </Dialog>
+  )
+}
