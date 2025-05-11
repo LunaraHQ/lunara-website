@@ -44,12 +44,11 @@ export default function NavBar() {
               >
                 Sign In
               </button>
-              <button
-                onClick={() => signIn()}
-                className="hidden sm:inline bg-purple-500 hover:bg-purple-400 px-4 py-1 rounded-lg font-medium"
-              >
-                Sign Up
-              </button>
+              <Link href="/auth/signup">
+                <a className="hidden sm:inline bg-purple-500 hover:bg-purple-400 px-4 py-1 rounded-lg font-medium">
+                  Sign Up
+                </a>
+              </Link>
             </>
           )}
         </div>
