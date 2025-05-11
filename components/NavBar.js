@@ -10,13 +10,21 @@ export default function NavBar() {
 
   return (
     <>
-      <nav className="bg-white shadow-md px-6 py-4 flex justify-between items-center">
-        <div className="flex items-center space-x-8">
-          <Link href="/"><a className="text-2xl font-bold">Lunara</a></Link>
-          <Link href="/#features"><a className="hover:underline">Features</a></Link>
-          <Link href="/#howitworks"><a className="hover:underline">Howitworks</a></Link>
-          <Link href="/#pricing"><a className="hover:underline">Pricing</a></Link>
-          {/* Open the contact modal instead of navigating away */}
+      <nav className="bg-gradient-to-r from-purple-800 to-purple-600 text-white px-8 py-4 flex justify-between items-center">
+        {/* Left side logo */}
+        <div className="flex items-center space-x-12">
+          <Link href="/">
+            <a className="text-2xl font-extrabold">Lunara</a>
+          </Link>
+          <Link href="/#features">
+            <a className="hover:underline">Features</a>
+          </Link>
+          <Link href="/#howitworks">
+            <a className="hover:underline">How It Works</a>
+          </Link>
+          <Link href="/#pricing">
+            <a className="hover:underline">Pricing</a>
+          </Link>
           <button
             onClick={() => setIsOpen(true)}
             className="hover:underline"
@@ -25,13 +33,14 @@ export default function NavBar() {
           </button>
         </div>
 
-        <div className="space-x-4">
+        {/* Right side auth buttons */}
+        <div className="flex items-center space-x-4">
           {status === 'loading' ? null : session ? (
             <>
-              <span className="text-gray-700">Hello, {session.user.name}</span>
+              <span className="hidden sm:inline">Hi, {session.user.name}</span>
               <button
                 onClick={() => signOut()}
-                className="text-gray-700 hover:underline"
+                className="bg-white text-purple-700 px-4 py-1 rounded-lg font-medium hover:opacity-90"
               >
                 Sign Out
               </button>
@@ -40,13 +49,13 @@ export default function NavBar() {
             <>
               <button
                 onClick={() => signIn()}
-                className="text-gray-700 hover:underline"
+                className="bg-white text-purple-700 px-4 py-1 rounded-lg font-medium hover:opacity-90"
               >
-                Log In
+                Sign In
               </button>
               <button
                 onClick={() => signIn()}
-                className="text-gray-700 hover:underline"
+                className="hidden sm:inline bg-purple-500 hover:bg-purple-400 px-4 py-1 rounded-lg font-medium"
               >
                 Sign Up
               </button>
@@ -55,7 +64,7 @@ export default function NavBar() {
         </div>
       </nav>
 
-      {/* Mount your existing ContactModal and control via isOpen */}
+      {/* Contact modal mount */}
       <ContactModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </>
   )
