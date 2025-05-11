@@ -1,11 +1,12 @@
 import React from 'react'
 import Link from 'next/link'
-import ContactModal from './ContactModal'  // ← now relative!
+import ContactModal from './ContactModal'
 
 export default function Footer() {
   return (
     <footer className="bg-black/50 text-gray-400 py-10 mt-32 border-t border-white/10">
       <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8 text-sm">
+        {/* Logo & copyright */}
         <div>
           <Link href="/">
             <a className="text-2xl font-bold text-white">Lunara</a>
@@ -15,6 +16,7 @@ export default function Footer() {
           </p>
         </div>
 
+        {/* Company links */}
         <div>
           <h3 className="text-white font-semibold mb-2">Company</h3>
           <ul className="space-y-1">
@@ -34,6 +36,7 @@ export default function Footer() {
           </ul>
         </div>
 
+        {/* Social links */}
         <div>
           <h3 className="text-white font-semibold mb-2">Follow</h3>
           <ul className="space-y-1">
