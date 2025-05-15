@@ -46,7 +46,7 @@ export default function HeroSection() {
         />
       </motion.div>
 
-      {/* Updated Clear SaaS Tagline */}
+      {/* New clear SaaS tagline */}
       <motion.p
         className="mt-4 text-2xl md:text-3xl font-semibold text-purple-300 max-w-xl z-10"
         initial={{ opacity: 0, y: 20 }}
@@ -62,7 +62,7 @@ export default function HeroSection() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 1 }}
       >
-        Modular AI-powered solutions tailored specifically for your industry. Pay only for what you use.
+        Modular business solutions tailored for your industry. Pay only for what you use.
       </motion.p>
 
       {submitted ? (
