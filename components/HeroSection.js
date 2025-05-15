@@ -29,10 +29,10 @@ export default function HeroSection() {
 
   return (
     <section className="relative h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden">
-      {/* gradient overlay atop your starry canvas */}
+      {/* Gradient overlay on starry canvas */}
       <div className="absolute inset-0 bg-gradient-to-b from-purple-700 via-purple-800 to-black opacity-70" />
 
-      {/* your logo, now triple the previous size */}
+      {/* Lunara logo */}
       <motion.div
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -46,27 +46,28 @@ export default function HeroSection() {
         />
       </motion.div>
 
+      {/* Updated Clear SaaS Tagline */}
       <motion.p
-        className="mt-4 text-xl md:text-2xl text-purple-300 mb-4 max-w-xl z-10"
+        className="mt-4 text-2xl md:text-3xl font-semibold text-purple-300 max-w-xl z-10"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 1 }}
       >
-        AI-powered funnels built for orbit.
+        Your Business. Your Features. One SaaS.
       </motion.p>
 
       <motion.p
-        className="text-md md:text-lg text-gray-400 mb-6 max-w-md z-10"
+        className="mt-3 text-md md:text-lg text-gray-300 max-w-md z-10"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 1 }}
       >
-        Scalable. Secure. Stunningly simple.
+        Modular AI-powered solutions tailored specifically for your industry. Pay only for what you use.
       </motion.p>
 
       {submitted ? (
         <motion.p
-          className="text-lg text-green-400 z-10"
+          className="mt-4 text-lg text-green-400 z-10"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
@@ -76,7 +77,7 @@ export default function HeroSection() {
       ) : (
         <motion.form
           onSubmit={handleSubmit}
-          className="flex flex-col sm:flex-row gap-4 z-10"
+          className="mt-6 flex flex-col sm:flex-row gap-4 z-10"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 1 }}
