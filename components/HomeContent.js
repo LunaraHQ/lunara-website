@@ -8,7 +8,6 @@ import {
   Users,
   Bot,
   BarChart3,
-  UsersCog,
   ShoppingCart,
   Gift,
   Cloud,
@@ -51,7 +50,7 @@ const features = [
   {
     title: 'Team Management',
     desc: 'Schedule shifts, assign tasks, and streamline team communication.',
-    icon: UsersCog,
+    icon: Users, // <-- changed from UsersCog to Users
   },
   {
     title: 'E-commerce Tools',
