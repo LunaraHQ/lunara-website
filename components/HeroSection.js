@@ -46,7 +46,7 @@ export default function HeroSection() {
         />
       </motion.div>
 
-      {/* New clear SaaS tagline */}
+      {/* Tagline moved up under logo */}
       <motion.p
         className="mt-4 text-2xl md:text-3xl font-semibold text-purple-300 max-w-xl z-10"
         initial={{ opacity: 0, y: 20 }}
@@ -55,9 +55,8 @@ export default function HeroSection() {
       >
         Your Business. Your Features. One SaaS.
       </motion.p>
-
       <motion.p
-        className="mt-3 text-md md:text-lg text-gray-300 max-w-md z-10"
+        className="mt-2 text-md md:text-lg text-gray-300 max-w-md z-10"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 1 }}
