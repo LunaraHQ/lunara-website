@@ -32,21 +32,22 @@ export default function HeroSection() {
       {/* gradient overlay atop your starry canvas */}
       <div className="absolute inset-0 bg-gradient-to-b from-purple-700 via-purple-800 to-black opacity-70" />
 
-      {/* your new logo, animated in */}
+      {/* logo sized to match text-6xl / text-7xl */}
       <motion.div
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
+        className="z-10"
       >
         <img
           src="/images/lunara-logo.png"
           alt="Lunara"
-          className="h-16 md:h-20"
+          className="w-auto h-[3.75rem] md:h-[4.5rem]"
         />
       </motion.div>
 
       <motion.p
-        className="mt-4 text-xl md:text-2xl text-purple-300 mb-4 max-w-xl"
+        className="mt-4 text-xl md:text-2xl text-purple-300 mb-4 max-w-xl z-10"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 1 }}
@@ -55,7 +56,7 @@ export default function HeroSection() {
       </motion.p>
 
       <motion.p
-        className="text-md md:text-lg text-gray-400 mb-6 max-w-md"
+        className="text-md md:text-lg text-gray-400 mb-6 max-w-md z-10"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 1 }}
@@ -65,7 +66,7 @@ export default function HeroSection() {
 
       {submitted ? (
         <motion.p
-          className="text-lg text-green-400"
+          className="text-lg text-green-400 z-10"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
@@ -75,7 +76,7 @@ export default function HeroSection() {
       ) : (
         <motion.form
           onSubmit={handleSubmit}
-          className="flex flex-col sm:flex-row gap-4"
+          className="flex flex-col sm:flex-row gap-4 z-10"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 1 }}
@@ -98,7 +99,7 @@ export default function HeroSection() {
         </motion.form>
       )}
 
-      {error && <p className="mt-2 text-red-500">{error}</p>}
+      {error && <p className="mt-2 text-red-500 z-10">{error}</p>}
     </section>
   )
 }
