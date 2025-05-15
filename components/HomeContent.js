@@ -2,29 +2,66 @@
 import { useEffect, useRef } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import {
-  Funnel,
-  LayoutDashboard,
-  ShieldCheck,
+  Calendar,
+  TrendingUp,
+  Smile,
+  Users,
+  Bot,
+  BarChart3,
+  UsersCog,
+  ShoppingCart,
+  Gift,
   Cloud,
+  ShieldCheck,
   Lock,
 } from 'lucide-react'
 import PricingTable from './PricingTable'
 
 const features = [
   {
-    title: 'Adaptive Funnels',
-    desc: 'Guided journeys that learn & improve.',
-    icon: Funnel,
+    title: 'Meetings & Events',
+    desc: 'Effortlessly manage bookings, registration, and reminders for any event.',
+    icon: Calendar,
   },
   {
-    title: 'Unified Dashboard',
-    desc: 'All your analytics in one console.',
-    icon: LayoutDashboard,
+    title: 'Sales Funnel',
+    desc: 'Capture leads, automate outreach, and visualize your entire pipeline.',
+    icon: TrendingUp,
   },
   {
-    title: 'Bank-Grade Security',
-    desc: 'SOC-2 & GDPR compliance out-of-the-box.',
-    icon: ShieldCheck,
+    title: 'CX Management',
+    desc: 'Collect feedback, manage reviews, and analyze guest experience in real-time.',
+    icon: Smile,
+  },
+  {
+    title: 'CRM & Client Management',
+    desc: 'Track interactions, centralize contacts, and forecast your sales.',
+    icon: Users,
+  },
+  {
+    title: 'AI Chatbot & Automation',
+    desc: 'Provide instant support, qualify leads, and automate routine tasks.',
+    icon: Bot,
+  },
+  {
+    title: 'Analytics & Reporting',
+    desc: 'Build custom dashboards and uncover actionable business insights.',
+    icon: BarChart3,
+  },
+  {
+    title: 'Team Management',
+    desc: 'Schedule shifts, assign tasks, and streamline team communication.',
+    icon: UsersCog,
+  },
+  {
+    title: 'E-commerce Tools',
+    desc: 'Recover abandoned carts and boost conversions with smart offers.',
+    icon: ShoppingCart,
+  },
+  {
+    title: 'Loyalty & Membership',
+    desc: 'Reward returning customers and manage memberships with ease.',
+    icon: Gift,
   },
 ]
 
@@ -104,10 +141,10 @@ export default function HomeContent() {
               className="group bg-black/60 backdrop-blur-md rounded-2xl p-8 flex flex-col items-center text-center aspect-square transform transition-all duration-300 hover:scale-105 hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-purple-300"
             >
               <Icon
-                className="w-28 h-28 md:w-32 md:h-32 text-purple-300 opacity-60 group-hover:opacity-100 transition duration-300"
+                className="w-20 h-20 md:w-24 md:h-24 text-purple-300 opacity-80 group-hover:opacity-100 transition duration-300"
                 strokeWidth={1.4}
               />
-              <h3 className="mt-6 text-xl font-semibold">{title}</h3>
+              <h3 className="mt-6 text-lg font-semibold">{title}</h3>
               <p className="mt-2 text-gray-200 text-sm max-w-[14rem]">
                 {desc}
               </p>
