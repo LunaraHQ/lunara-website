@@ -33,8 +33,12 @@ export default function PricingTable() {
     return total
   }
 
-  // Small floating cart icon in top right
   const cartFeatures = allFeatures.filter(f => selected.includes(f.key))
+
+  const handleCheckout = () => {
+    sessionStorage.setItem('lunaraBasket', JSON.stringify(selected))
+    window.location.href = '/checkout'
+  }
 
   return (
     <div className="relative">
@@ -72,8 +76,7 @@ export default function PricingTable() {
           </div>
           <button
             className="w-full bg-purple-600 hover:bg-purple-500 text-white font-semibold py-2 rounded-full transition"
-            // Replace with your checkout flow
-            onClick={() => alert('Checkout coming soon!')}
+            onClick={handleCheckout}
           >
             Proceed to Checkout
           </button>
@@ -112,8 +115,9 @@ export default function PricingTable() {
         className={`w-full py-3 rounded-full font-semibold text-lg transition 
           ${selected.length > 0 ? 'bg-purple-500 hover:bg-purple-400 text-white' : 'bg-gray-500 text-gray-300 cursor-not-allowed'}`}
         disabled={selected.length === 0}
+        onClick={selected.length > 0 ? handleCheckout : undefined}
       >
-        {selected.length > 0 ? 'Start Free Trial' : 'Select Features Above'}
+        {selected.length > 0 ? 'Proceed to Checkout' : 'Select Features Above'}
       </button>
     </div>
   )
