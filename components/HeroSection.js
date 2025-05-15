@@ -32,7 +32,7 @@ export default function HeroSection() {
       {/* gradient overlay atop your starry canvas */}
       <div className="absolute inset-0 bg-gradient-to-b from-purple-700 via-purple-800 to-black opacity-70" />
 
-      {/* your logo, now much larger */}
+      {/* your logo, now triple the previous size */}
       <motion.div
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -42,7 +42,7 @@ export default function HeroSection() {
         <img
           src="/images/lunara-logo.png"
           alt="Lunara"
-          className="w-auto h-20 md:h-28"
+          className="w-auto h-[15rem] md:h-[21rem]"
         />
       </motion.div>
 
