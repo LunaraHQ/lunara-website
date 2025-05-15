@@ -20,7 +20,7 @@ export default function HeroSection() {
       })
       if (!res.ok) throw new Error('Network response was not ok')
       setSubmitted(true)
-    } catch (err) {
+    } catch {
       setError('Oops! Something went wrong.')
     } finally {
       setLoading(false)
@@ -29,12 +29,24 @@ export default function HeroSection() {
 
   return (
     <section className="relative h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden">
+      {/* 1) Your PNG as full-screen background */}
+      <div className="absolute inset-0 -z-20">
+        <img
+          src="/images/hero-landing.png"
+          alt="Lunara Landing"
+          className="w-full h-full object-cover"
+        />
+      </div>
+
+      {/* 2) Gradient overlay */}
       <motion.div
-        className="absolute inset-0 -z-10 bg-gradient-to-b from-black via-purple-900 to-black opacity-30"
+        className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-black/30 to-black/60"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2 }}
       />
+
+      {/* 3) Title, copy & form */}
       <motion.h1
         className="text-6xl md:text-7xl font-extrabold mb-4 text-white drop-shadow-xl"
         initial={{ opacity: 0, y: -30 }}
@@ -60,7 +72,6 @@ export default function HeroSection() {
         Scalable. Secure. Stunningly simple.
       </motion.p>
 
-      {/* Waitlist form */}
       {submitted ? (
         <motion.p
           className="text-lg text-green-400"
