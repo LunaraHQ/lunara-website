@@ -1,5 +1,6 @@
 // components/PricingTable.js
 import React, { useState } from 'react'
+import { ShoppingCart } from 'lucide-react'
 
 const allFeatures = [
   { name: 'Meetings & Events', price: 19, key: 'meetings-events' },
@@ -15,24 +16,70 @@ const allFeatures = [
 
 export default function PricingTable() {
   const [selected, setSelected] = useState([])
+  const [showCart, setShowCart] = useState(false)
 
   const toggleFeature = (key) => {
     setSelected((prev) =>
       prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
     )
+    setShowCart(true)
   }
 
   const getTotal = () => {
     const total = selected
       .map((k) => allFeatures.find((f) => f.key === k).price)
       .reduce((a, b) => a + b, 0)
-    // 20% discount if they pick 3 or more
     if (selected.length >= 3) return Math.round(total * 0.8)
     return total
   }
 
+  // Small floating cart icon in top right
+  const cartFeatures = allFeatures.filter(f => selected.includes(f.key))
+
   return (
-    <div>
+    <div className="relative">
+      {/* Sticky Basket Icon */}
+      {selected.length > 0 && (
+        <div
+          className="fixed top-6 right-6 z-50 flex items-center bg-purple-700 rounded-full shadow-lg px-4 py-2 cursor-pointer transition hover:bg-purple-600"
+          style={{ minWidth: '60px' }}
+          onClick={() => setShowCart(v => !v)}
+        >
+          <ShoppingCart className="text-white w-6 h-6" />
+          <span className="ml-2 text-white font-bold">{selected.length}</span>
+        </div>
+      )}
+
+      {/* Cart Popup */}
+      {showCart && selected.length > 0 && (
+        <div className="fixed top-20 right-6 z-50 bg-gray-900 border border-purple-500 rounded-2xl p-6 shadow-2xl w-80">
+          <h3 className="text-lg font-semibold mb-4 text-white">Your Basket</h3>
+          <ul className="mb-4 space-y-2 text-gray-200">
+            {cartFeatures.map(f => (
+              <li key={f.key} className="flex justify-between items-center">
+                {f.name}
+                <span className="ml-2">€{f.price}</span>
+              </li>
+            ))}
+          </ul>
+          {selected.length >= 3 && (
+            <div className="text-green-400 mb-2 text-sm">
+              20% Bundle Discount Applied!
+            </div>
+          )}
+          <div className="text-xl font-bold mb-4 text-white">
+            Total: €{getTotal()}/mo
+          </div>
+          <button
+            className="w-full bg-purple-600 hover:bg-purple-500 text-white font-semibold py-2 rounded-full transition"
+            // Replace with your checkout flow
+            onClick={() => alert('Checkout coming soon!')}
+          >
+            Proceed to Checkout
+          </button>
+        </div>
+      )}
+
       <h3 className="text-lg mb-4 text-gray-200">
         Pick only the features you need. <span className="text-purple-300">Add 3 or more and save 20%!</span>
       </h3>
