@@ -1,79 +1,73 @@
 // components/PricingTable.js
-import React from 'react'
+import React, { useState } from 'react'
 
-const features = [
-  { name: 'Meetings & Events', price: 19 },
-  { name: 'Sales Funnel', price: 29 },
-  { name: 'CX Management', price: 25 },
-  { name: 'CRM & Client Management', price: 35 },
-  { name: 'AI Chatbot & Automation', price: 39 },
-  { name: 'Analytics & Reporting', price: 19 },
-  { name: 'Team Management', price: 14 },
-  { name: 'E-commerce Tools', price: 29 },
-  { name: 'Loyalty & Membership', price: 19 },
-]
-
-const plans = [
-  {
-    name: 'Core Access',
-    price: 29,
-    features: [
-      'Access to dashboard',
-      'Account admin',
-      'Standard support',
-      'Add features as needed (see below)',
-    ],
-  },
-  {
-    name: 'Feature Add-Ons',
-    custom: true,
-    features: features.map((f) => `${f.name}: €${f.price}/mo`),
-    highlight: true,
-  },
-  {
-    name: 'Enterprise',
-    price: 'Custom',
-    features: [
-      'Dedicated account manager',
-      'SLA & compliance',
-      'Custom integrations',
-      'Volume discounts',
-    ],
-  },
+const allFeatures = [
+  { name: 'Meetings & Events', price: 19, key: 'meetings-events' },
+  { name: 'Sales Funnel', price: 29, key: 'sales-funnel' },
+  { name: 'CX Management', price: 25, key: 'cx-management' },
+  { name: 'CRM & Client Management', price: 35, key: 'crm-client-management' },
+  { name: 'AI Chatbot & Automation', price: 39, key: 'ai-chatbot-automation' },
+  { name: 'Analytics & Reporting', price: 19, key: 'analytics-reporting' },
+  { name: 'Team Management', price: 14, key: 'team-management' },
+  { name: 'E-commerce Tools', price: 29, key: 'ecommerce-tools' },
+  { name: 'Loyalty & Membership', price: 19, key: 'loyalty-membership' },
 ]
 
 export default function PricingTable() {
+  const [selected, setSelected] = useState([])
+
+  const toggleFeature = (key) => {
+    setSelected((prev) =>
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+    )
+  }
+
+  const getTotal = () => {
+    const total = selected
+      .map((k) => allFeatures.find((f) => f.key === k).price)
+      .reduce((a, b) => a + b, 0)
+    // 20% discount if they pick 3 or more
+    if (selected.length >= 3) return Math.round(total * 0.8)
+    return total
+  }
+
   return (
-    <div className="grid gap-8 sm:grid-cols-3">
-      {plans.map((plan) => (
-        <div
-          key={plan.name}
-          className={`rounded-2xl p-6 ${
-            plan.highlight
-              ? 'bg-purple-700 text-white ring-4 ring-purple-400'
-              : 'bg-gray-800 text-gray-200'
-          } shadow-lg`}
-        >
-          {plan.highlight && (
-            <p className="text-sm font-semibold uppercase mb-2 text-yellow-200">Add Features</p>
-          )}
-          <h3 className="text-xl font-semibold mb-4">{plan.name}</h3>
-          <div className="text-4xl font-bold mb-4">
-            {plan.price ? `€${plan.price}` : plan.price === 0 ? 'Free' : ''}
-            {plan.custom ? <span className="text-base font-normal">Custom</span> : ''}
+    <div>
+      <h3 className="text-lg mb-4 text-gray-200">
+        Pick only the features you need. <span className="text-purple-300">Add 3 or more and save 20%!</span>
+      </h3>
+      <div className="grid gap-5 sm:grid-cols-3 mb-8">
+        {allFeatures.map((feat) => (
+          <div
+            key={feat.key}
+            onClick={() => toggleFeature(feat.key)}
+            className={`cursor-pointer rounded-xl p-6 transition
+              border-2 ${selected.includes(feat.key) ? 'border-purple-400 bg-purple-900' : 'border-gray-700 bg-gray-800'}
+              hover:border-purple-300 hover:bg-purple-800 shadow-lg text-left`}
+          >
+            <h4 className="text-xl font-semibold mb-2">{feat.name}</h4>
+            <div className="text-2xl font-bold mb-2">€{feat.price}/mo</div>
+            <span className={`inline-block px-2 py-1 text-xs rounded ${selected.includes(feat.key) ? 'bg-purple-400 text-black' : 'bg-gray-700 text-gray-300'}`}>
+              {selected.includes(feat.key) ? 'Selected' : 'Click to add'}
+            </span>
           </div>
-          <ul className="mb-6 space-y-2">
-            {plan.features.map((feat) => (
-              <li key={feat} className="flex items-center">
-                <span className="mr-2">✓</span> {feat}
-              </li>
-            ))}
-          </ul>
-          <button className="w-full py-2 rounded-full bg-white text-gray-900 font-medium hover:opacity-90 transition">
-            {plan.name === 'Enterprise' ? 'Contact Sales' : 'Choose Plan'}
-          </button>
-        </div>
-      ))}
+        ))}
+      </div>
+      <div className="mb-4 text-lg text-gray-100">
+        <strong>
+          Total: {selected.length === 0 ? '€0' : `€${getTotal()}/mo`}
+          {selected.length >= 3 && (
+            <span className="ml-2 text-green-400">(20% Bundle Discount Applied!)</span>
+          )}
+        </strong>
+      </div>
+      <button
+        className={`w-full py-3 rounded-full font-semibold text-lg transition 
+          ${selected.length > 0 ? 'bg-purple-500 hover:bg-purple-400 text-white' : 'bg-gray-500 text-gray-300 cursor-not-allowed'}`}
+        disabled={selected.length === 0}
+      >
+        {selected.length > 0 ? 'Start Free Trial' : 'Select Features Above'}
+      </button>
     </div>
   )
 }
