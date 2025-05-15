@@ -1,6 +1,7 @@
 // components/HomeContent.js
 import { useEffect, useRef } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
+import Link from 'next/link'
 import {
   Calendar,
   TrendingUp,
@@ -16,51 +17,61 @@ import {
 } from 'lucide-react'
 import PricingTable from './PricingTable'
 
+// Map features to their slugs for URL use
 const features = [
   {
     title: 'Meetings & Events',
     desc: 'Effortlessly manage bookings, registration, and reminders for any event.',
     icon: Calendar,
+    slug: 'meetings-events',
   },
   {
     title: 'Sales Funnel',
     desc: 'Capture leads, automate outreach, and visualize your entire pipeline.',
     icon: TrendingUp,
+    slug: 'sales-funnel',
   },
   {
     title: 'CX Management',
     desc: 'Collect feedback, manage reviews, and analyze guest experience in real-time.',
     icon: Smile,
+    slug: 'cx-management',
   },
   {
     title: 'CRM & Client Management',
     desc: 'Track interactions, centralize contacts, and forecast your sales.',
     icon: Users,
+    slug: 'crm-client-management',
   },
   {
     title: 'AI Chatbot & Automation',
     desc: 'Provide instant support, qualify leads, and automate routine tasks.',
     icon: Bot,
+    slug: 'ai-chatbot-automation',
   },
   {
     title: 'Analytics & Reporting',
     desc: 'Build custom dashboards and uncover actionable business insights.',
     icon: BarChart3,
+    slug: 'analytics-reporting',
   },
   {
     title: 'Team Management',
     desc: 'Schedule shifts, assign tasks, and streamline team communication.',
-    icon: Users, // <-- changed from UsersCog to Users
+    icon: Users,
+    slug: 'team-management',
   },
   {
     title: 'E-commerce Tools',
     desc: 'Recover abandoned carts and boost conversions with smart offers.',
     icon: ShoppingCart,
+    slug: 'ecommerce-tools',
   },
   {
     title: 'Loyalty & Membership',
     desc: 'Reward returning customers and manage memberships with ease.',
     icon: Gift,
+    slug: 'loyalty-membership',
   },
 ]
 
@@ -130,24 +141,29 @@ export default function HomeContent() {
           className="py-24 px-6 max-w-7xl mx-auto grid md:grid-cols-3 gap-8"
         >
           <h2 className="sr-only">Our Key Features</h2>
-          {features.map(({ title, desc, icon: Icon }, idx) => (
-            <motion.div
+          {features.map(({ title, desc, icon: Icon, slug }, idx) => (
+            <Link
               key={idx}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-              className="group bg-black/60 backdrop-blur-md rounded-2xl p-8 flex flex-col items-center text-center aspect-square transform transition-all duration-300 hover:scale-105 hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-purple-300"
+              href={`/features/${slug}`}
+              className="group bg-black/60 backdrop-blur-md rounded-2xl p-8 flex flex-col items-center text-center aspect-square transform transition-all duration-300 hover:scale-105 hover:-translate-y-1 hover:shadow-xl focus:outline-none"
             >
-              <Icon
-                className="w-20 h-20 md:w-24 md:h-24 text-purple-300 opacity-80 group-hover:opacity-100 transition duration-300"
-                strokeWidth={1.4}
-              />
-              <h3 className="mt-6 text-lg font-semibold">{title}</h3>
-              <p className="mt-2 text-gray-200 text-sm max-w-[14rem]">
-                {desc}
-              </p>
-            </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
+                className="flex flex-col items-center"
+              >
+                <Icon
+                  className="w-20 h-20 md:w-24 md:h-24 text-purple-300 opacity-80 group-hover:opacity-100 transition duration-300"
+                  strokeWidth={1.4}
+                />
+                <h3 className="mt-6 text-lg font-semibold">{title}</h3>
+                <p className="mt-2 text-gray-200 text-sm max-w-[14rem]">
+                  {desc}
+                </p>
+              </motion.div>
+            </Link>
           ))}
         </section>
 
