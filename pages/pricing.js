@@ -1,114 +1,95 @@
 // pages/pricing.js
-import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
-import { supabase } from '../utils/supabaseClient'
-import DashboardSidebar from '../components/DashboardSidebar'
-import { Lock, CheckCircle } from 'lucide-react'
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import { supabase } from "../utils/supabaseClient";
+import {
+  ShoppingCart,
+  CheckCircle,
+} from "lucide-react";
 
+// Same master list again (or import from a shared utils file):
 const ALL_FEATURES = [
-  { name: 'Meetings & Events', slug: 'meetings-events' },
-  { name: 'Sales Funnel', slug: 'sales-funnel' },
-  { name: 'CX Management', slug: 'cx-management' },
-  { name: 'CRM & Client Management', slug: 'crm-client-management' },
-  { name: 'AI Chatbot & Automation', slug: 'ai-chatbot-automation' },
-  { name: 'Analytics & Reporting', slug: 'analytics-reporting' },
-  { name: 'Team Management', slug: 'team-management' },
-  { name: 'E-commerce Tools', slug: 'ecommerce-tools' },
-  { name: 'Loyalty & Membership', slug: 'loyalty-membership' },
-]
+  { name: "CRM", slug: "crm" },
+  { name: "Analytics", slug: "analytics" },
+  { name: "Events", slug: "events" },
+  { name: "CX Management", slug: "cx-management" },
+  { name: "AI Chatbot", slug: "ai-chatbot-automation" },
+  { name: "E-commerce Tools", slug: "ecommerce-tools" },
+  { name: "Loyalty & Membership", slug: "loyalty-membership" },
+  { name: "Team Management", slug: "team-management" },
+];
 
 export default function Pricing() {
-  const router = useRouter()
-  const [loading, setLoading] = useState(true)
-  const [user, setUser]     = useState(null)
-  const [features, setFeatures] = useState([])
-  const [updating, setUpdating] = useState(false)
+  const [loading, setLoading] = useState(true);
+  const [userFeatures, setUserFeatures] = useState([]);
+  const router = useRouter();
 
-  // Load session + profile.features (or empty if none)
   useEffect(() => {
-    ;(async () => {
+    (async () => {
       const {
         data: { session },
-      } = await supabase.auth.getSession()
-      if (!session) return router.replace('/auth/signin')
-      setUser(session.user)
-
+      } = await supabase.auth.getSession();
+      if (!session) {
+        router.push("/auth/signin");
+        return;
+      }
       const { data } = await supabase
-        .from('profiles')
-        .select('features')
-        .eq('id', session.user.id)
-        .single()
+        .from("profiles")
+        .select("features")
+        .eq("id", session.user.id)
+        .single();
+      setUserFeatures(Array.isArray(data.features) ? data.features : []);
+      setLoading(false);
+    })();
+  }, []);
 
-      setFeatures(Array.isArray(data?.features) ? data.features : [])
-      setLoading(false)
-    })()
-  }, [router])
+  if (loading) return <p className="p-4">Loading…</p>;
 
-  const unlock = async (slug) => {
-    setUpdating(true)
-    const updated = Array.from(new Set([...features, slug]))
-    const { error } = await supabase
-      .from('profiles')
-      .upsert(
-        { id: user.id, features: updated },
-        { onConflict: 'id' }
-      )
-    if (!error) {
-      setFeatures(updated)
-    } else {
-      console.error(error)
-      alert('Unlock failed')
-    }
-    setUpdating(false)
-  }
+  // Build your “basket” of everything they haven't yet unlocked:
+  const toUnlock = ALL_FEATURES.filter(
+    (f) => !userFeatures.includes(f.slug)
+  );
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-purple-800 via-purple-900 to-black text-white">
-        Loading…
-      </div>
-    )
-  }
+  const handleCheckout = async () => {
+    // Example: Upsert all remaining features in one go
+    const newFeatures = [...userFeatures, ...toUnlock.map((f) => f.slug)];
+    await supabase
+      .from("profiles")
+      .update({ features: newFeatures })
+      .eq("id", (await supabase.auth.getSession()).data.session.user.id);
+    router.push("/dashboard");
+  };
 
   return (
-    <div className="flex min-h-screen">
-      <DashboardSidebar />
-      <main className="flex-1 bg-gradient-to-b from-purple-800 via-purple-900 to-black p-8">
-        <div className="max-w-3xl mx-auto bg-black/70 rounded-2xl shadow-xl p-6 space-y-6">
-          <h1 className="text-2xl font-bold text-white">Upgrade Plan</h1>
-          <p className="text-gray-300">
-            Unlock individual features here. Click “Unlock” to add them to your account.
-          </p>
-          <ul className="space-y-3">
-            {ALL_FEATURES.map(({ name, slug }) => {
-              const owned = features.includes(slug)
-              return (
-                <li key={slug} className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    {owned ? (
-                      <CheckCircle className="w-5 h-5 text-green-400" />
-                    ) : (
-                      <Lock className="w-5 h-5 text-gray-500" />
-                    )}
-                    <span className="text-white">{name}</span>
-                  </div>
-                  {!owned ? (
-                    <button
-                      onClick={() => unlock(slug)}
-                      disabled={updating}
-                      className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-1 rounded-lg disabled:opacity-50 transition"
-                    >
-                      {updating ? 'Updating…' : 'Unlock'}
-                    </button>
-                  ) : (
-                    <span className="text-gray-300">Unlocked</span>
-                  )}
-                </li>
-              )
-            })}
+    <div className="p-6">
+      <h1 className="text-2xl font-semibold mb-4 inline-flex items-center">
+        <ShoppingCart className="w-6 h-6 mr-2 text-purple-600" />
+        Your Basket
+      </h1>
+
+      {toUnlock.length === 0 ? (
+        <p>All features already unlocked! 🎉</p>
+      ) : (
+        <>
+          <ul className="space-y-2 mb-6">
+            {toUnlock.map(({ name, slug }) => (
+              <li
+                key={slug}
+                className="flex items-center justify-between p-3 border rounded"
+              >
+                <span>{name}</span>
+                <CheckCircle className="w-5 h-5 text-gray-400" />
+              </li>
+            ))}
           </ul>
-        </div>
-      </main>
+          <button
+            onClick={handleCheckout}
+            className="px-5 py-2 bg-green-600 text-white rounded hover:bg-green-500"
+          >
+            Unlock All &amp; Return to Dashboard
+          </button>
+        </>
+      )}
     </div>
-  )
+  );
 }
