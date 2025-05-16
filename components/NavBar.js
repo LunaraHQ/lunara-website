@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { supabase } from '../utils/supabaseClient'
 import ContactModal from './ContactModal'
+import { AnimatePresence, motion } from 'framer-motion'
 
 const features = [
   { name: 'Meetings & Events', slug: 'meetings-events' },
@@ -27,7 +28,7 @@ export default function NavBar() {
       if (data.session) {
         setSession(data.session)
         const name = data.session.user.user_metadata?.name || data.session.user.email
-        setUserName(name.split(' ')[0]) // Use first name or fallback
+        setUserName(name.split(' ')[0])
       }
     }
 
@@ -62,33 +63,39 @@ export default function NavBar() {
           <Link href="/dashboard" className="hover:underline focus:outline-none">
             Dashboard
           </Link>
-          {/* Sticky Features Dropdown */}
+          {/* Features Dropdown - Sticky Fix */}
           <div
             className="relative"
             onMouseEnter={() => setShowFeatures(true)}
             onMouseLeave={() => setShowFeatures(false)}
+            style={{ zIndex: 51 }}
           >
             <button className="hover:underline flex items-center space-x-1 focus:outline-none">
               <span>Features</span>
               <span className="text-xs">&#x25BE;</span>
             </button>
-            {showFeatures && (
-              <div
-                className="absolute left-0 mt-2 bg-white text-purple-800 rounded-lg shadow-xl w-64 z-50 transition"
-                onMouseEnter={() => setShowFeatures(true)}
-                onMouseLeave={() => setShowFeatures(false)}
-              >
-                {features.map((feat) => (
-                  <Link
-                    key={feat.slug}
-                    href={`/features/${feat.slug}`}
-                    className="block px-5 py-2 hover:bg-purple-100 transition-colors focus:outline-none"
-                  >
-                    {feat.name}
-                  </Link>
-                ))}
-              </div>
-            )}
+            <AnimatePresence>
+              {showFeatures && (
+                <motion.div
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 5 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute left-0 mt-2 bg-white text-purple-800 rounded-lg shadow-xl w-64 z-50 transition"
+                  style={{ minHeight: 30, paddingTop: 2, paddingBottom: 2 }}
+                >
+                  {features.map((feat) => (
+                    <Link
+                      key={feat.slug}
+                      href={`/features/${feat.slug}`}
+                      className="block px-5 py-2 hover:bg-purple-100 transition-colors focus:outline-none"
+                    >
+                      {feat.name}
+                    </Link>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
           <Link href="/#howitworks" className="hover:underline focus:outline-none">
             How It Works
