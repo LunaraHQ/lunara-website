@@ -1,99 +1,123 @@
 // pages/dashboard.js
 import React from 'react'
-import Head from 'next/head'
-import { getSession, useSession, signOut } from 'next-auth/react'
-import { createClient } from '@supabase/supabase-js'
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
+import {
+  Calendar,
+  TrendingUp,
+  Smile,
+  Users,
+  Bot,
+  BarChart3,
+  ShoppingCart,
+  Gift,
+} from 'lucide-react'
 
-export default function Dashboard({ entries }) {
+const features = [
+  {
+    title: 'Meetings & Events',
+    slug: 'meetings-events',
+    icon: Calendar,
+    desc: 'Event booking, registration, reminders',
+  },
+  {
+    title: 'Sales Funnel',
+    slug: 'sales-funnel',
+    icon: TrendingUp,
+    desc: 'Lead capture, campaigns, pipeline',
+  },
+  {
+    title: 'CX Management',
+    slug: 'cx-management',
+    icon: Smile,
+    desc: 'Surveys, reviews, guest feedback',
+  },
+  {
+    title: 'CRM & Client Management',
+    slug: 'crm-client-management',
+    icon: Users,
+    desc: 'Track client interactions, forecasting',
+  },
+  {
+    title: 'AI Chatbot & Automation',
+    slug: 'ai-chatbot-automation',
+    icon: Bot,
+    desc: '24/7 support, lead qualification',
+  },
+  {
+    title: 'Analytics & Reporting',
+    slug: 'analytics-reporting',
+    icon: BarChart3,
+    desc: 'Dashboards, KPIs, predictions',
+  },
+  {
+    title: 'Team Management',
+    slug: 'team-management',
+    icon: Users,
+    desc: 'Shifts, tasks, staff comms',
+  },
+  {
+    title: 'E-commerce Tools',
+    slug: 'ecommerce-tools',
+    icon: ShoppingCart,
+    desc: 'Cart recovery, checkout boost',
+  },
+  {
+    title: 'Loyalty & Membership',
+    slug: 'loyalty-membership',
+    icon: Gift,
+    desc: 'Rewards, memberships, offers',
+  },
+]
+
+export default function Dashboard() {
   const { data: session } = useSession()
 
   return (
-    <>
-      <Head>
-        <title>Dashboard | Lunara</title>
-      </Head>
-
-      <div className="min-h-screen bg-gray-100">
-        <header className="bg-purple-700 text-white py-4 px-6 flex justify-between items-center">
-          <h1 className="text-xl font-semibold">Lunara Dashboard</h1>
-          {session && (
-            <button
-              onClick={() => signOut({ callbackUrl: '/' })}
-              className="bg-white text-purple-700 px-3 py-1 rounded"
+    <div className="min-h-screen bg-gradient-to-b from-purple-800 via-purple-900 to-black py-12 px-4">
+      <div className="max-w-5xl mx-auto">
+        <div className="mb-10 text-center">
+          <h1 className="text-3xl md:text-4xl font-extrabold text-purple-200 mb-2">
+            Welcome{session?.user?.name ? `, ${session.user.name}` : ''}!
+          </h1>
+          <p className="text-gray-300">
+            Preview any of Lunara’s modular business features below. Upgrade to unlock full access!
+          </p>
+        </div>
+        <div className="grid md:grid-cols-3 gap-8">
+          {features.map(({ title, slug, icon: Icon, desc }) => (
+            <div
+              key={slug}
+              className="bg-black/80 rounded-2xl shadow-xl p-8 flex flex-col items-center text-center border border-purple-700"
             >
-              Sign Out
-            </button>
-          )}
-        </header>
-
-        <main className="p-6">
-          <h2 className="text-2xl font-bold mb-4">Waitlist Signups</h2>
-          {entries.length ? (
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white shadow rounded-lg">
-                <thead className="bg-gray-200">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-sm font-medium">Email</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium">Signed Up At</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {entries.map((row) => (
-                    <tr key={row.id} className="border-b even:bg-gray-50">
-                      <td className="px-6 py-4 text-sm">{row.email}</td>
-                      <td className="px-6 py-4 text-sm">
-                        {new Date(row.inserted_at).toLocaleString()}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <Icon className="w-16 h-16 mb-4 text-purple-300" />
+              <h2 className="text-xl font-bold text-white mb-1">{title}</h2>
+              <p className="text-gray-400 text-sm mb-6">{desc}</p>
+              <Link
+                href={`/features/${slug}`}
+                className="mb-2 w-full inline-block rounded-full bg-gradient-to-br from-purple-600 to-purple-800 text-white font-semibold px-6 py-2 transition cursor-pointer hover:from-purple-500 hover:to-purple-700"
+              >
+                Preview
+              </Link>
+              <button
+                className="w-full py-2 rounded-full bg-gray-700 text-gray-300 font-semibold cursor-not-allowed"
+                disabled
+                title="Subscribe to use this feature"
+              >
+                Use (Subscribe)
+              </button>
             </div>
-          ) : (
-            <p className="text-gray-600">No signups yet.</p>
-          )}
-
-          <div className="mt-6">
-            <Link href="/">
-              <a className="text-purple-700 hover:underline">&larr; Back to Home</a>
-            </Link>
-          </div>
-        </main>
+          ))}
+        </div>
+        <div className="mt-12 text-center">
+          <Link
+            href="/"
+            className="text-purple-400 hover:underline"
+          >
+            &larr; Back to Home
+          </Link>
+        </div>
       </div>
-    </>
+    </div>
   )
-}
-
-// Server-side rendering and protection
-export async function getServerSideProps(context) {
-  const session = await getSession({ req: context.req })
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/auth/signin?callbackUrl=/dashboard',
-        permanent: false,
-      },
-    }
-  }
-
-  // Fetch waitlist entries using Service Role key
-  const supabase = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEY
-  )
-  const { data, error } = await supabase
-    .from('waitlist')
-    .select('id, email, inserted_at')
-    .order('inserted_at', { ascending: false })
-
-  if (error) {
-    console.error('Supabase fetch error:', error)
-  }
-
-  return {
-    props: {
-      entries: data || [],
-    },
-  }
 }
