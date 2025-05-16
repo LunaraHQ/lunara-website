@@ -1,11 +1,17 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { supabase } from "../utils/supabaseClient";
-// import FeatureCards from "../components/FeatureCards";
+import HeroSection from "../components/HeroSection";
 import Footer from "../components/Footer";
 import PricingTable from "../components/PricingTable";
-// import Testimonials from "../components/Testimonials";
-// import Hero from "../components/Hero";
+import HomeContent from "../components/HomeContent";
+import HowItWorks from "../components/HowItWorks";
+// Import your features section (see note below)
+
+// If your features live in components/features/FeatureCards.js or similar, import like this:
+// import FeatureCards from "../components/features/FeatureCards";
+//
+// If they're split into multiple cards/components, let me know and I'll help you combine them.
 
 export default function Home() {
   const router = useRouter();
@@ -24,29 +30,21 @@ export default function Home() {
 
   return (
     <main className="bg-gradient-to-br from-[#140a29] via-[#341a66] to-[#6E41FF] min-h-screen">
-      {/* HERO/HEADER SECTION */}
-      {/* <Hero /> */}
+      {/* HERO SECTION */}
+      <HeroSection />
 
-      {/* 9x FEATURE CARDS */}
-      {/* <section id="features" className="py-16">
-        <div className="max-w-7xl mx-auto px-4">
-          <FeatureCards />
-        </div>
-      </section> */}
+      {/* MAIN HOME CONTENT */}
+      <HomeContent />
+
+      {/* HOW IT WORKS SECTION */}
+      <HowItWorks />
+
+      {/* 9x FEATURE CARDS SECTION */}
+      {/* Uncomment and correct import path if your features are a component: */}
+      {/* <FeatureCards /> */}
 
       {/* PRICING TABLE */}
-      <section id="pricing" className="py-16">
-        <div className="max-w-4xl mx-auto px-4">
-          <PricingTable />
-        </div>
-      </section>
-
-      {/* TESTIMONIALS */}
-      {/* <section id="testimonials" className="py-16 bg-[#221843]/60">
-        <div className="max-w-4xl mx-auto px-4">
-          <Testimonials />
-        </div>
-      </section> */}
+      <PricingTable />
 
       {/* FOOTER */}
       <Footer />
