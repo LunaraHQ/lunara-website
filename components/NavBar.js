@@ -33,7 +33,10 @@ export default function NavBar({ onContactOpen, session }) {
     <header className="w-full bg-gradient-to-r from-[#1a103e] via-[#6E41FF] to-[#221446] shadow-xl z-50">
       <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo/Brand */}
-        <Link href="/" className="flex items-center gap-2 font-extrabold text-2xl tracking-wider text-white drop-shadow-glow">
+        <Link
+          href="/"
+          className="flex items-center gap-2 font-extrabold text-2xl tracking-wider text-white drop-shadow-glow"
+        >
           <span className="bg-gradient-to-r from-[#8C64FF] to-[#6E41FF] text-white px-4 py-2 rounded-2xl shadow-inner">
             Lunara
           </span>
@@ -41,7 +44,10 @@ export default function NavBar({ onContactOpen, session }) {
 
         {/* Nav Links */}
         <div className="flex items-center gap-8">
-          <Link href="/dashboard" className="text-[#e0d3fc] hover:text-white font-semibold text-lg transition">
+          <Link
+            href="/dashboard"
+            className="text-[#e0d3fc] hover:text-white font-semibold text-lg transition"
+          >
             Dashboard
           </Link>
           {/* Features Dropdown */}
@@ -57,7 +63,12 @@ export default function NavBar({ onContactOpen, session }) {
             >
               Features
               <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
-                <path d="M7 10l5 5 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                <path
+                  d="M7 10l5 5 5-5"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
               </svg>
             </button>
             {featuresOpen && (
@@ -77,13 +88,28 @@ export default function NavBar({ onContactOpen, session }) {
               </div>
             )}
           </div>
-          <Link href="/how-it-works" className="text-[#e0d3fc] hover:text-white font-semibold text-lg transition">
-            How It Works
-          </Link>
-          <Link href="/pricing" className="text-[#e0d3fc] hover:text-white font-semibold text-lg transition">
-            Pricing
-          </Link>
-          <Link href="/pilot" className="text-[#e0d3fc] hover:text-white font-semibold text-lg transition">
+
+          {/* Dynamic Pricing Link */}
+          {session ? (
+            <Link
+              href="/pricing"
+              className="text-[#e0d3fc] hover:text-white font-semibold text-lg transition"
+            >
+              Pricing
+            </Link>
+          ) : (
+            <Link
+              href="/#pricing"
+              className="text-[#e0d3fc] hover:text-white font-semibold text-lg transition"
+            >
+              Pricing
+            </Link>
+          )}
+
+          <Link
+            href="/pilot"
+            className="text-[#e0d3fc] hover:text-white font-semibold text-lg transition"
+          >
             Pilot
           </Link>
           <button
@@ -99,10 +125,16 @@ export default function NavBar({ onContactOpen, session }) {
         <div className="flex items-center gap-4">
           {!session && (
             <>
-              <Link href="/auth/signin" className="px-5 py-2 rounded-2xl bg-gradient-to-r from-[#6E41FF] to-[#8C64FF] text-white font-bold shadow hover:scale-105 transition">
+              <Link
+                href="/auth/signin"
+                className="px-5 py-2 rounded-2xl bg-gradient-to-r from-[#6E41FF] to-[#8C64FF] text-white font-bold shadow hover:scale-105 transition"
+              >
                 Sign In
               </Link>
-              <Link href="/auth/signup" className="px-5 py-2 rounded-2xl border border-[#6E41FF] text-[#6E41FF] font-bold bg-[#130b24] hover:bg-gradient-to-r hover:from-[#6E41FF] hover:to-[#8C64FF] hover:text-white transition">
+              <Link
+                href="/auth/signup"
+                className="px-5 py-2 rounded-2xl border border-[#6E41FF] text-[#6E41FF] font-bold bg-[#130b24] hover:bg-gradient-to-r hover:from-[#6E41FF] hover:to-[#8C64FF] hover:text-white transition"
+              >
                 Sign Up
               </Link>
             </>
