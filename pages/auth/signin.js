@@ -5,6 +5,7 @@ import { supabase } from "../../utils/supabaseClient";
 
 export default function SignIn() {
   const [form, setForm] = useState({ email: "", password: "" });
+  const [rememberMe, setRememberMe] = useState(true);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -18,10 +19,20 @@ export default function SignIn() {
     e.preventDefault();
     setError("");
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email: form.email,
-      password: form.password,
-    });
+
+    const { error } = await supabase.auth.signInWithPassword(
+      {
+        email: form.email,
+        password: form.password,
+      },
+      {
+        // 👇 This is where Remember Me matters
+        options: {
+          session: rememberMe ? 'local' : 'session',
+        },
+      }
+    );
+
     setLoading(false);
     if (error) {
       if (
@@ -72,6 +83,15 @@ export default function SignIn() {
               required
               className="w-full px-4 py-3 rounded-full border border-gray-700 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
+            <label className="flex items-center text-gray-300 text-sm">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="mr-2 rounded"
+              />
+              Remember Me
+            </label>
             <button
               type="submit"
               disabled={loading}
