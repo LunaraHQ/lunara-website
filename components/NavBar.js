@@ -62,6 +62,7 @@ export default function NavBar() {
           <Link href="/dashboard" className="hover:underline focus:outline-none">
             Dashboard
           </Link>
+          {/* Sticky Features Dropdown */}
           <div
             className="relative"
             onMouseEnter={() => setShowFeatures(true)}
@@ -74,6 +75,8 @@ export default function NavBar() {
             {showFeatures && (
               <div
                 className="absolute left-0 mt-2 bg-white text-purple-800 rounded-lg shadow-xl w-64 z-50 transition"
+                onMouseEnter={() => setShowFeatures(true)}
+                onMouseLeave={() => setShowFeatures(false)}
               >
                 {features.map((feat) => (
                   <Link
