@@ -39,11 +39,11 @@ export default function SignIn() {
       </Head>
       <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-b from-purple-800 via-purple-900 to-black px-4">
         <div className="bg-black/80 p-10 rounded-2xl shadow-2xl max-w-md w-full text-center">
-          {/* Crisp Lunara Logo */}
+          {/* Larger Lunara Logo */}
           <img
             src="/images/lunara-logo.png"
             alt="Lunara"
-            className="mx-auto mb-6 h-20 w-auto object-contain"
+            className="mx-auto mb-6 h-28 w-auto object-contain"
           />
           <h1 className="text-3xl font-extrabold text-purple-200 mb-6">Sign In</h1>
           {error && (
