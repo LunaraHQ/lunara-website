@@ -9,6 +9,8 @@
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@next-auth/supabase-adapter": "^0.2.1",
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
+    "@supabase/auth-helpers-react": "^0.5.0",
     "@supabase/supabase-js": "^2.49.4",
     "autoprefixer": "^10.4.14",
     "framer-motion": "^12.10.5",
