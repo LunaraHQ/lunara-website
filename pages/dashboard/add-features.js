@@ -18,15 +18,14 @@ export default function AddFeatures() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      const s = data.session
-      if (!s) return router.push('/auth/signin')
+      if (!data.session) return router.push('/auth/signin')
       supabase
         .from('profiles')
         .select('features')
-        .eq('id', s.user.id)
+        .eq('id', data.session.user.id)
         .single()
         .then(({ data }) => {
-          setUserFeatures(Array.isArray(data.features) ? data.features : [])
+          setUserFeatures( Array.isArray(data.features) ? data.features : [] )
           setLoading(false)
         })
     })
@@ -46,14 +45,14 @@ export default function AddFeatures() {
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             {locked.map((slug) => (
               <li key={slug} className="flex items-center space-x-3 p-4 border rounded-lg">
-                <PlusCircle className="w-6 h-6 text-purple-600" />
+                <PlusCircle className="w-6 h-6 text-purple-600"/>
                 <span className="font-medium">{slug.replace(/-/g,' ')}</span>
               </li>
             ))}
           </ul>
           <Link href="/pricing">
             <button className="inline-flex items-center px-4 py-2 bg-purple-700 text-white rounded hover:bg-purple-600">
-              Upgrade Plan <ChevronRight className="w-4 h-4 ml-2" />
+              Upgrade Plan <ChevronRight className="w-4 h-4 ml-2"/>
             </button>
           </Link>
         </>

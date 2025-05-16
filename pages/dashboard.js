@@ -14,18 +14,17 @@ import {
 } from 'lucide-react'
 
 const ALL_FEATURES = [
-  { name: 'Meetings & Events', slug: 'meetings-events', description: 'Host events, manage RSVPs, send reminders.', icon: Calendar },
-  { name: 'Sales Funnel', slug: 'sales-funnel', description: 'Lead capture, campaigns, pipeline.', icon: BarChart3 },
-  { name: 'CX Management', slug: 'cx-management', description: 'Surveys, reviews, guest feedback.', icon: Smile },
-  { name: 'AI Chatbot & Automation', slug: 'ai-chatbot-automation', description: '24/7 support, lead qualification.', icon: Bot },
-  { name: 'CRM & Client Management', slug: 'crm', description: 'Track client interactions, forecasting.', icon: Users },
-  { name: 'Analytics & Reporting', slug: 'analytics', description: 'Dashboards, KPIs, predictions.', icon: BarChart3 },
-  { name: 'E-commerce Tools', slug: 'ecommerce-tools', description: 'Storefront, payments, inventory.', icon: ShoppingCart },
-  { name: 'Loyalty & Membership', slug: 'loyalty-membership', description: 'Rewards, tiers, subscriptions.', icon: Gift },
-  { name: 'Team Management', slug: 'team-management', description: 'Roles, permissions, collaboration.', icon: Users },
+  { name: 'Meetings & Events',      slug: 'meetings-events',        description: 'Host events, manage RSVPs, send reminders.',      icon: Calendar },
+  { name: 'Sales Funnel',           slug: 'sales-funnel',           description: 'Lead capture, campaigns, pipeline.',              icon: BarChart3 },
+  { name: 'CX Management',          slug: 'cx-management',          description: 'Surveys, reviews, guest feedback.',              icon: Smile },
+  { name: 'AI Chatbot',             slug: 'ai-chatbot-automation',   description: '24/7 support, lead qualification.',              icon: Bot },
+  { name: 'CRM & Client Mgmt.',     slug: 'crm',                    description: 'Track client interactions, forecasting.',         icon: Users },
+  { name: 'Analytics & Reporting',  slug: 'analytics',              description: 'Dashboards, KPIs, predictions.',                 icon: BarChart3 },
+  { name: 'E-commerce Tools',       slug: 'ecommerce-tools',        description: 'Storefront, payments, inventory.',                icon: ShoppingCart },
+  { name: 'Loyalty & Membership',   slug: 'loyalty-membership',     description: 'Rewards, tiers, subscriptions.',                  icon: Gift },
+  { name: 'Team Management',        slug: 'team-management',        description: 'Roles, permissions, collaboration.',              icon: Users },
 ]
 
-// server-side redirect if not logged in
 export async function getServerSideProps({ req }) {
   const { user } = await supabase.auth.api.getUserByCookie(req)
   if (!user) {
@@ -40,20 +39,16 @@ export default function Dashboard() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      const s = data.session
-      if (s) {
-        supabase
-          .from('profiles')
-          .select('name,features')
-          .eq('id', s.user.id)
-          .single()
-          .then(({ data }) => {
-            setProfile({ name: data.name, features: Array.isArray(data.features) ? data.features : [] })
-            setLoading(false)
-          })
-      } else {
-        setLoading(false)
-      }
+      if (!data.session) return setLoading(false)
+      supabase
+        .from('profiles')
+        .select('name,features')
+        .eq('id', data.session.user.id)
+        .single()
+        .then(({ data }) => {
+          setProfile({ name: data.name, features: Array.isArray(data.features) ? data.features : [] })
+          setLoading(false)
+        })
     })
   }, [])
 
@@ -73,15 +68,13 @@ export default function Dashboard() {
         {ALL_FEATURES.map(({ name, slug, description, icon: Icon }) => {
           const isUnlocked = unlocked.includes(slug)
           const href = isUnlocked ? `/features/${slug}` : '/dashboard/add-features'
-
           return (
-            <Link href={href} key={slug}>
+            <Link key={slug} href={href}>
               <a className="block group">
                 <div className="relative p-6 bg-purple-800 rounded-lg hover:bg-purple-700 transition">
                   <Icon className="w-10 h-10 text-purple-300 mb-4" />
                   <h2 className="text-xl font-semibold text-white mb-1">{name}</h2>
                   <p className="text-purple-200">{description}</p>
-
                   {!isUnlocked && (
                     <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
                       <span className="px-3 py-1 bg-purple-600 text-white rounded">Click to Unlock</span>
