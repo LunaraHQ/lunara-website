@@ -1,8 +1,42 @@
 // components/HeroSection.js
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { supabase } from '../utils/supabaseClient'
 
 export default function HeroSection() {
+  const [session, setSession] = useState(null)
+  const [userName, setUserName] = useState(null)
+
+  useEffect(() => {
+    const loadSession = async () => {
+      const { data } = await supabase.auth.getSession()
+      if (data.session) {
+        setSession(data.session)
+        setUserName(data.session.user.user_metadata?.name || data.session.user.email)
+      }
+    }
+
+    loadSession()
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+      if (session) {
+        setUserName(session.user.user_metadata?.name || session.user.email)
+      }
+    })
+
+    return () => {
+      listener.subscription.unsubscribe()
+    }
+  }, [])
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    setSession(null)
+    window.location.href = '/'
+  }
+
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden">
       {/* Gradient overlay */}
@@ -36,20 +70,34 @@ export default function HeroSection() {
           Modular business solutions tailored for your industry. Pay only for what you use.
         </motion.p>
 
-        {/* Sign Up / Sign In Buttons */}
+        {/* Buttons */}
         <div className="w-full mt-8 flex flex-col sm:flex-row gap-4 items-center justify-center">
-          <Link
-            href="/auth/signup"
-            className="px-8 py-3 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 text-white font-semibold shadow-xl hover:scale-105 transition"
-          >
-            Sign Up
-          </Link>
-          <Link
-            href="/auth/signin"
-            className="px-8 py-3 rounded-full bg-purple-700 text-white font-semibold shadow-xl hover:scale-105 transition"
-          >
-            Sign In
-          </Link>
+          {session ? (
+            <>
+              <span className="text-white font-medium">Hi, {userName}</span>
+              <button
+                onClick={handleLogout}
+                className="px-8 py-3 rounded-full bg-red-600 text-white font-semibold shadow-xl hover:scale-105 transition"
+              >
+                Log Out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/auth/signup"
+                className="px-8 py-3 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 text-white font-semibold shadow-xl hover:scale-105 transition"
+              >
+                Sign Up
+              </Link>
+              <Link
+                href="/auth/signin"
+                className="px-8 py-3 rounded-full bg-purple-700 text-white font-semibold shadow-xl hover:scale-105 transition"
+              >
+                Sign In
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </section>
