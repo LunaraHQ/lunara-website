@@ -2,7 +2,7 @@
 import "../styles/globals.css";
 import { useRouter } from "next/router";
 import DashboardSidebar from "../components/DashboardSidebar";
-import PublicNavBar from "../components/PublicNavBar";
+import NavBar from "../components/NavBar";
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -13,19 +13,16 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <>
-      {/* Show public navbar on non-dashboard routes */}
-      {!isDashboardLayout && <PublicNavBar />}
+      {/* Show public NavBar on non-dashboard routes */}
+      {!isDashboardLayout && <NavBar />}
 
       {/* Always render sidebar on dashboard, features, and pricing */}
       {isDashboardLayout && <DashboardSidebar />}
 
-      {/* Push your page content right so it sits next to the sidebar */}
+      {/* Main content shifts right when sidebar is present */}
       <div
         className={`transition-all duration-300 ${
-          isDashboardLayout
-            ? // match your sidebar widths: 64px collapsed, 256px expanded
-              "ml-16 md:ml-64"
-            : ""
+          isDashboardLayout ? "ml-16 md:ml-64" : ""
         }`}
       >
         <Component {...pageProps} />
