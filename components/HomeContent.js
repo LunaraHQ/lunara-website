@@ -1,4 +1,3 @@
-// components/HomeContent.js
 import { useEffect, useRef } from 'react'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import Link from 'next/link'
@@ -79,7 +78,7 @@ export default function HomeContent() {
   const { scrollY } = useScroll()
   const hue = useTransform(scrollY, [0, 500], [260, 300], { clamp: false })
   const hueSpring = useSpring(hue, { stiffness: 10, damping: 50 })
-  const background = useTransform(hueSpring, h => `hsl(${h}, 30%, 8%)`)
+  const background = useTransform(hueSpring, h => `hsl(${h}, 34%, 9%)`)
 
   const canvas1 = useRef(null)
   const canvas2 = useRef(null)
@@ -97,14 +96,16 @@ export default function HomeContent() {
       canvas.width = window.innerWidth
       canvas.height = window.innerHeight
       const draw = () => {
-        ctx.fillStyle = 'rgba(0,0,0,0.1)'
-        ctx.fillRect(0, 0, canvas.width, canvas.height)
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
         stars.forEach(star => {
           star.y += star.s * speed
           if (star.y > canvas.height) star.y = 0
           ctx.beginPath()
           ctx.arc(star.x, star.y, star.r, 0, 2 * Math.PI)
-          ctx.fillStyle = 'white'
+          ctx.fillStyle = '#fff'
+          ctx.globalAlpha = 0.7
+          ctx.shadowColor = '#6E41FF'
+          ctx.shadowBlur = 5
           ctx.fill()
         })
         requestAnimationFrame(draw)
@@ -145,7 +146,7 @@ export default function HomeContent() {
             <Link
               key={idx}
               href={`/features/${slug}`}
-              className="group bg-black/60 backdrop-blur-md rounded-2xl p-8 flex flex-col items-center text-center aspect-square transform transition-all duration-300 hover:scale-105 hover:-translate-y-1 hover:shadow-xl focus:outline-none"
+              className="group bg-gradient-to-br from-[#251654]/80 via-[#27134e]/80 to-[#130b24]/90 backdrop-blur-md rounded-2xl p-8 flex flex-col items-center text-center aspect-square transform transition-all duration-300 hover:scale-105 hover:-translate-y-1 hover:shadow-[0_6px_32px_rgba(140,100,255,0.28)] focus:outline-none border border-[#322769]/60"
             >
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -155,11 +156,11 @@ export default function HomeContent() {
                 className="flex flex-col items-center"
               >
                 <Icon
-                  className="w-20 h-20 md:w-24 md:h-24 text-purple-300 opacity-80 group-hover:opacity-100 transition duration-300"
+                  className="w-20 h-20 md:w-24 md:h-24 text-[#8C64FF] opacity-90 group-hover:opacity-100 transition duration-300 drop-shadow-[0_8px_32px_#8C64FF44]"
                   strokeWidth={1.4}
                 />
                 <h3 className="mt-6 text-lg font-semibold">{title}</h3>
-                <p className="mt-2 text-gray-200 text-sm max-w-[14rem]">
+                <p className="mt-2 text-[#d2c6f7] text-sm max-w-[14rem]">
                   {desc}
                 </p>
               </motion.div>
@@ -170,7 +171,7 @@ export default function HomeContent() {
         {/* Tech & Security */}
         <section
           id="security"
-          className="py-20 px-6 bg-gray-900"
+          className="py-20 px-6 bg-gradient-to-br from-[#23194b]/80 to-[#12092e]/95"
           aria-labelledby="security-heading"
         >
           <h2
@@ -181,20 +182,20 @@ export default function HomeContent() {
           </h2>
 
           <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8 text-center">
-            <div className="text-white p-4">
-              <Cloud className="mx-auto mb-4 w-12 h-12 text-blue-400" />
+            <div className="text-white p-4 rounded-2xl bg-gradient-to-br from-[#1a103e] via-[#6E41FF33] to-[#130b24]">
+              <Cloud className="mx-auto mb-4 w-12 h-12 text-[#8C64FF]" />
               <h3 className="text-xl font-semibold mb-2">Global CDN</h3>
               <p>Lightning-fast performance worldwide via Vercel’s edge network.</p>
             </div>
 
-            <div className="text-white p-4">
-              <ShieldCheck className="mx-auto mb-4 w-12 h-12 text-blue-400" />
+            <div className="text-white p-4 rounded-2xl bg-gradient-to-br from-[#1a103e] via-[#6E41FF22] to-[#130b24]">
+              <ShieldCheck className="mx-auto mb-4 w-12 h-12 text-[#8C64FF]" />
               <h3 className="text-xl font-semibold mb-2">SOC 2 & GDPR</h3>
               <p>Built-in compliance to keep your data—and your guests—secure.</p>
             </div>
 
-            <div className="text-white p-4">
-              <Lock className="mx-auto mb-4 w-12 h-12 text-blue-400" />
+            <div className="text-white p-4 rounded-2xl bg-gradient-to-br from-[#1a103e] via-[#6E41FF22] to-[#130b24]">
+              <Lock className="mx-auto mb-4 w-12 h-12 text-[#8C64FF]" />
               <h3 className="text-xl font-semibold mb-2">Data Encryption</h3>
               <p>All data encrypted in transit (TLS) and at rest.</p>
             </div>
@@ -204,12 +205,12 @@ export default function HomeContent() {
         {/* Pricing */}
         <section
           id="pricing"
-          className="py-20 bg-white/5 text-center"
+          className="py-20 bg-gradient-to-br from-[#23194b]/85 to-[#130b24]/95 text-center"
           aria-labelledby="pricing-heading"
         >
           <h2
             id="pricing-heading"
-            className="text-3xl font-bold text-purple-300 mb-8"
+            className="text-3xl font-bold text-[#8C64FF] mb-8"
           >
             Simple, Scalable Pricing
           </h2>

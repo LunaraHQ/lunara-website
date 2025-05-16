@@ -1,71 +1,85 @@
-// pages/features/[slug].js
-import { useEffect, useState } from 'react'
-import { supabase } from '../../utils/supabaseClient'
-import { useRouter } from 'next/router'
-import Link from 'next/link'
-import LoadingSpinner from '../../components/LoadingSpinner'
+import { useRouter } from "next/router";
 
-const MARKETING = {
-  'meetings-events':      { title: 'Meetings & Events',      desc: 'Host events, manage RSVPs, send reminders.' },
-  'sales-funnel':         { title: 'Sales Funnel',           desc: 'Capture leads, track campaigns, optimize your pipeline.' },
-  'cx-management':        { title: 'CX Management',          desc: 'Run surveys, gather reviews, enhance experiences.' },
-  'crm':                  { title: 'CRM & Client Mgmt.',     desc: 'Manage contacts, log interactions, forecast sales.' },
-  'ai-chatbot-automation':{ title: 'AI Chatbot',            desc: '24/7 support, lead qualification with AI.' },
-  'analytics':            { title: 'Analytics & Reporting',  desc: 'Visualize KPIs, dashboards, predictive insights.' },
-  'team-management':      { title: 'Team Management',        desc: 'Roles, permissions, collaborate with your team.' },
-  'ecommerce-tools':      { title: 'E-commerce Tools',       desc: 'Storefront, payments, inventory management.' },
-  'loyalty-membership':   { title: 'Loyalty & Membership',   desc: 'Reward programs, tiers, subscriptions.' },
-}
+const FEATURE_CONTENT = {
+  "meetings-events": {
+    title: "Meetings & Events",
+    desc: "Automate bookings, attendee management, and reminders—all in one place.",
+  },
+  "sales-funnel": {
+    title: "Sales Funnel",
+    desc: "Convert more leads with powerful, automated funnel tools.",
+  },
+  "cx-management": {
+    title: "CX Management",
+    desc: "Capture feedback, track reviews, and boost customer loyalty.",
+  },
+  "crm": {
+    title: "CRM & Client Management",
+    desc: "Keep all your client info, notes, and sales activities in one secure hub.",
+  },
+  "ai-chatbot": {
+    title: "AI Chatbot & Automation",
+    desc: "Let Lunara handle 24/7 chats, support, and lead qualification.",
+  },
+  "analytics": {
+    title: "Analytics & Reporting",
+    desc: "Custom dashboards and predictive analytics at your fingertips.",
+  },
+  "team-management": {
+    title: "Staff & Team Management",
+    desc: "Manage shifts, tasks, and internal comms with ease.",
+  },
+  "ecommerce": {
+    title: "E-commerce Tools",
+    desc: "Recover carts, optimize pricing, and boost conversions.",
+  },
+  "loyalty": {
+    title: "Loyalty & Membership",
+    desc: "Reward loyal customers with scalable programs.",
+  },
+};
 
-const LOADERS = {
-  'meetings-events':      () => import('../../components/features/MeetingsEvents'),
-  'sales-funnel':         () => import('../../components/features/SalesFunnel'),
-  'cx-management':        () => import('../../components/features/CXManagement'),
-  'crm':                  () => import('../../components/features/CRMModule'),
-  'ai-chatbot-automation':() => import('../../components/features/AIChatbot'),
-  'analytics':            () => import('../../components/features/AnalyticsModule'),
-  'team-management':      () => import('../../components/features/TeamManagement'),
-  'ecommerce-tools':      () => import('../../components/features/EcommerceTools'),
-  'loyalty-membership':   () => import('../../components/features/LoyaltyModule'),
-}
+export default function FeatureDetail({ session }) {
+  const router = useRouter();
+  const { slug } = router.query;
+  const feature = FEATURE_CONTENT[slug];
 
-export async function getServerSideProps({ req, params }) {
-  const { user } = await supabase.auth.api.getUserByCookie(req)
-  return { props: { isLoggedIn: !!user, slug: params.slug } }
-}
-
-export default function FeaturePage({ isLoggedIn, slug }) {
-  const router = useRouter()
-  const [Comp, setComp] = useState(null)
-
-  if (!isLoggedIn) {
-    const m = MARKETING[slug] || { title: 'Coming Soon', desc: '' }
+  if (!feature) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-8">
-        <h1 className="text-4xl font-bold mb-4">{m.title}</h1>
-        <p className="text-lg text-gray-600 mb-8 text-center max-w-xl">{m.desc}</p>
-        <Link href="/auth/signin">
-          <a className="px-6 py-3 bg-purple-700 text-white rounded hover:bg-purple-600">
-            Sign In to Explore
-          </a>
-        </Link>
+      <div className="min-h-screen flex items-center justify-center text-2xl font-bold text-[#6E41FF] bg-gradient-to-br from-[#1a103e] via-[#6E41FF] to-[#130b24]">
+        Feature not found.
       </div>
-    )
+    );
   }
 
-  useEffect(() => {
-    const loader = LOADERS[slug]
-    if (!loader) return router.replace('/dashboard')
-    loader().then((m) => setComp(() => m.default))
-  }, [slug, router])
-
-  if (!Comp) {
+  // Show stub content if logged in (expand later for real app features)
+  if (session) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <LoadingSpinner />
+      <div className="py-20 px-4 flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-[#1a103e] via-[#6E41FF] to-[#130b24]">
+        <div className="bg-gradient-to-r from-[#27134e] via-[#6E41FF] to-[#23194b] text-white rounded-3xl shadow-2xl max-w-2xl w-full p-10 text-center border border-[#352a5c]">
+          <h1 className="text-4xl font-bold mb-4">{feature.title}</h1>
+          <p className="mb-8 text-lg text-[#e0d3fc]">{feature.desc}</p>
+          <div className="bg-[#23194b]/80 text-[#6E41FF] p-6 rounded-2xl shadow text-xl font-semibold border border-[#322769]">
+            <span>Feature module coming soon. Check back for updates!</span>
+          </div>
+        </div>
       </div>
-    )
+    );
   }
 
-  return <Comp />
+  // Guest view (marketing)
+  return (
+    <div className="min-h-screen flex items-center justify-center py-24 px-4 bg-gradient-to-br from-[#1a103e] via-[#6E41FF] to-[#130b24]">
+      <div className="bg-gradient-to-br from-[#23194b] via-[#27134e] to-[#130b24] rounded-3xl shadow-2xl max-w-2xl w-full p-10 text-center border border-[#352a5c]">
+        <h1 className="text-4xl font-bold text-white mb-4">{feature.title}</h1>
+        <p className="mb-8 text-[#e0d3fc] text-lg">{feature.desc}</p>
+        <a
+          href="/auth/signin"
+          className="inline-block bg-gradient-to-r from-[#6E41FF] to-[#8C64FF] text-white font-bold px-8 py-4 rounded-xl hover:scale-105 transition"
+        >
+          Sign In to Explore
+        </a>
+      </div>
+    </div>
+  );
 }
