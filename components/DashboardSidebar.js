@@ -18,7 +18,6 @@ import {
   ChevronsRight,
 } from "lucide-react";
 
-// Master feature list; adjust to match your ALL_FEATURES in add-features/pricing
 const ALL_FEATURES = [
   { name: "CRM", slug: "crm", icon: Users, path: "/dashboard/crm" },
   { name: "Analytics", slug: "analytics", icon: BarChart3, path: "/dashboard/analytics" },
@@ -36,7 +35,7 @@ export default function DashboardSidebar() {
   const [loading, setLoading] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
 
-  // Load collapse state from localStorage
+  // load collapse state
   useEffect(() => {
     const saved = window.localStorage.getItem("lunaraSidebarCollapsed");
     if (saved) setCollapsed(saved === "true");
@@ -45,22 +44,18 @@ export default function DashboardSidebar() {
     window.localStorage.setItem("lunaraSidebarCollapsed", collapsed ? "true" : "false");
   }, [collapsed]);
 
-  // Fetch user profile (name + features) from Supabase
+  // fetch name & features
   useEffect(() => {
     (async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (!session) {
-        setLoading(false);
-        return;
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        const { data } = await supabase
+          .from("profiles")
+          .select("features")
+          .eq("id", session.user.id)
+          .single();
+        setProfile({ ...profile, features: Array.isArray(data.features) ? data.features : [] });
       }
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("name, features")
-        .eq("id", session.user.id)
-        .single();
-      if (data) setProfile(data);
       setLoading(false);
     })();
   }, []);
@@ -70,12 +65,6 @@ export default function DashboardSidebar() {
     router.push("/");
   };
 
-  const userFeatures = Array.isArray(profile.features)
-    ? profile.features.map((f) => f.toLowerCase())
-    : [];
-  const firstName = profile.name.split(" ")[0] || "User";
-
-  // Show spinner placeholder while loading
   if (loading) {
     return (
       <aside className="fixed top-0 left-0 h-full w-16 flex items-center justify-center bg-gradient-to-b from-purple-900 to-black z-50">
@@ -84,6 +73,8 @@ export default function DashboardSidebar() {
     );
   }
 
+  const userFeatures = profile.features.map((f) => f.toLowerCase());
+
   return (
     <aside
       className={`fixed top-0 left-0 h-full z-50 flex flex-col bg-gradient-to-b from-purple-900 to-black shadow-xl border-r border-purple-700 transition-all duration-300 ease-in-out ${
@@ -91,7 +82,7 @@ export default function DashboardSidebar() {
       }`}
       style={{ minWidth: collapsed ? 64 : 256 }}
     >
-      {/* Collapse Toggle */}
+      {/* Collapse button */}
       <button
         onClick={() => setCollapsed((c) => !c)}
         aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
@@ -100,23 +91,21 @@ export default function DashboardSidebar() {
         {collapsed ? <ChevronsRight size={18} /> : <ChevronsLeft size={18} />}
       </button>
 
-      {/* Logo / User Name */}
-      <Link href="/dashboard" className="flex items-center mt-4 mb-8 select-none px-4">
-        {!collapsed && (
-          <span className="text-white font-extrabold text-2xl tracking-wide">
-            {firstName}'s Account
-          </span>
-        )}
+      {/* My Account */}
+      <Link href="/dashboard">
+        <a className="flex items-center mt-4 mb-8 select-none px-4 focus:outline-none">
+          {!collapsed && <span className="text-white font-extrabold text-2xl">My Account</span>}
+        </a>
       </Link>
 
-      {/* Navigation Links */}
-      <nav className="flex-1 w-full overflow-y-auto">
+      {/* Links */}
+      <nav className="flex-1 overflow-y-auto">
         <ul className="space-y-2 px-2">
           <li>
             <Link href="/dashboard">
               <a
                 title="Dashboard"
-                className={`flex items-center px-4 py-3 rounded-lg transition ${
+                className={`flex items-center px-4 py-3 rounded-lg transition focus:outline-none ${
                   router.pathname === "/dashboard"
                     ? "bg-purple-700 text-white"
                     : "text-purple-100 hover:bg-purple-700/50 hover:text-white"
@@ -133,7 +122,7 @@ export default function DashboardSidebar() {
               <Link href={path}>
                 <a
                   title={name}
-                  className={`flex items-center px-4 py-3 rounded-lg transition ${
+                  className={`flex items-center px-4 py-3 rounded-lg transition focus:outline-none ${
                     router.pathname === path
                       ? "bg-purple-700 text-white"
                       : "text-purple-100 hover:bg-purple-700/50 hover:text-white"
@@ -150,7 +139,7 @@ export default function DashboardSidebar() {
             <Link href="/dashboard/add-features">
               <a
                 title="Add More Features"
-                className={`flex items-center px-4 py-3 mt-4 rounded-lg transition ${
+                className={`flex items-center px-4 py-3 mt-4 rounded-lg transition focus:outline-none ${
                   router.pathname === "/dashboard/add-features"
                     ? "bg-purple-700 text-white"
                     : "text-purple-100 hover:bg-purple-700/50 hover:text-white"
@@ -169,7 +158,7 @@ export default function DashboardSidebar() {
         <button
           onClick={handleLogout}
           title="Logout"
-          className={`flex items-center px-4 py-2 rounded-lg shadow transition ${
+          className={`flex items-center px-4 py-2 rounded-lg shadow transition focus:outline-none ${
             collapsed
               ? "bg-transparent text-purple-100 hover:bg-purple-700/50"
               : "bg-white text-purple-800 hover:bg-gray-100"
@@ -180,5 +169,5 @@ export default function DashboardSidebar() {
         </button>
       </div>
     </aside>
-  );
+);
 }

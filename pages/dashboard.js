@@ -1,110 +1,126 @@
-import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
-import Link from 'next/link'
-import { supabase } from '../utils/supabaseClient'
-import {
-  Calendar,
-  TrendingUp,
-  Smile,
-  Users,
-  Bot,
-  BarChart3,
-  ShoppingCart,
-  Gift,
-} from 'lucide-react'
-import DashboardSidebar from '../components/DashboardSidebar'
+// pages/dashboard.js
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { supabase } from "../utils/supabaseClient";
+import { Calendar, BarChart3, Smile, Bot, Users, ShoppingCart, Gift } from "lucide-react";
 
-const features = [
-  { title: 'Meetings & Events', slug: 'meetings-events', icon: Calendar, desc: 'Event booking, registration, reminders' },
-  { title: 'Sales Funnel', slug: 'sales-funnel', icon: TrendingUp, desc: 'Lead capture, campaigns, pipeline' },
-  { title: 'CX Management', slug: 'cx-management', icon: Smile, desc: 'Surveys, reviews, guest feedback' },
-  { title: 'CRM & Client Management', slug: 'crm-client-management', icon: Users, desc: 'Track client interactions, forecasting' },
-  { title: 'AI Chatbot & Automation', slug: 'ai-chatbot-automation', icon: Bot, desc: '24/7 support, lead qualification' },
-  { title: 'Analytics & Reporting', slug: 'analytics-reporting', icon: BarChart3, desc: 'Dashboards, KPIs, predictions' },
-  { title: 'Team Management', slug: 'team-management', icon: Users, desc: 'Shifts, tasks, staff comms' },
-  { title: 'E-commerce Tools', slug: 'ecommerce-tools', icon: ShoppingCart, desc: 'Cart recovery, checkout boost' },
-  { title: 'Loyalty & Membership', slug: 'loyalty-membership', icon: Gift, desc: 'Rewards, memberships, offers' },
-]
+const ALL_FEATURES = [
+  {
+    name: "Meetings & Events",
+    slug: "events",
+    description: "Event booking, registration, reminders",
+    icon: Calendar,
+  },
+  {
+    name: "Sales Funnel",
+    slug: "analytics",
+    description: "Lead capture, campaigns, pipeline",
+    icon: BarChart3,
+  },
+  {
+    name: "CX Management",
+    slug: "cx-management",
+    description: "Surveys, reviews, guest feedback",
+    icon: Smile,
+  },
+  {
+    name: "AI Chatbot",
+    slug: "ai-chatbot-automation",
+    description: "24/7 support, lead qualification",
+    icon: Bot,
+  },
+  {
+    name: "CRM & Client Management",
+    slug: "crm",
+    description: "Track client interactions, forecasting",
+    icon: Users,
+  },
+  {
+    name: "Analytics & Reporting",
+    slug: "analytics",
+    description: "Dashboards, KPIs, predictions",
+    icon: BarChart3,
+  },
+  {
+    name: "E-commerce Tools",
+    slug: "ecommerce-tools",
+    description: "Storefront, payments, inventory",
+    icon: ShoppingCart,
+  },
+  {
+    name: "Loyalty & Membership",
+    slug: "loyalty-membership",
+    description: "Rewards, tiers, subscriptions",
+    icon: Gift,
+  },
+  {
+    name: "Team Management",
+    slug: "team-management",
+    description: "Roles, permissions, collaboration",
+    icon: Users,
+  },
+];
 
 export default function Dashboard() {
-  const router = useRouter()
-  const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState(null)
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [profile, setProfile] = useState({ name: "", features: [] });
+  const [loading, setLoading] = useState(true);
 
-  // Check auth
   useEffect(() => {
-    ;(async () => {
-      const { data } = await supabase.auth.getSession()
-      if (!data.session) return router.push('/auth/signin')
-      setUser(data.session.user)
-      setLoading(false)
-    })()
-  }, [router])
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        const { data } = await supabase
+          .from("profiles")
+          .select("name, features")
+          .eq("id", session.user.id)
+          .single();
+        setProfile({
+          name: data.name,
+          features: Array.isArray(data.features) ? data.features : [],
+        });
+      }
+      setLoading(false);
+    })();
+  }, []);
 
-  // Sync sidebar collapse state
-  useEffect(() => {
-    const handler = () => {
-      setSidebarCollapsed(window.localStorage.getItem('lunaraSidebarCollapsed') === 'true')
-    }
-    window.addEventListener('storage', handler)
-    handler()
-    return () => window.removeEventListener('storage', handler)
-  }, [])
+  if (loading) return <p className="p-6">Loading…</p>;
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-800 via-purple-900 to-black text-white">
-        Loading…
-      </div>
-    )
-  }
+  const firstName = profile.name.split(" ")[0] || "";
+  const unlocked = profile.features.map((f) => f.toLowerCase());
 
   return (
-    <div className="flex min-h-screen">
-      <DashboardSidebar />
+    <div className="p-6">
+      <h1 className="text-3xl font-bold mb-4">Welcome, {firstName}!</h1>
+      <p className="text-gray-300 mb-8">
+        Preview any of Lunara’s modular business features below. Upgrade to unlock full access!
+      </p>
 
-      <main className="flex-1 bg-gradient-to-b from-purple-800 via-purple-900 to-black p-12">
-        <div className="max-w-5xl mx-auto space-y-10">
-          <header className="text-center space-y-2">
-            <h1 className="text-4xl font-extrabold text-purple-200">
-              Welcome, {user.user_metadata?.name?.split(' ')[0] || user.email}!
-            </h1>
-            <p className="text-gray-300">
-              Preview any of Lunara’s modular business features below. Upgrade to unlock full access!
-            </p>
-          </header>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {ALL_FEATURES.map(({ name, slug, description, icon: Icon }) => {
+          const isUnlocked = unlocked.includes(slug);
+          const href = isUnlocked ? `/features/${slug}` : "/dashboard/add-features";
 
-          <section className="grid md:grid-cols-3 gap-8 relative">
-            {features.map(({ title, slug, icon: Icon, desc }) => (
-              <div
-                key={slug}
-                className="relative bg-black/80 rounded-2xl shadow-xl p-8 text-center border border-purple-700"
-              >
-                <Icon className="w-16 h-16 mb-4 text-purple-300 mx-auto" />
-                <h2 className="text-xl font-bold text-white mb-2">{title}</h2>
-                <p className="text-gray-400 mb-6">{desc}</p>
-                
-                {/* Overlay redirecting to add-features */}
-                <Link href="/dashboard/add-features">
-                  <a className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-2xl opacity-0 hover:opacity-100 transition">
-                    <button className="bg-purple-600 text-white px-5 py-2 rounded-lg">
-                      Upgrade to unlock
-                    </button>
-                  </a>
-                </Link>
+          return (
+            <Link href={href} key={slug}>
+              <a className="block group">
+                <div className="relative p-6 bg-gray-900 rounded-lg transition hover:shadow-lg">
+                  <Icon className="w-10 h-10 text-purple-400 mb-4" />
+                  <h2 className="text-xl font-semibold text-white mb-2">{name}</h2>
+                  <p className="text-gray-400">{description}</p>
 
-                <button
-                  disabled
-                  className="mt-4 w-full py-2 rounded-full bg-gray-700 text-gray-300 cursor-not-allowed"
-                >
-                  Locked
-                </button>
-              </div>
-            ))}
-          </section>
-        </div>
-      </main>
+                  {!isUnlocked && (
+                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                      <span className="px-3 py-1 bg-purple-600 text-white rounded">
+                        Click to Unlock
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </a>
+            </Link>
+          );
+        })}
+      </div>
     </div>
-  )
+  );
 }
