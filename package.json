@@ -10,6 +10,8 @@
     "@heroicons/react": "^2.2.0",
     "@next-auth/supabase-adapter": "^0.2.1",
     "@supabase/supabase-js": "^2.49.4",
+    "@supabase/auth-helpers-nextjs": "^0.6.4",
+    "@supabase/auth-helpers-react": "^0.6.4",
     "autoprefixer": "^10.4.14",
     "framer-motion": "^12.10.5",
     "lucide-react": "^0.508.0",
