@@ -34,6 +34,7 @@ export default function DashboardSidebar() {
   const [loading, setLoading] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
 
+  // load collapse state
   useEffect(() => {
     const saved = window.localStorage.getItem("lunaraSidebarCollapsed");
     if (saved) setCollapsed(saved === "true");
@@ -42,6 +43,7 @@ export default function DashboardSidebar() {
     window.localStorage.setItem("lunaraSidebarCollapsed", collapsed ? "true" : "false");
   }, [collapsed]);
 
+  // fetch profile
   useEffect(() => {
     const fetchProfile = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -51,7 +53,7 @@ export default function DashboardSidebar() {
       }
       const { data } = await supabase
         .from("profiles")
-        .select("id, name, features")
+        .select("name, features")
         .eq("id", session.user.id)
         .single();
       setProfile(data);
@@ -69,19 +71,13 @@ export default function DashboardSidebar() {
     ? profile.features.map((f) => f.toLowerCase())
     : [];
 
-  const firstName = profile?.name
-    ? profile.name.split(" ")[0]
-    : null;
+  const firstName = profile?.name?.split(" ")[0] || null;
 
+  // loading placeholder
   if (loading) {
     return (
-      <aside
-        className="fixed top-0 left-0 h-full w-16 flex items-center justify-center bg-gradient-to-b from-purple-900/90 via-purple-800/95 to-black/95 shadow-2xl z-50"
-        style={{ minWidth: 64 }}
-      >
-        <span className="text-purple-200/80 font-semibold animate-pulse">
-          ...
-        </span>
+      <aside className="fixed top-0 left-0 h-full w-16 flex items-center justify-center bg-gradient-to-b from-purple-900 to-black z-50">
+        <span className="text-purple-300 animate-pulse">…</span>
       </aside>
     );
   }
@@ -89,103 +85,84 @@ export default function DashboardSidebar() {
   return (
     <aside
       className={`
-        fixed top-0 left-0 h-full z-50
-        bg-gradient-to-b from-purple-900/90 via-purple-800/95 to-black/95
-        shadow-2xl border-r border-purple-700/30
-        backdrop-blur-lg
-        flex flex-col items-center
-        transition-all duration-300
+        fixed top-0 left-0 h-full z-50 flex flex-col items-center
+        bg-gradient-to-b from-purple-900 to-black shadow-xl border-r border-purple-700
+        transition-width duration-300
         ${collapsed ? "w-16" : "w-64"}
       `}
-      style={{ minWidth: collapsed ? 64 : 220, width: collapsed ? 64 : 220 }}
+      style={{ minWidth: collapsed ? 64 : 220 }}
     >
-      {/* Collapse Button */}
+      {/* Collapse Toggle */}
       <button
-        onClick={() => setCollapsed((c) => !c)}
+        onClick={() => setCollapsed(c => !c)}
         aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        className={`
-          absolute top-5 right-[-18px] z-10 bg-purple-800 hover:bg-purple-700
-          border border-purple-600 shadow-xl rounded-full w-9 h-9 flex items-center justify-center
-          transition-all
-        `}
-        style={{ outline: "none" }}
+        className="absolute top-4 right-[-18px] w-8 h-8 flex items-center justify-center bg-purple-800 border border-purple-600 rounded-full shadow hover:bg-purple-700 z-10"
       >
-        {collapsed ? <ChevronsRight size={22} /> : <ChevronsLeft size={22} />}
+        {collapsed ? <ChevronsRight size={20} /> : <ChevronsLeft size={20} />}
       </button>
-      {/* Logo (PNG only, never ICO) */}
-      <Link href="/dashboard" className="flex items-center mb-10 mt-2 select-none">
+
+      {/* Logo */}
+      <Link href="/dashboard" className="flex items-center mt-4 mb-8 select-none">
         <img
           src="/lunara-favicon.png"
-          alt="Lunara"
+          alt="Lunara logo"
           className="h-10 w-10 rounded-xl"
         />
         {!collapsed && (
-          <span className="ml-2 text-white font-extrabold text-2xl tracking-wide drop-shadow-lg">
+          <span className="ml-2 text-white font-extrabold text-2xl tracking-wide">
             Lunara
           </span>
         )}
       </Link>
-      {/* Dashboard/Home always visible */}
+
+      {/* Nav Links */}
       <nav className="flex-1 w-full">
         <ul className="space-y-2">
           <li>
-            <Link
-              href="/dashboard"
-              className={`flex items-center px-4 py-3 rounded-xl font-medium text-lg transition
-                ${router.pathname === "/dashboard"
-                  ? "bg-purple-700/70 text-white shadow-lg"
-                  : "text-purple-100 hover:bg-purple-700/40 hover:text-white"
-                }
-              `}
-            >
-              <Home className="w-6 h-6 mr-3 opacity-80" />
-              {!collapsed && <span>Dashboard</span>}
+            <Link href="/dashboard" className={`flex items-center px-4 py-3 rounded-lg transition ${
+              router.pathname === "/dashboard"
+                ? "bg-purple-700 text-white"
+                : "text-purple-100 hover:bg-purple-700/50 hover:text-white"
+            }`}>
+              <Home className="w-6 h-6 mr-3" />
+              {!collapsed && "Dashboard"}
             </Link>
           </li>
-          {/* Only show features the user has */}
+
           {ALL_FEATURES.filter(f => userFeatures.includes(f.slug)).map(({ name, path, icon: Icon }) => (
             <li key={name}>
-              <Link
-                href={path}
-                className={`flex items-center px-4 py-3 rounded-xl font-medium text-lg transition
-                  ${router.pathname === path
-                    ? "bg-purple-700/70 text-white shadow-lg"
-                    : "text-purple-100 hover:bg-purple-700/40 hover:text-white"
-                  }
-                `}
-              >
-                <Icon className="w-6 h-6 mr-3 opacity-80" />
-                {!collapsed && <span>{name}</span>}
+              <Link href={path} className={`flex items-center px-4 py-3 rounded-lg transition ${
+                router.pathname === path
+                  ? "bg-purple-700 text-white"
+                  : "text-purple-100 hover:bg-purple-700/50 hover:text-white"
+              }`}>
+                <Icon className="w-6 h-6 mr-3" />
+                {!collapsed && name}
               </Link>
             </li>
           ))}
-          {/* Always show Add More Features */}
+
           <li>
-            <Link
-              href="/dashboard/add-features"
-              className={`flex items-center px-4 py-3 mt-4 rounded-xl font-medium text-lg transition
-                ${router.pathname === "/dashboard/add-features"
-                  ? "bg-purple-700/70 text-white shadow-lg"
-                  : "text-purple-100 hover:bg-purple-700/40 hover:text-white"
-                }
-              `}
-            >
-              <PlusCircle className="w-6 h-6 mr-3 opacity-80" />
-              {!collapsed && <span>Add More Features</span>}
+            <Link href="/dashboard/add-features" className={`flex items-center px-4 py-3 mt-4 rounded-lg transition ${
+              router.pathname === "/dashboard/add-features"
+                ? "bg-purple-700 text-white"
+                : "text-purple-100 hover:bg-purple-700/50 hover:text-white"
+            }`}>
+              <PlusCircle className="w-6 h-6 mr-3" />
+              {!collapsed && "Add More Features"}
             </Link>
           </li>
         </ul>
       </nav>
-      {/* User & Logout */}
-      <div className="mt-10 w-full flex flex-col items-center space-y-4 pb-4">
+
+      {/* Logout */}
+      <div className="mb-6 w-full flex flex-col items-center">
         {!collapsed && firstName && (
-          <span className="text-purple-200/80 font-semibold text-base mb-2">
-            Hi, {firstName}
-          </span>
+          <div className="text-purple-200 mb-2">Hi, {firstName}</div>
         )}
         <button
           onClick={handleLogout}
-          className={`flex items-center px-4 py-2 bg-white text-purple-800 font-semibold rounded-xl shadow hover:bg-purple-200 transition`}
+          className="flex items-center px-4 py-2 bg-white text-purple-800 rounded-lg shadow hover:bg-gray-100"
         >
           <LogOut className="w-5 h-5 mr-2" />
           {!collapsed && "Logout"}
