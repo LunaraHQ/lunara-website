@@ -5,13 +5,27 @@ import { useEffect } from 'react'
 import Script from 'next/script'
 import { SessionProvider } from 'next-auth/react'
 import NavBar from '../components/NavBar'
-import CookieBanner from '../components/CookieBanner'  // ← added
+import CookieBanner from '../components/CookieBanner'
+import { supabase } from '../utils/supabaseClient'
 
 function MyApp({ Component, pageProps }) {
-  // Plausible analytics setup
   useEffect(() => {
+    // Plausible analytics setup
     window.plausible = window.plausible || function () {
       (window.plausible.q = window.plausible.q || []).push(arguments)
+    }
+
+    // Supabase session persistence
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        localStorage.setItem('sb-lunara-session', JSON.stringify(session))
+      } else {
+        localStorage.removeItem('sb-lunara-session')
+      }
+    })
+
+    return () => {
+      listener?.subscription.unsubscribe()
     }
   }, [])
 
@@ -33,13 +47,8 @@ function MyApp({ Component, pageProps }) {
           data-domain="lunara.com"
         />
 
-        {/* Navigation Bar */}
         <NavBar />
-
-        {/* Main page content */}
         <Component {...pageProps} />
-
-        {/* Cookie consent banner */}
         <CookieBanner />
       </ThemeProvider>
     </SessionProvider>
