@@ -1,4 +1,3 @@
-// pages/auth/signin.js
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
@@ -25,7 +24,14 @@ export default function SignIn() {
     });
     setLoading(false);
     if (error) {
-      setError("Check account email or password and try again.");
+      if (
+        error.message.toLowerCase().includes('confirm') ||
+        error.message.toLowerCase().includes('not confirmed')
+      ) {
+        setError('Please confirm your email address before signing in.');
+      } else {
+        setError('Check account email or password and try again.');
+      }
     } else {
       router.push("/dashboard");
     }

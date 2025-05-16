@@ -1,5 +1,6 @@
 // pages/dashboard.js
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import {
@@ -71,7 +72,26 @@ const features = [
 ]
 
 export default function Dashboard() {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
+  const router = useRouter()
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (status === "loading") return // Wait for session to load
+    if (!session) {
+      router.push("/auth/signin")
+    } else {
+      setLoading(false)
+    }
+  }, [session, status, router])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex justify-center items-center bg-gradient-to-b from-purple-800 via-purple-900 to-black text-white">
+        Loading dashboard...
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-800 via-purple-900 to-black py-12 px-4">
