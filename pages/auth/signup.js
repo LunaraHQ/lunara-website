@@ -48,12 +48,11 @@ export default function SignUp() {
       </Head>
       <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-b from-purple-800 via-purple-900 to-black px-4">
         <div className="bg-black/80 p-10 rounded-2xl shadow-2xl max-w-md w-full text-center">
-          {/* Lunara Logo */}
+          {/* Crisp Lunara Logo */}
           <img
             src="/images/lunara-logo.png"
             alt="Lunara"
-            className="mx-auto mb-6 w-28 h-auto"
-            style={{ maxHeight: '90px' }}
+            className="mx-auto mb-6 h-20 w-auto object-contain"
           />
           <h1 className="text-3xl font-extrabold text-purple-200 mb-6">Sign Up</h1>
           {error && (
