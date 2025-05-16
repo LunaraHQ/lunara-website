@@ -15,60 +15,7 @@ import {
 import DashboardSidebar from '../components/DashboardSidebar'
 
 const features = [
-  {
-    title: 'Meetings & Events',
-    slug: 'meetings-events',
-    icon: Calendar,
-    desc: 'Event booking, registration, reminders',
-  },
-  {
-    title: 'Sales Funnel',
-    slug: 'sales-funnel',
-    icon: TrendingUp,
-    desc: 'Lead capture, campaigns, pipeline',
-  },
-  {
-    title: 'CX Management',
-    slug: 'cx-management',
-    icon: Smile,
-    desc: 'Surveys, reviews, guest feedback',
-  },
-  {
-    title: 'CRM & Client Management',
-    slug: 'crm-client-management',
-    icon: Users,
-    desc: 'Track client interactions, forecasting',
-  },
-  {
-    title: 'AI Chatbot & Automation',
-    slug: 'ai-chatbot-automation',
-    icon: Bot,
-    desc: '24/7 support, lead qualification',
-  },
-  {
-    title: 'Analytics & Reporting',
-    slug: 'analytics-reporting',
-    icon: BarChart3,
-    desc: 'Dashboards, KPIs, predictions',
-  },
-  {
-    title: 'Team Management',
-    slug: 'team-management',
-    icon: Users,
-    desc: 'Shifts, tasks, staff comms',
-  },
-  {
-    title: 'E-commerce Tools',
-    slug: 'ecommerce-tools',
-    icon: ShoppingCart,
-    desc: 'Cart recovery, checkout boost',
-  },
-  {
-    title: 'Loyalty & Membership',
-    slug: 'loyalty-membership',
-    icon: Gift,
-    desc: 'Rewards, memberships, offers',
-  },
+  // ... your features list ...
 ]
 
 export default function Dashboard() {
@@ -90,13 +37,13 @@ export default function Dashboard() {
     getSession()
   }, [router])
 
-  // Listen to sidebar collapse changes
+  // Sync with sidebar state
   useEffect(() => {
     const handler = () => {
       setSidebarCollapsed(window.localStorage.getItem("lunaraSidebarCollapsed") === "true");
     };
     window.addEventListener('storage', handler);
-    handler(); // Initial check
+    handler();
     return () => window.removeEventListener('storage', handler);
   }, []);
 
@@ -109,16 +56,19 @@ export default function Dashboard() {
   }
 
   return (
-    <>
+    <div className="relative min-h-screen w-full">
       <DashboardSidebar />
       <div
+        className="absolute top-0 right-0"
         style={{
-          marginLeft: sidebarCollapsed ? 64 : 220,
+          left: sidebarCollapsed ? 64 : 220,
           width: `calc(100% - ${sidebarCollapsed ? 64 : 220}px)`,
-          transition: 'margin-left 0.3s, width 0.3s'
+          minHeight: '100vh',
+          transition: 'left 0.3s, width 0.3s',
+          background: 'linear-gradient(to bottom, #6D28D9, #1e0d47 70%, #000 100%)',
         }}
       >
-        <div className="min-h-screen bg-gradient-to-b from-purple-800 via-purple-900 to-black py-12 px-4">
+        <div className="py-12 px-4 min-h-screen">
           <div className="max-w-5xl mx-auto">
             <div className="mb-10 text-center">
               <h1 className="text-3xl md:text-4xl font-extrabold text-purple-200 mb-2">
@@ -169,6 +119,6 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
