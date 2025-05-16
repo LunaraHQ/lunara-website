@@ -1,45 +1,37 @@
 // pages/_app.js
-import '../styles/globals.css'
-import { ThemeProvider } from 'next-themes'
-import { useEffect } from 'react'
-import Script from 'next/script'
-import { SessionProvider } from 'next-auth/react'
-import NavBar from '../components/NavBar'
-import CookieBanner from '../components/CookieBanner'
-import { supabase } from '../utils/supabaseClient'
-import { useRouter } from 'next/router'
+import "../styles/globals.css";
+import { useRouter } from "next/router";
+import DashboardSidebar from "../components/DashboardSidebar";
+import PublicNavBar from "../components/PublicNavBar";
 
 function MyApp({ Component, pageProps }) {
-  const router = useRouter()
-
-  useEffect(() => {
-    // Persist Supabase session
-    const { data: listener } = supabase.auth.onAuthStateChange((_, session) => {
-      if (session) {
-        localStorage.setItem('sb-session', JSON.stringify(session))
-      } else {
-        localStorage.removeItem('sb-session')
-      }
-    })
-    return () => listener.subscription.unsubscribe()
-  }, [])
-
-  // Hide NavBar on internal pages
-  const hideNav =
-    router.pathname.startsWith('/dashboard') ||
-    router.pathname.startsWith('/features') ||
-    router.pathname === '/pricing' ||
-    router.pathname.startsWith('/dashboard')
+  const router = useRouter();
+  const isDashboardLayout =
+    router.pathname.startsWith("/dashboard") ||
+    router.pathname.startsWith("/features") ||
+    router.pathname === "/pricing";
 
   return (
-    <SessionProvider session={pageProps.session}>
-      <ThemeProvider attribute="class" defaultTheme="dark">
-        {!hideNav && <NavBar />}
+    <>
+      {/* Show public navbar on non-dashboard routes */}
+      {!isDashboardLayout && <PublicNavBar />}
+
+      {/* Always render sidebar on dashboard, features, and pricing */}
+      {isDashboardLayout && <DashboardSidebar />}
+
+      {/* Push your page content right so it sits next to the sidebar */}
+      <div
+        className={`transition-all duration-300 ${
+          isDashboardLayout
+            ? // match your sidebar widths: 64px collapsed, 256px expanded
+              "ml-16 md:ml-64"
+            : ""
+        }`}
+      >
         <Component {...pageProps} />
-        <CookieBanner />
-      </ThemeProvider>
-    </SessionProvider>
-  )
+      </div>
+    </>
+  );
 }
 
-export default MyApp
+export default MyApp;

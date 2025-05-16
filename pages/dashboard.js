@@ -2,7 +2,15 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "../utils/supabaseClient";
-import { Calendar, BarChart3, Smile, Bot, Users, ShoppingCart, Gift } from "lucide-react";
+import {
+  Calendar,
+  BarChart3,
+  Smile,
+  Bot,
+  Users,
+  ShoppingCart,
+  Gift,
+} from "lucide-react";
 
 const ALL_FEATURES = [
   {
@@ -36,12 +44,6 @@ const ALL_FEATURES = [
     icon: Users,
   },
   {
-    name: "Analytics & Reporting",
-    slug: "analytics",
-    description: "Dashboards, KPIs, predictions",
-    icon: BarChart3,
-  },
-  {
     name: "E-commerce Tools",
     slug: "ecommerce-tools",
     description: "Storefront, payments, inventory",
@@ -67,7 +69,9 @@ export default function Dashboard() {
 
   useEffect(() => {
     (async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (session) {
         const { data } = await supabase
           .from("profiles")
@@ -89,27 +93,34 @@ export default function Dashboard() {
   const unlocked = profile.features.map((f) => f.toLowerCase());
 
   return (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold mb-4">Welcome, {firstName}!</h1>
-      <p className="text-gray-300 mb-8">
-        Preview any of Lunara’s modular business features below. Upgrade to unlock full access!
+    <div className="min-h-screen bg-gradient-to-b from-purple-900 to-purple-700 p-6">
+      <h1 className="text-3xl font-bold text-white mb-2">
+        Welcome, {firstName}!
+      </h1>
+      <p className="text-purple-200 mb-8">
+        Preview any of Lunara’s modular business features below. Upgrade to
+        unlock full access!
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {ALL_FEATURES.map(({ name, slug, description, icon: Icon }) => {
           const isUnlocked = unlocked.includes(slug);
-          const href = isUnlocked ? `/features/${slug}` : "/dashboard/add-features";
+          const href = isUnlocked
+            ? `/features/${slug}`
+            : "/dashboard/add-features";
 
           return (
             <Link href={href} key={slug}>
               <a className="block group">
-                <div className="relative p-6 bg-gray-900 rounded-lg transition hover:shadow-lg">
-                  <Icon className="w-10 h-10 text-purple-400 mb-4" />
-                  <h2 className="text-xl font-semibold text-white mb-2">{name}</h2>
-                  <p className="text-gray-400">{description}</p>
+                <div className="relative p-6 bg-purple-800 rounded-lg hover:bg-purple-700 transition">
+                  <Icon className="w-10 h-10 text-purple-300 mb-4" />
+                  <h2 className="text-xl font-semibold text-white mb-1">
+                    {name}
+                  </h2>
+                  <p className="text-purple-200">{description}</p>
 
                   {!isUnlocked && (
-                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                    <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
                       <span className="px-3 py-1 bg-purple-600 text-white rounded">
                         Click to Unlock
                       </span>
