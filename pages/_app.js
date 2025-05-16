@@ -35,10 +35,12 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <>
-      {!isApp && <NavBar />}
-      {isApp && <DashboardSidebar />}
+      {/* Pass session prop for user logic */}
+      {!isApp && <NavBar session={session} />}
+      {isApp && <DashboardSidebar session={session} />}
 
       <div className={`transition-all duration-300 ${isApp ? 'ml-16 md:ml-64' : ''}`}>
+        {/* Always pass session to pages */}
         <Component {...pageProps} session={session}/>
       </div>
     </>
