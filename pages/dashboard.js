@@ -75,6 +75,7 @@ export default function Dashboard() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
 
   useEffect(() => {
     const getSession = async () => {
@@ -89,6 +90,16 @@ export default function Dashboard() {
     getSession()
   }, [router])
 
+  useEffect(() => {
+    // Sync with sidebar localStorage
+    const handler = () => {
+      setSidebarCollapsed(window.localStorage.getItem("lunaraSidebarCollapsed") === "true");
+    };
+    window.addEventListener('storage', handler);
+    handler();
+    return () => window.removeEventListener('storage', handler);
+  }, []);
+
   if (loading) {
     return (
       <div className="min-h-screen flex justify-center items-center bg-gradient-to-b from-purple-800 via-purple-900 to-black text-white">
@@ -100,7 +111,10 @@ export default function Dashboard() {
   return (
     <>
       <DashboardSidebar />
-      <div style={{ marginLeft: 220 }}>
+      <div style={{
+        marginLeft: sidebarCollapsed ? 64 : 220,
+        transition: 'margin-left 0.3s'
+      }}>
         <div className="min-h-screen bg-gradient-to-b from-purple-800 via-purple-900 to-black py-12 px-4">
           <div className="max-w-5xl mx-auto">
             <div className="mb-10 text-center">
