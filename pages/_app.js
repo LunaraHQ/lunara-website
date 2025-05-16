@@ -7,8 +7,11 @@ import { SessionProvider } from 'next-auth/react'
 import NavBar from '../components/NavBar'
 import CookieBanner from '../components/CookieBanner'
 import { supabase } from '../utils/supabaseClient'
+import { useRouter } from 'next/router'
 
 function MyApp({ Component, pageProps }) {
+  const router = useRouter();
+
   useEffect(() => {
     // Plausible analytics setup
     window.plausible = window.plausible || function () {
@@ -29,6 +32,9 @@ function MyApp({ Component, pageProps }) {
     }
   }, [])
 
+  // Only show NavBar on non-dashboard routes
+  const isDashboard = router.pathname.startsWith('/dashboard')
+
   return (
     <SessionProvider session={pageProps.session}>
       <ThemeProvider attribute="class" defaultTheme="dark">
@@ -39,15 +45,12 @@ function MyApp({ Component, pageProps }) {
         >
           Skip to content
         </a>
-
-        {/* Plausible script */}
         <Script
           strategy="afterInteractive"
           src="https://plausible.io/js/plausible.js"
           data-domain="lunara.com"
         />
-
-        <NavBar />
+        {!isDashboard && <NavBar />}
         <Component {...pageProps} />
         <CookieBanner />
       </ThemeProvider>
