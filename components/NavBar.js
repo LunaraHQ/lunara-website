@@ -1,5 +1,3 @@
-// components/NavBar.js
-
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -21,7 +19,6 @@ export default function NavBar({ onContactOpen, session }) {
   const router = useRouter();
   const [featuresOpen, setFeaturesOpen] = useState(false);
 
-  // For Supabase: session?.user?.user_metadata?.full_name or session?.user?.email
   const displayName =
     session?.user?.user_metadata?.full_name ||
     session?.user?.email?.split("@")[0] ||
