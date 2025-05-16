@@ -1,89 +1,115 @@
 // pages/auth/signup.js
-import React, { useState } from 'react'
-import Head from 'next/head'
-import { createClient } from '@supabase/supabase-js'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-)
+import Head from 'next/head'
 
 export default function SignUp() {
-  const [form, setForm] = useState({ email: '', password: '', confirm: '' })
+  const [form, setForm] = useState({ name: '', email: '', password: '' })
   const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setForm((f) => ({ ...f, [name]: value }))
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
-    if (form.password !== form.confirm) {
-      setError('Passwords do not match.')
-      return
-    }
     setLoading(true)
-    const { error: signUpError } = await supabase.auth.signUp({
-      email: form.email,
-      password: form.password,
-    })
-    setLoading(false)
-    if (signUpError) {
-      setError(signUpError.message)
-    } else {
+    try {
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      const data = await res.json()
+      setLoading(false)
+      if (!res.ok) {
+        setError(data.error || 'Sign up failed.')
+        return
+      }
       setSuccess(true)
-      setTimeout(() => router.push('/auth/signin'), 3000)
+      setTimeout(() => {
+        router.push('/auth/signin?newaccount=true')
+      }, 2500)
+    } catch (err) {
+      setLoading(false)
+      setError('Sign up failed. Please try again.')
     }
   }
 
   return (
     <>
-      <Head><title>Sign Up | Lunara</title></Head>
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white px-6">
-        <h1 className="text-4xl font-extrabold mb-4">Create your Lunara account</h1>
-        {success ? (
-          <p className="text-green-400">Check your email to confirm and then sign in...</p>
-        ) : (
-          <form onSubmit={handleSubmit} className="w-full max-w-xs space-y-4">
-            {error && <p className="text-red-500 text-sm">{error}</p>}
-            <input
-              type="email"
-              required
-              placeholder="Email"
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-              className="w-full px-4 py-3 rounded-lg bg-gray-800 placeholder-gray-500 text-white"
-            />
-            <input
-              type="password"
-              required
-              placeholder="Password"
-              value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
-              className="w-full px-4 py-3 rounded-lg bg-gray-800 placeholder-gray-500 text-white"
-            />
-            <input
-              type="password"
-              required
-              placeholder="Confirm Password"
-              value={form.confirm}
-              onChange={(e) => setForm({ ...form, confirm: e.target.value })}
-              className="w-full px-4 py-3 rounded-lg bg-gray-800 placeholder-gray-500 text-white"
-            />
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-medium"
+      <Head>
+        <title>Sign Up | Lunara</title>
+      </Head>
+      <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-b from-purple-800 via-purple-900 to-black px-4">
+        <div className="bg-black/80 p-10 rounded-2xl shadow-2xl max-w-md w-full text-center">
+          {/* Lunara Logo */}
+          <img
+            src="/images/lunara-logo.png"
+            alt="Lunara"
+            className="mx-auto mb-6 w-28 h-auto"
+            style={{ maxHeight: '90px' }}
+          />
+          <h1 className="text-3xl font-extrabold text-purple-200 mb-6">Sign Up</h1>
+          {error && (
+            <div className="mb-4 text-red-500 font-semibold text-center">{error}</div>
+          )}
+          {success ? (
+            <div className="mb-4 text-green-400 font-semibold text-center">
+              Signup successful! Please check your email to verify your account.
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <input
+                type="text"
+                name="name"
+                placeholder="Full Name"
+                value={form.name}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 rounded-full border border-gray-700 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={form.email}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 rounded-full border border-gray-700 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                value={form.password}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 rounded-full border border-gray-700 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-3 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 text-white font-semibold shadow-xl hover:scale-105 transition disabled:opacity-50"
+              >
+                {loading ? 'Signing Up...' : 'Sign Up'}
+              </button>
+            </form>
+          )}
+          <div className="mt-4">
+            <a
+              href="/auth/signin"
+              className="text-purple-400 hover:underline transition"
             >
-              {loading ? 'Signing Up...' : 'Sign Up'}
-            </button>
-          </form>
-        )}
-        <p className="mt-4 text-sm text-gray-500">
-          Already have an account?{' '}
-          <a href="/auth/signin" className="underline">Sign In</a>
-        </p>
+              Already have an account? Sign in
+            </a>
+          </div>
+        </div>
       </div>
     </>
   )
