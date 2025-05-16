@@ -26,18 +26,36 @@ export default function SignUp() {
     }
     setLoading(true)
     try {
-      const { error } = await supabase.auth.signUp({
+      // 1. Sign up with Supabase Auth, storing name in user_metadata
+      const { data, error: signUpError } = await supabase.auth.signUp({
         email: form.email,
         password: form.password,
         options: {
-          data: { name: form.name }, // ✅ store name in metadata
+          data: { name: form.name },
         }
       })
-      setLoading(false)
-      if (error) {
-        setError(error.message || 'Sign up failed.')
+      if (signUpError) {
+        setError(signUpError.message || 'Sign up failed.')
+        setLoading(false)
         return
       }
+
+      // 2. Insert into profiles table (after sign up is successful)
+      // (user id is in data.user.id)
+      const user = data?.user
+      if (user) {
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .insert([
+            { id: user.id, email: form.email, name: form.name }
+          ])
+        if (profileError) {
+          console.error('Profile creation error:', profileError)
+          // Optionally show error, but still continue
+        }
+      }
+
+      setLoading(false)
       setSuccess(true)
       setTimeout(() => {
         router.push('/auth/signin?newaccount=true')
