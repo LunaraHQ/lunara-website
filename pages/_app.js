@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { supabase } from '../utils/supabaseClient'
 import NavBar from '../components/NavBar'
-import DashboardSidebar from '../components/DashboardSidebar'
 import ContactModal from '../components/ContactModal'
 import LoadingSpinner from '../components/LoadingSpinner'
 
