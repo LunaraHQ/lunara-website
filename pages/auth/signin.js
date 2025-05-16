@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { supabase } from "../../utils/supabaseClient";
-import { useSession } from "../../hooks/useSession"; // adjust this path if your session hook lives elsewhere
+import { useSession } from "../../hooks/useSession";
 
 export default function SignIn() {
   const router = useRouter();
@@ -10,14 +10,12 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
-  // Redirect if already logged in
   useEffect(() => {
     if (!loading && session) {
       router.replace("/dashboard");
     }
   }, [session, loading, router]);
 
-  // Handle sign in
   const handleSignIn = async (e) => {
     e.preventDefault();
     setErrorMsg("");
