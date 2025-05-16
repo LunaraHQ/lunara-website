@@ -28,7 +28,10 @@ export default function SignUp() {
     try {
       const { error } = await supabase.auth.signUp({
         email: form.email,
-        password: form.password
+        password: form.password,
+        options: {
+          data: { name: form.name }, // ✅ store name in metadata
+        }
       })
       setLoading(false)
       if (error) {
