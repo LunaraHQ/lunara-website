@@ -1,8 +1,8 @@
 // components/DashboardSidebar.js
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { supabase } from "../utils/supabaseClient";
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { supabase } from '../utils/supabaseClient'
 import {
   Home,
   Users,
@@ -16,76 +16,78 @@ import {
   LogOut,
   ChevronsLeft,
   ChevronsRight,
-} from "lucide-react";
+} from 'lucide-react'
 
 const ALL_FEATURES = [
-  { name: "CRM", slug: "crm", icon: Users, path: "/dashboard/crm" },
-  { name: "Analytics", slug: "analytics", icon: BarChart3, path: "/dashboard/analytics" },
-  { name: "Events", slug: "events", icon: Calendar, path: "/dashboard/events" },
-  { name: "CX Management", slug: "cx-management", icon: Smile, path: "/dashboard/cx-management" },
-  { name: "AI Chatbot", slug: "ai-chatbot-automation", icon: Bot, path: "/dashboard/ai-chatbot-automation" },
-  { name: "E-commerce Tools", slug: "ecommerce-tools", icon: ShoppingCart, path: "/dashboard/ecommerce-tools" },
-  { name: "Loyalty & Membership", slug: "loyalty-membership", icon: Gift, path: "/dashboard/loyalty-membership" },
-  { name: "Team Management", slug: "team-management", icon: Users, path: "/dashboard/team-management" },
-];
+  { name: 'Meetings & Events', slug: 'meetings-events', icon: Calendar },
+  { name: 'Sales Funnel', slug: 'sales-funnel', icon: BarChart3 },
+  { name: 'CX Management', slug: 'cx-management', icon: Smile },
+  { name: 'CRM & Client Management', slug: 'crm', icon: Users },
+  { name: 'AI Chatbot & Automation', slug: 'ai-chatbot-automation', icon: Bot },
+  { name: 'Analytics & Reporting', slug: 'analytics', icon: BarChart3 },
+  { name: 'Team Management', slug: 'team-management', icon: Users },
+  { name: 'E-commerce Tools', slug: 'ecommerce-tools', icon: ShoppingCart },
+  { name: 'Loyalty & Membership', slug: 'loyalty-membership', icon: Gift },
+]
 
 export default function DashboardSidebar() {
-  const router = useRouter();
-  const [profile, setProfile] = useState({ name: "", features: [] });
-  const [loading, setLoading] = useState(true);
-  const [collapsed, setCollapsed] = useState(false);
+  const router = useRouter()
+  const [profile, setProfile] = useState({ name: '', features: [] })
+  const [loading, setLoading] = useState(true)
+  const [collapsed, setCollapsed] = useState(false)
 
   // load collapse state
   useEffect(() => {
-    const saved = window.localStorage.getItem("lunaraSidebarCollapsed");
-    if (saved) setCollapsed(saved === "true");
-  }, []);
+    const s = window.localStorage.getItem('lunaraSidebarCollapsed')
+    if (s) setCollapsed(s === 'true')
+  }, [])
   useEffect(() => {
-    window.localStorage.setItem("lunaraSidebarCollapsed", collapsed ? "true" : "false");
-  }, [collapsed]);
+    window.localStorage.setItem('lunaraSidebarCollapsed', collapsed ? 'true' : 'false')
+  }, [collapsed])
 
-  // fetch name & features
+  // fetch profile
   useEffect(() => {
-    (async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        const { data } = await supabase
-          .from("profiles")
-          .select("features")
-          .eq("id", session.user.id)
-          .single();
-        setProfile({ ...profile, features: Array.isArray(data.features) ? data.features : [] });
-      }
-      setLoading(false);
-    })();
-  }, []);
+    supabase.auth.getSession().then(({ data }) => {
+      if (!data.session) return setLoading(false)
+      supabase
+        .from('profiles')
+        .select('name,features')
+        .eq('id', data.session.user.id)
+        .single()
+        .then(({ data: p }) => {
+          setProfile({ name: p.name, features: Array.isArray(p.features) ? p.features : [] })
+          setLoading(false)
+        })
+    })
+  }, [])
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.push("/");
-  };
+    await supabase.auth.signOut()
+    router.push('/')
+  }
 
   if (loading) {
     return (
       <aside className="fixed top-0 left-0 h-full w-16 flex items-center justify-center bg-gradient-to-b from-purple-900 to-black z-50">
         <span className="text-purple-300 animate-pulse">…</span>
       </aside>
-    );
+    )
   }
 
-  const userFeatures = profile.features.map((f) => f.toLowerCase());
+  const userSlugs = profile.features.map((f) => f.toLowerCase())
+  const firstName = profile.name.split(' ')[0] || ''
 
   return (
     <aside
       className={`fixed top-0 left-0 h-full z-50 flex flex-col bg-gradient-to-b from-purple-900 to-black shadow-xl border-r border-purple-700 transition-all duration-300 ease-in-out ${
-        collapsed ? "w-16" : "w-64"
+        collapsed ? 'w-16' : 'w-64'
       }`}
       style={{ minWidth: collapsed ? 64 : 256 }}
     >
-      {/* Collapse button */}
+      {/* collapse toggle */}
       <button
         onClick={() => setCollapsed((c) => !c)}
-        aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         className="absolute top-4 right-[-18px] w-8 h-8 flex items-center justify-center bg-purple-800 border border-purple-600 rounded-full shadow hover:bg-purple-700 z-10"
       >
         {collapsed ? <ChevronsRight size={18} /> : <ChevronsLeft size={18} />}
@@ -93,22 +95,21 @@ export default function DashboardSidebar() {
 
       {/* My Account */}
       <Link href="/dashboard">
-        <a className="flex items-center mt-4 mb-8 select-none px-4 focus:outline-none">
+        <a className="flex items-center mt-4 mb-8 px-4 select-none focus:outline-none">
           {!collapsed && <span className="text-white font-extrabold text-2xl">My Account</span>}
         </a>
       </Link>
 
-      {/* Links */}
+      {/* links */}
       <nav className="flex-1 overflow-y-auto">
         <ul className="space-y-2 px-2">
           <li>
             <Link href="/dashboard">
               <a
-                title="Dashboard"
                 className={`flex items-center px-4 py-3 rounded-lg transition focus:outline-none ${
-                  router.pathname === "/dashboard"
-                    ? "bg-purple-700 text-white"
-                    : "text-purple-100 hover:bg-purple-700/50 hover:text-white"
+                  router.pathname === '/dashboard'
+                    ? 'bg-purple-700 text-white'
+                    : 'text-purple-100 hover:bg-purple-700/50 hover:text-white'
                 }`}
               >
                 <Home className="w-6 h-6" />
@@ -116,16 +117,14 @@ export default function DashboardSidebar() {
               </a>
             </Link>
           </li>
-
-          {ALL_FEATURES.filter((f) => userFeatures.includes(f.slug)).map(({ name, slug, path, icon: Icon }) => (
+          {ALL_FEATURES.filter((f) => userSlugs.includes(f.slug)).map(({ name, slug, icon: Icon }) => (
             <li key={slug}>
-              <Link href={path}>
+              <Link href={`/features/${slug}`}>
                 <a
-                  title={name}
                   className={`flex items-center px-4 py-3 rounded-lg transition focus:outline-none ${
-                    router.pathname === path
-                      ? "bg-purple-700 text-white"
-                      : "text-purple-100 hover:bg-purple-700/50 hover:text-white"
+                    router.pathname === `/features/${slug}`
+                      ? 'bg-purple-700 text-white'
+                      : 'text-purple-100 hover:bg-purple-700/50 hover:text-white'
                   }`}
                 >
                   <Icon className="w-6 h-6" />
@@ -134,15 +133,13 @@ export default function DashboardSidebar() {
               </Link>
             </li>
           ))}
-
           <li>
             <Link href="/dashboard/add-features">
               <a
-                title="Add More Features"
                 className={`flex items-center px-4 py-3 mt-4 rounded-lg transition focus:outline-none ${
-                  router.pathname === "/dashboard/add-features"
-                    ? "bg-purple-700 text-white"
-                    : "text-purple-100 hover:bg-purple-700/50 hover:text-white"
+                  router.pathname === '/dashboard/add-features'
+                    ? 'bg-purple-700 text-white'
+                    : 'text-purple-100 hover:bg-purple-700/50 hover:text-white'
                 }`}
               >
                 <PlusCircle className="w-6 h-6" />
@@ -153,15 +150,14 @@ export default function DashboardSidebar() {
         </ul>
       </nav>
 
-      {/* Logout */}
+      {/* logout */}
       <div className="mb-6 w-full flex items-center justify-center px-2">
         <button
           onClick={handleLogout}
-          title="Logout"
           className={`flex items-center px-4 py-2 rounded-lg shadow transition focus:outline-none ${
             collapsed
-              ? "bg-transparent text-purple-100 hover:bg-purple-700/50"
-              : "bg-white text-purple-800 hover:bg-gray-100"
+              ? 'bg-transparent text-purple-100 hover:bg-purple-700/50'
+              : 'bg-white text-purple-800 hover:bg-gray-100'
           }`}
         >
           <LogOut className="w-5 h-5" />
@@ -169,5 +165,5 @@ export default function DashboardSidebar() {
         </button>
       </div>
     </aside>
-);
+  )
 }

@@ -1,16 +1,17 @@
+// components/NavBar.js
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { supabase } from '../utils/supabaseClient'
 import ContactModal from './ContactModal'
 import { AnimatePresence, motion } from 'framer-motion'
 
-const features = [
+const FEATURES = [
   { name: 'Meetings & Events', slug: 'meetings-events' },
   { name: 'Sales Funnel', slug: 'sales-funnel' },
   { name: 'CX Management', slug: 'cx-management' },
-  { name: 'CRM & Client Management', slug: 'crm-client-management' },
+  { name: 'CRM & Client Management', slug: 'crm' },
   { name: 'AI Chatbot & Automation', slug: 'ai-chatbot-automation' },
-  { name: 'Analytics & Reporting', slug: 'analytics-reporting' },
+  { name: 'Analytics & Reporting', slug: 'analytics' },
   { name: 'Team Management', slug: 'team-management' },
   { name: 'E-commerce Tools', slug: 'ecommerce-tools' },
   { name: 'Loyalty & Membership', slug: 'loyalty-membership' },
@@ -23,33 +24,28 @@ export default function NavBar() {
   const [showFeatures, setShowFeatures] = useState(false)
 
   useEffect(() => {
-    const loadSession = async () => {
-      const { data } = await supabase.auth.getSession()
-      if (data.session) {
-        setSession(data.session)
-        const name = data.session.user.user_metadata?.name || data.session.user.email
-        setUserName(name.split(' ')[0])
-      }
-    }
-
-    loadSession()
-
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-      if (session) {
-        const name = session.user.user_metadata?.name || session.user.email
-        setUserName(name.split(' ')[0])
+    // load initial session and username
+    supabase.auth.getSession().then(({ data }) => {
+      const s = data.session
+      setSession(s)
+      if (s) {
+        const nm = s.user.user_metadata?.name || s.user.email
+        setUserName(nm.split(' ')[0])
       }
     })
-
-    return () => {
-      listener.subscription.unsubscribe()
-    }
+    // listen for changes
+    const { data: listener } = supabase.auth.onAuthStateChange((_ev, s) => {
+      setSession(s)
+      if (s) {
+        const nm = s.user.user_metadata?.name || s.user.email
+        setUserName(nm.split(' ')[0])
+      }
+    })
+    return () => listener.subscription.unsubscribe()
   }, [])
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
-    setSession(null)
     window.location.href = '/'
   }
 
@@ -57,22 +53,20 @@ export default function NavBar() {
     <>
       <nav className="bg-gradient-to-r from-purple-800 to-purple-600 text-white px-8 py-4 flex justify-between items-center">
         <div className="flex items-center space-x-12">
-          <Link href="/" className="text-2xl font-extrabold focus:outline-none">
-            Lunara
-          </Link>
-          <Link href="/dashboard" className="hover:underline focus:outline-none">
-            Dashboard
-          </Link>
-          {/* Features Dropdown - Sticky Fix */}
+          <Link href="/"><a className="text-2xl font-extrabold focus:outline-none">Lunara</a></Link>
+          <Link href="/dashboard"><a className="hover:underline focus:outline-none">Dashboard</a></Link>
+
           <div
             className="relative"
             onMouseEnter={() => setShowFeatures(true)}
             onMouseLeave={() => setShowFeatures(false)}
-            style={{ zIndex: 51 }}
           >
-            <button className="hover:underline flex items-center space-x-1 focus:outline-none">
+            <button
+              onClick={() => setShowFeatures((o) => !o)}
+              className="flex items-center space-x-1 hover:underline focus:outline-none"
+            >
               <span>Features</span>
-              <span className="text-xs">&#x25BE;</span>
+              <span className="text-xs">▾</span>
             </button>
             <AnimatePresence>
               {showFeatures && (
@@ -81,37 +75,22 @@ export default function NavBar() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 5 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute left-0 mt-2 bg-white text-purple-800 rounded-lg shadow-xl w-64 z-50 transition"
-                  style={{ minHeight: 30, paddingTop: 2, paddingBottom: 2 }}
+                  className="absolute left-0 mt-2 bg-white text-purple-800 rounded-lg shadow-xl w-64 z-50"
                 >
-                  {features.map((feat) => (
-                    <Link
-                      key={feat.slug}
-                      href={`/features/${feat.slug}`}
-                      className="block px-5 py-2 hover:bg-purple-100 transition-colors focus:outline-none"
-                    >
-                      {feat.name}
+                  {FEATURES.map((f) => (
+                    <Link key={f.slug} href={`/features/${f.slug}`}>
+                      <a className="block px-5 py-2 hover:bg-purple-100 focus:outline-none">{f.name}</a>
                     </Link>
                   ))}
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
-          <Link href="/#howitworks" className="hover:underline focus:outline-none">
-            How It Works
-          </Link>
-          <Link href="/#pricing" className="hover:underline focus:outline-none">
-            Pricing
-          </Link>
-          <Link href="/pilot" className="hover:underline focus:outline-none">
-            Pilot Programme
-          </Link>
-          <button
-            onClick={() => setContactOpen(true)}
-            className="hover:underline focus:outline-none"
-          >
-            Contact
-          </button>
+
+          <Link href="/#howitworks"><a className="hover:underline focus:outline-none">How It Works</a></Link>
+          <Link href="/#pricing"><a className="hover:underline focus:outline-none">Pricing</a></Link>
+          <Link href="/pilot"><a className="hover:underline focus:outline-none">Pilot Programme</a></Link>
+          <button onClick={() => setContactOpen(true)} className="hover:underline focus:outline-none">Contact</button>
         </div>
 
         <div className="flex items-center space-x-4">
@@ -127,22 +106,21 @@ export default function NavBar() {
             </>
           ) : (
             <>
-              <Link
-                href="/auth/signup"
-                className="bg-purple-500 hover:bg-purple-400 px-4 py-1 rounded-lg font-medium text-white focus:outline-none"
-              >
-                Sign Up
+              <Link href="/auth/signup">
+                <a className="bg-purple-500 hover:bg-purple-400 px-4 py-1 rounded-lg font-medium text-white focus:outline-none">
+                  Sign Up
+                </a>
               </Link>
-              <Link
-                href="/auth/signin"
-                className="bg-white text-purple-700 px-4 py-1 rounded-lg font-medium hover:opacity-90 focus:outline-none"
-              >
-                Sign In
+              <Link href="/auth/signin">
+                <a className="bg-white text-purple-700 px-4 py-1 rounded-lg font-medium hover:opacity-90 focus:outline-none">
+                  Sign In
+                </a>
               </Link>
             </>
           )}
         </div>
       </nav>
+
       <ContactModal
         isOpen={isContactOpen}
         onOpen={() => setContactOpen(true)}
