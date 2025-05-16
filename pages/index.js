@@ -23,7 +23,6 @@ export async function getServerSideProps(ctx) {
   } = await supabase.auth.getSession();
 
   if (session) {
-    // Redirect logged-in users to dashboard
     return {
       redirect: {
         destination: "/dashboard",
