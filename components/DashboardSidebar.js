@@ -34,7 +34,7 @@ export default function DashboardSidebar() {
   const [loading, setLoading] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
 
-  // load collapse state
+  // Load collapse state
   useEffect(() => {
     const saved = window.localStorage.getItem("lunaraSidebarCollapsed");
     if (saved) setCollapsed(saved === "true");
@@ -43,14 +43,11 @@ export default function DashboardSidebar() {
     window.localStorage.setItem("lunaraSidebarCollapsed", collapsed ? "true" : "false");
   }, [collapsed]);
 
-  // fetch profile
+  // Fetch profile/features
   useEffect(() => {
-    const fetchProfile = async () => {
+    (async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        setLoading(false);
-        return;
-      }
+      if (!session) return setLoading(false);
       const { data } = await supabase
         .from("profiles")
         .select("name, features")
@@ -58,8 +55,7 @@ export default function DashboardSidebar() {
         .single();
       setProfile(data);
       setLoading(false);
-    };
-    fetchProfile();
+    })();
   }, []);
 
   const handleLogout = async () => {
@@ -73,7 +69,6 @@ export default function DashboardSidebar() {
 
   const firstName = profile?.name?.split(" ")[0] || null;
 
-  // loading placeholder
   if (loading) {
     return (
       <aside className="fixed top-0 left-0 h-full w-16 flex items-center justify-center bg-gradient-to-b from-purple-900 to-black z-50">
@@ -87,8 +82,7 @@ export default function DashboardSidebar() {
       className={`
         fixed top-0 left-0 h-full z-50 flex flex-col items-center
         bg-gradient-to-b from-purple-900 to-black shadow-xl border-r border-purple-700
-        transition-width duration-300
-        ${collapsed ? "w-16" : "w-64"}
+        transition-all duration-300 ${collapsed ? "w-16" : "w-64"}
       `}
       style={{ minWidth: collapsed ? 64 : 220 }}
     >
@@ -98,15 +92,16 @@ export default function DashboardSidebar() {
         aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         className="absolute top-4 right-[-18px] w-8 h-8 flex items-center justify-center bg-purple-800 border border-purple-600 rounded-full shadow hover:bg-purple-700 z-10"
       >
-        {collapsed ? <ChevronsRight size={20} /> : <ChevronsLeft size={20} />}
+        {collapsed ? <ChevronsRight size={18} /> : <ChevronsLeft size={18} />}
       </button>
 
-      {/* Logo */}
+      {/* Logo with PNG fallback */}
       <Link href="/dashboard" className="flex items-center mt-4 mb-8 select-none">
         <img
           src="/lunara-favicon.png"
           alt="Lunara logo"
           className="h-10 w-10 rounded-xl"
+          onError={e => (e.currentTarget.src = "/favicon.ico")}
         />
         {!collapsed && (
           <span className="ml-2 text-white font-extrabold text-2xl tracking-wide">
@@ -115,7 +110,7 @@ export default function DashboardSidebar() {
         )}
       </Link>
 
-      {/* Nav Links */}
+      {/* Navigation */}
       <nav className="flex-1 w-full">
         <ul className="space-y-2">
           <li>
@@ -157,9 +152,7 @@ export default function DashboardSidebar() {
 
       {/* Logout */}
       <div className="mb-6 w-full flex flex-col items-center">
-        {!collapsed && firstName && (
-          <div className="text-purple-200 mb-2">Hi, {firstName}</div>
-        )}
+        {!collapsed && firstName && <div className="text-purple-200 mb-2">Hi, {firstName}</div>}
         <button
           onClick={handleLogout}
           className="flex items-center px-4 py-2 bg-white text-purple-800 rounded-lg shadow hover:bg-gray-100"
