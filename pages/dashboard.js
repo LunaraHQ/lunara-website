@@ -88,6 +88,14 @@ export default function Dashboard() {
     getSession()
   }, [router])
 
+  // Extract first name from user_metadata if available
+  const getFirstName = (user) => {
+    if (user?.user_metadata?.name) {
+      return user.user_metadata.name.split(' ')[0]
+    }
+    return null
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen flex justify-center items-center bg-gradient-to-b from-purple-800 via-purple-900 to-black text-white">
@@ -101,7 +109,12 @@ export default function Dashboard() {
       <div className="max-w-5xl mx-auto">
         <div className="mb-10 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold text-purple-200 mb-2">
-            Welcome{user?.email ? `, ${user.email}` : ''}!
+            Welcome
+            {getFirstName(user)
+              ? `, ${getFirstName(user)}`
+              : user?.email
+              ? `, ${user.email}`
+              : ''}!
           </h1>
           <p className="text-gray-300">
             Preview any of Lunara’s modular business features below. Upgrade to unlock full access!
