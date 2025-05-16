@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useUser, useSupabaseClient } from '@supabase/auth-helpers-react';
+import { supabase } from "../utils/supabaseClient";
 import {
   Home,
   Users,
@@ -18,6 +18,7 @@ import {
   ChevronsRight,
 } from "lucide-react";
 
+// Master feature list; adjust to match your ALL_FEATURES in add-features/pricing
 const ALL_FEATURES = [
   { name: "CRM", slug: "crm", icon: Users, path: "/dashboard/crm" },
   { name: "Analytics", slug: "analytics", icon: BarChart3, path: "/dashboard/analytics" },
@@ -31,38 +32,38 @@ const ALL_FEATURES = [
 
 export default function DashboardSidebar() {
   const router = useRouter();
-  const supabase = useSupabaseClient();
-  const user = useUser();
   const [profile, setProfile] = useState({ name: "", features: [] });
   const [loading, setLoading] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
 
-  // Load collapse state
+  // Load collapse state from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem("lunaraSidebarCollapsed");
+    const saved = window.localStorage.getItem("lunaraSidebarCollapsed");
     if (saved) setCollapsed(saved === "true");
   }, []);
   useEffect(() => {
-    localStorage.setItem("lunaraSidebarCollapsed", collapsed.toString());
+    window.localStorage.setItem("lunaraSidebarCollapsed", collapsed ? "true" : "false");
   }, [collapsed]);
 
-  // Fetch user profile when user is ready
+  // Fetch user profile (name + features) from Supabase
   useEffect(() => {
-    if (!user) {
-      setLoading(false);
-      return;
-    }
     (async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (!session) {
+        setLoading(false);
+        return;
+      }
       const { data, error } = await supabase
         .from("profiles")
         .select("name, features")
-        .eq("id", user.id)
+        .eq("id", session.user.id)
         .single();
-      if (error) console.error("Error fetching profile:", error.message);
       if (data) setProfile(data);
       setLoading(false);
     })();
-  }, [user, supabase]);
+  }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -72,8 +73,9 @@ export default function DashboardSidebar() {
   const userFeatures = Array.isArray(profile.features)
     ? profile.features.map((f) => f.toLowerCase())
     : [];
-  const firstName = profile.name?.split(" ")[0] || "User";
+  const firstName = profile.name.split(" ")[0] || "User";
 
+  // Show spinner placeholder while loading
   if (loading) {
     return (
       <aside className="fixed top-0 left-0 h-full w-16 flex items-center justify-center bg-gradient-to-b from-purple-900 to-black z-50">
@@ -101,7 +103,7 @@ export default function DashboardSidebar() {
       {/* Logo / User Name */}
       <Link href="/dashboard" className="flex items-center mt-4 mb-8 select-none px-4">
         {!collapsed && (
-          <span className="text-white font-extrabold text-2xl tracking-wide truncate">
+          <span className="text-white font-extrabold text-2xl tracking-wide">
             {firstName}'s Account
           </span>
         )}
@@ -111,24 +113,25 @@ export default function DashboardSidebar() {
       <nav className="flex-1 w-full overflow-y-auto">
         <ul className="space-y-2 px-2">
           <li>
-            <Link
-              href="/dashboard"
-              title="Dashboard"
-              className={`flex items-center px-4 py-3 rounded-lg transition ${
-                router.pathname === "/dashboard"
-                  ? "bg-purple-700 text-white"
-                  : "text-purple-100 hover:bg-purple-700/50 hover:text-white"
-              }`}
-            >
-              <Home className="w-6 h-6" />
-              {!collapsed && <span className="ml-3">Dashboard</span>}
+            <Link href="/dashboard">
+              <a
+                title="Dashboard"
+                className={`flex items-center px-4 py-3 rounded-lg transition ${
+                  router.pathname === "/dashboard"
+                    ? "bg-purple-700 text-white"
+                    : "text-purple-100 hover:bg-purple-700/50 hover:text-white"
+                }`}
+              >
+                <Home className="w-6 h-6" />
+                {!collapsed && <span className="ml-3">Dashboard</span>}
+              </a>
             </Link>
           </li>
-          {ALL_FEATURES.filter((f) => userFeatures.includes(f.slug)).map(
-            ({ name, slug, path, icon: Icon }) => (
-              <li key={slug}>
-                <Link
-                  href={path}
+
+          {ALL_FEATURES.filter((f) => userFeatures.includes(f.slug)).map(({ name, slug, path, icon: Icon }) => (
+            <li key={slug}>
+              <Link href={path}>
+                <a
                   title={name}
                   className={`flex items-center px-4 py-3 rounded-lg transition ${
                     router.pathname === path
@@ -137,23 +140,25 @@ export default function DashboardSidebar() {
                   }`}
                 >
                   <Icon className="w-6 h-6" />
-                  {!collapsed && <span className="ml-3 truncate">{name}</span>}
-                </Link>
-              </li>
-            )
-          )}
+                  {!collapsed && <span className="ml-3">{name}</span>}
+                </a>
+              </Link>
+            </li>
+          ))}
+
           <li>
-            <Link
-              href="/dashboard/add-features"
-              title="Add More Features"
-              className={`flex items-center px-4 py-3 mt-4 rounded-lg transition ${
-                router.pathname === "/dashboard/add-features"
-                  ? "bg-purple-700 text-white"
-                  : "text-purple-100 hover:bg-purple-700/50 hover:text-white"
-              }`}
-            >
-              <PlusCircle className="w-6 h-6" />
-              {!collapsed && <span className="ml-3">Add More Features</span>}
+            <Link href="/dashboard/add-features">
+              <a
+                title="Add More Features"
+                className={`flex items-center px-4 py-3 mt-4 rounded-lg transition ${
+                  router.pathname === "/dashboard/add-features"
+                    ? "bg-purple-700 text-white"
+                    : "text-purple-100 hover:bg-purple-700/50 hover:text-white"
+                }`}
+              >
+                <PlusCircle className="w-6 h-6" />
+                {!collapsed && <span className="ml-3">Add More Features</span>}
+              </a>
             </Link>
           </li>
         </ul>
