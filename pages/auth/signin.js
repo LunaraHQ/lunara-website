@@ -1,54 +1,63 @@
-// pages/auth/signin.js
-import { useState } from 'react'
-import { useRouter } from 'next/router'
-import { supabase } from '../../utils/supabaseClient'
+import { useState } from "react";
+import { useRouter } from "next/router";
+import { supabase } from "../../utils/supabaseClient";
 
-export default function SignInPage() {
-  const router = useRouter()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [err, setErr] = useState('')
+export default function SignIn() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const submit = async (e) => {
-    e.preventDefault()
-    setErr('')
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) setErr(error.message)
-    else router.push('/dashboard')
-  }
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    setLoading(false);
+    if (error) {
+      setError(error.message || "Invalid credentials");
+    } else {
+      router.push("/dashboard");
+    }
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
-      <form onSubmit={submit} className="w-full max-w-sm bg-white p-6 rounded shadow">
-        <h1 className="text-2xl font-bold mb-4">Sign In</h1>
-        {err && <p className="text-red-600 mb-4">{err}</p>}
-        <label className="block mb-3">
-          <span className="text-gray-700">Email</span>
+    <div className="min-h-screen bg-gradient-to-br from-[#6E41FF] via-[#8C64FF] to-[#322769] flex items-center justify-center">
+      <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
+        <h1 className="text-3xl font-bold mb-2 text-[#6E41FF]">Sign In to Lunara</h1>
+        <p className="mb-6 text-gray-500">Access your dashboard and unlock powerful features.</p>
+        <form onSubmit={handleSignIn} className="flex flex-col gap-4">
           <input
             type="email"
-            required
-            className="mt-1 block w-full border rounded px-3 py-2"
+            className="px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-[#6E41FF]"
+            placeholder="Email address"
             value={email}
-            onChange={(e)=>setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
+            required
           />
-        </label>
-        <label className="block mb-5">
-          <span className="text-gray-700">Password</span>
           <input
             type="password"
-            required
-            className="mt-1 block w-full border rounded px-3 py-2"
+            className="px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-[#6E41FF]"
+            placeholder="Password"
             value={password}
-            onChange={(e)=>setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
+            required
           />
-        </label>
-        <button
-          type="submit"
-          className="w-full px-4 py-2 bg-purple-700 text-white rounded hover:bg-purple-600"
-        >
-          Sign In
-        </button>
-      </form>
+          {error && <div className="text-red-500 text-sm">{error}</div>}
+          <button
+            type="submit"
+            disabled={loading}
+            className="bg-gradient-to-r from-[#6E41FF] to-[#8C64FF] text-white py-3 rounded-xl font-bold hover:scale-105 transition disabled:opacity-70"
+          >
+            {loading ? "Signing in..." : "Sign In"}
+          </button>
+          <div className="flex justify-between items-center text-sm text-gray-500 mt-2">
+            <a href="/auth/signup" className="text-[#6E41FF] hover:underline">Create an account</a>
+            <a href="/auth/forgot-password" className="text-[#6E41FF] hover:underline">Forgot password?</a>
+          </div>
+        </form>
+      </div>
     </div>
-  )
+  );
 }
