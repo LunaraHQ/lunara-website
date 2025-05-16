@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useSession, signOut } from "next-auth/react";
 import { useState } from "react";
+import { supabase } from "../utils/supabaseClient";
 
 const FEATURES = [
   { name: "Meetings & Events", slug: "meetings-events" },
@@ -17,18 +17,23 @@ const FEATURES = [
   { name: "Loyalty & Membership", slug: "loyalty" },
 ];
 
-export default function NavBar({ onContactOpen }) {
-  const { data: session } = useSession();
+export default function NavBar({ onContactOpen, session }) {
   const router = useRouter();
   const [featuresOpen, setFeaturesOpen] = useState(false);
 
+  // For Supabase: session?.user?.user_metadata?.full_name or session?.user?.email
+  const displayName =
+    session?.user?.user_metadata?.full_name ||
+    session?.user?.email?.split("@")[0] ||
+    "Account";
+
   const handleSignOut = async () => {
-    await signOut({ redirect: false });
+    await supabase.auth.signOut();
     router.push("/");
   };
 
   return (
-    <header className="w-full bg-gradient-to-r from-[#6E41FF] via-[#8C64FF] to-[#322769] shadow-lg">
+    <header className="w-full bg-gradient-to-r from-[#6E41FF] via-[#8C64FF] to-[#322769] shadow-lg z-40">
       <nav className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
         {/* Logo/Brand */}
         <Link href="/" className="flex items-center gap-2 text-white font-extrabold text-xl tracking-wide">
@@ -40,7 +45,6 @@ export default function NavBar({ onContactOpen }) {
           <Link href="/dashboard" className="text-white/90 hover:text-white transition font-semibold">
             Dashboard
           </Link>
-
           {/* Features Dropdown */}
           <div
             className="relative"
@@ -74,7 +78,6 @@ export default function NavBar({ onContactOpen }) {
               </div>
             )}
           </div>
-
           <Link href="/how-it-works" className="text-white/90 hover:text-white transition font-semibold">
             How It Works
           </Link>
@@ -87,6 +90,7 @@ export default function NavBar({ onContactOpen }) {
           <button
             className="text-white/90 hover:text-white transition font-semibold"
             onClick={onContactOpen}
+            type="button"
           >
             Contact
           </button>
@@ -107,11 +111,12 @@ export default function NavBar({ onContactOpen }) {
           {session && (
             <div className="flex items-center gap-2">
               <span className="text-white/90 font-semibold px-3 py-1 rounded bg-[#8C64FF]/50">
-                Hi, {session.user?.name?.split(" ")[0] || session.user?.email?.split("@")[0]}
+                Hi, {displayName}
               </span>
               <button
                 className="px-3 py-2 rounded-xl bg-white/80 text-[#8C64FF] font-bold shadow hover:bg-white hover:text-[#6E41FF] transition"
                 onClick={handleSignOut}
+                type="button"
               >
                 Sign Out
               </button>
