@@ -1,52 +1,54 @@
-// components/Footer.js
 import React from 'react'
 import Link from 'next/link'
-import ContactModal from './ContactModal'
 
 export default function Footer() {
   return (
-    <footer className="bg-black/50 text-gray-400 py-10 mt-32 border-t border-white/10">
+    <footer className="bg-gradient-to-r from-[#1a103e] via-[#221446] to-[#27134e] text-white py-10 mt-32 border-t border-[#352a5c]">
       <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8 text-sm">
+        {/* Brand */}
         <div>
-          <Link href="/" className="text-2xl font-bold text-white">
+          <Link href="/" className="text-2xl font-extrabold text-white tracking-wide">
             Lunara
           </Link>
-          <p className="mt-2 text-gray-500">
+          <p className="mt-2 text-[#b2a1e3]">
             © {new Date().getFullYear()} LunaraHQ. All rights reserved.
           </p>
         </div>
-
+        {/* Company Links */}
         <div>
           <h4 className="text-white font-semibold mb-2">Company</h4>
           <ul className="space-y-2">
             <li>
-              <Link href="/about" className="hover:underline">
+              <Link href="/about" className="hover:text-[#8C64FF] transition">
                 About Us
               </Link>
             </li>
             <li>
-              <ContactModal>
-                <a className="text-gray-400 hover:underline">Contact Us</a>
-              </ContactModal>
+              <a
+                href="mailto:nathan@lunarahq.com"
+                className="hover:text-[#8C64FF] transition"
+              >
+                Contact Us
+              </a>
             </li>
             <li>
-              <Link href="/terms" className="hover:underline">
+              <Link href="/terms" className="hover:text-[#8C64FF] transition">
                 Terms of Service
               </Link>
             </li>
             <li>
-              <Link href="/cookie-policy" className="hover:underline">
+              <Link href="/cookie-policy" className="hover:text-[#8C64FF] transition">
                 Cookie Policy
               </Link>
             </li>
             <li>
-              <Link href="/privacy" className="hover:underline">
+              <Link href="/privacy" className="hover:text-[#8C64FF] transition">
                 Privacy Policy
               </Link>
             </li>
           </ul>
         </div>
-
+        {/* Social */}
         <div>
           <h4 className="text-white font-semibold mb-2">Follow</h4>
           <ul className="space-y-2">
@@ -55,7 +57,7 @@ export default function Footer() {
                 href="https://twitter.com/yourhandle"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:underline"
+                className="hover:text-[#8C64FF] transition"
               >
                 Twitter
               </a>
@@ -65,7 +67,7 @@ export default function Footer() {
                 href="https://linkedin.com/yourcompany"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:underline"
+                className="hover:text-[#8C64FF] transition"
               >
                 LinkedIn
               </a>
@@ -73,6 +75,14 @@ export default function Footer() {
           </ul>
         </div>
       </div>
+      {/* Subtle star/nebula overlay */}
+      <div
+        className="pointer-events-none absolute left-0 right-0 bottom-0 h-28 opacity-15"
+        style={{
+          background:
+            "radial-gradient(circle at 80% 40%, #8C64FF66 0%, transparent 70%), radial-gradient(circle at 15% 60%, #fff2 1.5px, transparent 60%)",
+        }}
+      />
     </footer>
   )
 }
