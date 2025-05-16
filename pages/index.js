@@ -3,7 +3,7 @@ import HeroSection from "../components/HeroSection";
 import HomeContent from "../components/HomeContent";
 import HowItWorks from "../components/HowItWorks";
 import Footer from "../components/Footer";
-import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 export default function Home() {
   return (
@@ -26,9 +26,9 @@ export async function getServerSideProps(ctx) {
     // Redirect logged-in users to dashboard
     return {
       redirect: {
-        destination: '/dashboard',
+        destination: "/dashboard",
         permanent: false,
-      }
+      },
     };
   }
 
