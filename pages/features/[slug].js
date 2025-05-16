@@ -1,3 +1,4 @@
+// pages/features/[slug].js
 import React, { useEffect, useState, Suspense } from 'react'
 import { useRouter } from 'next/router'
 import { supabase } from '../../utils/supabaseClient'
@@ -31,7 +32,6 @@ export default function FeaturePage() {
         return router.replace('/auth/signin')
       }
       setUser(session.user)
-      // fetch profile row
       const { data } = await supabase
         .from('profiles')
         .select('features, user_metadata')
@@ -40,52 +40,46 @@ export default function FeaturePage() {
       setProfile(data)
       setLoading(false)
 
-      // redirect if not subscribed
       if (!data.features?.includes(slug)) {
         router.replace('/dashboard')
       }
     })()
   }, [slug, router])
 
+  // **Centered full-screen spinner while loading**
   if (loading || !profile) {
-    return <LoadingSpinner />
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-purple-800 via-purple-900 to-black">
+        <LoadingSpinner />
+      </div>
+    )
   }
 
-  // Admin flag (you can set this in your profile or via Stripe metadata)
+  // Admin flag
   const isAdmin = Boolean(profile.user_metadata?.isAdmin)
 
-  // 2) Pick the right module
+  // Pick the right module
   let FeatureComponent = null
   switch (slug) {
     case 'meetings-events':
-      FeatureComponent = MeetingsEvents
-      break
+      FeatureComponent = MeetingsEvents; break
     case 'sales-funnel':
-      FeatureComponent = SalesFunnel
-      break
+      FeatureComponent = SalesFunnel; break
     case 'cx-management':
-      FeatureComponent = CXManagement
-      break
+      FeatureComponent = CXManagement; break
     case 'crm-client-management':
-      FeatureComponent = CRMModule
-      break
+      FeatureComponent = CRMModule; break
     case 'ai-chatbot-automation':
-      FeatureComponent = AIChatbot
-      break
+      FeatureComponent = AIChatbot; break
     case 'analytics-reporting':
-      FeatureComponent = Analytics
-      break
+      FeatureComponent = Analytics; break
     case 'team-management':
-      FeatureComponent = TeamManagement
-      break
+      FeatureComponent = TeamManagement; break
     case 'ecommerce-tools':
-      FeatureComponent = EcommerceTools
-      break
+      FeatureComponent = EcommerceTools; break
     case 'loyalty-membership':
-      FeatureComponent = LoyaltyModule
-      break
+      FeatureComponent = LoyaltyModule; break
     default:
-      // unknown slug → back to dashboard
       router.replace('/dashboard')
       return null
   }
@@ -93,9 +87,12 @@ export default function FeaturePage() {
   return (
     <div className="flex min-h-screen">
       <DashboardSidebar />
-
       <main className="flex-1 bg-gradient-to-b from-purple-800 via-purple-900 to-black p-6">
-        <Suspense fallback={<LoadingSpinner />}>
+        <Suspense fallback={
+          <div className="flex items-center justify-center min-h-screen">
+            <LoadingSpinner />
+          </div>
+        }>
           <FeatureComponent user={user} isAdmin={isAdmin} />
         </Suspense>
       </main>
