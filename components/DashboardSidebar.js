@@ -44,7 +44,7 @@ export default function DashboardSidebar() {
     window.localStorage.setItem("lunaraSidebarCollapsed", collapsed ? "true" : "false");
   }, [collapsed]);
 
-  // Fetch profile/features
+  // Fetch profile (name + features)
   useEffect(() => {
     (async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -65,10 +65,10 @@ export default function DashboardSidebar() {
   };
 
   const userFeatures = Array.isArray(profile?.features)
-    ? profile.features.map((f) => f.toLowerCase())
+    ? profile.features.map(f => f.toLowerCase())
     : [];
 
-  const firstName = profile?.name?.split(" ")[0] || null;
+  const firstName = profile?.name?.split(" ")[0] || "";
 
   if (loading) {
     return (
@@ -91,30 +91,21 @@ export default function DashboardSidebar() {
       <button
         onClick={() => setCollapsed(c => !c)}
         aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        className="absolute top-4 right-[-18px] w-8 h-8 flex items-center justify-center bg-purple-800 border border-purple-600 rounded-full shadow hover:bg-purple-700 z-10"
+        className="absolute top-4 right-[ -18px ] w-8 h-8 flex items-center justify-center bg-purple-800 border border-purple-600 rounded-full shadow hover:bg-purple-700 z-10"
       >
         {collapsed ? <ChevronsRight size={18} /> : <ChevronsLeft size={18} />}
       </button>
 
-      {/* Logo with safe fallback */}
+      {/* Text Logo */}
       <Link href="/dashboard" className="flex items-center mt-4 mb-8 select-none">
-        <img
-          src="/lunara-favicon.png"
-          alt="Lunara logo"
-          className="h-10 w-10 rounded-xl"
-          onError={e => {
-            e.currentTarget.onerror = null;
-            e.currentTarget.src = "/favicon.ico";
-          }}
-        />
         {!collapsed && (
-          <span className="ml-2 text-white font-extrabold text-2xl tracking-wide">
-            Lunara
+          <span className="text-white font-extrabold text-2xl tracking-wide">
+            {firstName}&apos;s Account
           </span>
         )}
       </Link>
 
-      {/* Navigation */}
+      {/* Navigation Links */}
       <nav className="flex-1 w-full">
         <ul className="space-y-2">
           <li>
@@ -156,14 +147,15 @@ export default function DashboardSidebar() {
 
       {/* Logout */}
       <div className="mb-6 w-full flex flex-col items-center">
-        {!collapsed && firstName && <div className="text-purple-200 mb-2">Hi, {firstName}</div>}
-        <button
-          onClick={handleLogout}
-          className="flex items-center px-4 py-2 bg-white text-purple-800 rounded-lg shadow hover:bg-gray-100"
-        >
-          <LogOut className="w-5 h-5 mr-2" />
-          {!collapsed && "Logout"}
-        </button>
+        {!collapsed && (
+          <button
+            onClick={handleLogout}
+            className="flex items-center px-4 py-2 bg-white text-purple-800 rounded-lg shadow hover:bg-gray-100"
+          >
+            <LogOut className="w-5 h-5 mr-2" />
+            Logout
+          </button>
+        )}
       </div>
     </aside>
   );
