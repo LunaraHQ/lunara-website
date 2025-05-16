@@ -23,6 +23,7 @@ export default function MyApp({ Component, pageProps }) {
     return () => listener.subscription.unsubscribe()
   }, [])
 
+  // "isApp" means pages that should look like the SaaS app, not the landing/marketing site
   const isApp =
     router.pathname.startsWith('/dashboard') ||
     (router.pathname.startsWith('/features') && session) ||
@@ -35,12 +36,12 @@ export default function MyApp({ Component, pageProps }) {
   return (
     <>
       {!isApp && <NavBar onContactOpen={() => setContactOpen(true)} session={session} />}
-      {isApp && <DashboardSidebar session={session} />}
+      {/* Removed DashboardSidebar here! */}
 
       <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
 
       <div className={`transition-all duration-300 ${isApp ? 'ml-16 md:ml-64' : ''}`}>
-        <Component {...pageProps} session={session}/>
+        <Component {...pageProps} session={session} />
       </div>
     </>
   )
