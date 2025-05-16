@@ -1,16 +1,17 @@
-// pages/_app.js
 import '../styles/globals.css'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { supabase } from '../utils/supabaseClient'
 import NavBar from '../components/NavBar'
 import DashboardSidebar from '../components/DashboardSidebar'
+import ContactModal from '../components/ContactModal'
 import LoadingSpinner from '../components/LoadingSpinner'
 
-function MyApp({ Component, pageProps }) {
+export default function MyApp({ Component, pageProps }) {
   const router = useRouter()
   const [session, setSession] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [contactOpen, setContactOpen] = useState(false)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -23,7 +24,6 @@ function MyApp({ Component, pageProps }) {
     return () => listener.subscription.unsubscribe()
   }, [])
 
-  // determine layout: dashboard + features (when logged in) + pricing
   const isApp =
     router.pathname.startsWith('/dashboard') ||
     (router.pathname.startsWith('/features') && session) ||
@@ -35,16 +35,14 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <>
-      {/* Pass session prop for user logic */}
-      {!isApp && <NavBar session={session} />}
+      {!isApp && <NavBar onContactOpen={() => setContactOpen(true)} session={session} />}
       {isApp && <DashboardSidebar session={session} />}
 
+      <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
+
       <div className={`transition-all duration-300 ${isApp ? 'ml-16 md:ml-64' : ''}`}>
-        {/* Always pass session to pages */}
         <Component {...pageProps} session={session}/>
       </div>
     </>
   )
 }
-
-export default MyApp
