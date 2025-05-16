@@ -32,19 +32,20 @@ export default function Dashboard() {
   const [user, setUser] = useState(null)
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
 
+  // Check auth
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       const { data } = await supabase.auth.getSession()
-      if (!data.session) return router.push("/auth/signin")
+      if (!data.session) return router.push('/auth/signin')
       setUser(data.session.user)
       setLoading(false)
     })()
   }, [router])
 
-  // Sync collapse
+  // Sync sidebar collapse state
   useEffect(() => {
     const handler = () => {
-      setSidebarCollapsed(window.localStorage.getItem("lunaraSidebarCollapsed") === "true")
+      setSidebarCollapsed(window.localStorage.getItem('lunaraSidebarCollapsed') === 'true')
     }
     window.addEventListener('storage', handler)
     handler()
@@ -74,7 +75,7 @@ export default function Dashboard() {
             </p>
           </header>
 
-          <section className="grid md:grid-cols-3 gap-8">
+          <section className="grid md:grid-cols-3 gap-8 relative">
             {features.map(({ title, slug, icon: Icon, desc }) => (
               <div
                 key={slug}
@@ -83,13 +84,16 @@ export default function Dashboard() {
                 <Icon className="w-16 h-16 mb-4 text-purple-300 mx-auto" />
                 <h2 className="text-xl font-bold text-white mb-2">{title}</h2>
                 <p className="text-gray-400 mb-6">{desc}</p>
-                <Link href={`/features/${slug}`}>
+                
+                {/* Overlay redirecting to add-features */}
+                <Link href="/dashboard/add-features">
                   <a className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-2xl opacity-0 hover:opacity-100 transition">
                     <button className="bg-purple-600 text-white px-5 py-2 rounded-lg">
-                      Click to unlock
+                      Upgrade to unlock
                     </button>
                   </a>
                 </Link>
+
                 <button
                   disabled
                   className="mt-4 w-full py-2 rounded-full bg-gray-700 text-gray-300 cursor-not-allowed"
