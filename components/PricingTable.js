@@ -1,5 +1,5 @@
-import { useState } from "react";
 import Link from "next/link";
+import { useState } from "react";
 
 const FEATURES = [
   { slug: "meetings-events", name: "Meetings & Events", price: 50 },
@@ -20,7 +20,7 @@ function getDiscountRate(count) {
   return 0;
 }
 
-export default function PricingTable({ session }) {
+export default function PricingTable() {
   const [selectedFeatures, setSelectedFeatures] = useState([]);
 
   const toggleFeature = (slug) => {
@@ -97,33 +97,18 @@ export default function PricingTable({ session }) {
       </div>
 
       <div className="mt-8 flex flex-col items-center gap-4">
-        {session ? (
-          <button
-            onClick={() =>
-              alert("Proceeding to checkout... (replace with real checkout logic)")
-            }
-            className="px-8 py-3 rounded-full bg-gradient-to-r from-[#6E41FF] to-[#8C64FF] text-white font-bold shadow hover:scale-105 transition"
-          >
-            Checkout & Continue
-          </button>
-        ) : (
-          <>
-            <p className="text-center text-gray-300">
-              Want to try these out?{" "}
-              <Link href="/auth/signup">
-                <a className="text-purple-400 font-semibold hover:underline">
-                  Sign up now!
-                </a>
-              </Link>
-            </p>
-            <button
-              disabled
-              className="px-8 py-3 rounded-full bg-gray-700 text-gray-400 cursor-not-allowed font-bold shadow"
-            >
-              Checkout & Continue
-            </button>
-          </>
-        )}
+        <p className="text-center text-gray-300">
+          Want to try these out?{" "}
+          <Link href="/auth/signup">
+            <a className="text-purple-400 font-semibold hover:underline">Sign up now!</a>
+          </Link>
+        </p>
+        <button
+          disabled
+          className="px-8 py-3 rounded-full bg-gray-700 text-gray-400 cursor-not-allowed font-bold shadow"
+        >
+          Checkout & Continue
+        </button>
       </div>
     </section>
   );
