@@ -38,6 +38,9 @@ export default function NavBar() {
           <Link href="/" className="text-2xl font-extrabold focus:outline-none">
             Lunara
           </Link>
+          <Link href="/dashboard" className="hover:underline focus:outline-none">
+            Dashboard
+          </Link>
           {/* Features Dropdown */}
           <div
             className="relative"
