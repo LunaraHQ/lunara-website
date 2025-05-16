@@ -26,7 +26,8 @@ export default function NavBar() {
       const { data } = await supabase.auth.getSession()
       if (data.session) {
         setSession(data.session)
-        setUserName(data.session.user.user_metadata?.name || data.session.user.email)
+        const name = data.session.user.user_metadata?.name || data.session.user.email
+        setUserName(name.split(' ')[0]) // Use first name or fallback
       }
     }
 
@@ -35,7 +36,8 @@ export default function NavBar() {
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
       if (session) {
-        setUserName(session.user.user_metadata?.name || session.user.email)
+        const name = session.user.user_metadata?.name || session.user.email
+        setUserName(name.split(' ')[0])
       }
     })
 
@@ -60,7 +62,6 @@ export default function NavBar() {
           <Link href="/dashboard" className="hover:underline focus:outline-none">
             Dashboard
           </Link>
-          {/* Features Dropdown */}
           <div
             className="relative"
             onMouseEnter={() => setShowFeatures(true)}
