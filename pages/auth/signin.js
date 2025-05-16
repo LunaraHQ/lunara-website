@@ -1,3 +1,4 @@
+// pages/auth/signin.js
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { supabase } from "../../utils/supabaseClient";
@@ -6,66 +7,89 @@ export default function SignIn() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSignIn = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMsg("");
     setLoading(true);
-    setError("");
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
     setLoading(false);
+
     if (error) {
-      setError(error.message || "Invalid credentials");
-    } else {
+      setErrorMsg(error.message);
+      return;
+    }
+
+    if (data?.session) {
       router.push("/dashboard");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1a103e] via-[#322769] to-[#130b24]">
-      <div className="relative max-w-md w-full rounded-2xl p-8 shadow-[0_8px_40px_rgba(110,65,255,0.25)] bg-gradient-to-b from-[#221446]/90 via-[#251654]/95 to-[#12092e]/95 border border-[#36206c]">
-        <h1 className="text-3xl font-extrabold mb-3 text-white text-center drop-shadow-glow">
-          Sign In to <span className="bg-gradient-to-r from-[#8C64FF] to-[#6E41FF] text-transparent bg-clip-text">Lunara</span>
+    <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-[#1a103e] via-[#6E41FF] to-[#130b24] px-6">
+      <div className="max-w-md w-full bg-[#130b24] rounded-3xl p-8 shadow-lg border border-[#352a5c]">
+        <h1 className="text-3xl font-extrabold text-white mb-6 text-center drop-shadow-glow">
+          Sign In to Lunara
         </h1>
-        <form onSubmit={handleSignIn} className="flex flex-col gap-5 mt-4">
-          <input
-            type="email"
-            className="px-4 py-3 rounded-xl bg-[#170e2d]/80 border border-[#302057] text-white placeholder-[#c0b7e7] focus:ring-2 focus:ring-[#8C64FF] focus:outline-none"
-            placeholder="Email address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            autoComplete="username"
-            required
-          />
-          <input
-            type="password"
-            className="px-4 py-3 rounded-xl bg-[#170e2d]/80 border border-[#302057] text-white placeholder-[#c0b7e7] focus:ring-2 focus:ring-[#8C64FF] focus:outline-none"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="current-password"
-            required
-          />
-          {error && <div className="text-red-400 text-sm text-center">{error}</div>}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label htmlFor="email" className="block text-purple-300 mb-1 font-semibold">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-3 rounded-lg bg-[#27134e] text-white border border-[#6E41FF] focus:outline-none focus:ring-2 focus:ring-purple-500"
+              placeholder="you@example.com"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="password" className="block text-purple-300 mb-1 font-semibold">
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-3 rounded-lg bg-[#27134e] text-white border border-[#6E41FF] focus:outline-none focus:ring-2 focus:ring-purple-500"
+              placeholder="Your password"
+            />
+          </div>
+
+          {errorMsg && (
+            <p className="text-red-500 text-center font-semibold">{errorMsg}</p>
+          )}
+
           <button
             type="submit"
             disabled={loading}
-            className="bg-gradient-to-r from-[#6E41FF] to-[#8C64FF] text-white py-3 rounded-xl font-bold shadow-lg hover:scale-105 transition disabled:opacity-70"
+            className="w-full bg-gradient-to-r from-[#6E41FF] to-[#8C64FF] text-white font-bold py-3 rounded-xl shadow hover:scale-105 transition"
           >
             {loading ? "Signing in..." : "Sign In"}
           </button>
-          <div className="flex justify-between items-center text-xs text-[#b2a1e3] mt-2">
-            <a href="/auth/signup" className="hover:underline hover:text-[#8C64FF] transition">Create an account</a>
-            <a href="/auth/forgot-password" className="hover:underline hover:text-[#8C64FF] transition">Forgot password?</a>
-          </div>
         </form>
-        {/* Star overlay */}
-        <div className="absolute inset-0 pointer-events-none opacity-20"
-          style={{
-            background: "radial-gradient(circle at 30% 80%, #fff3 1px, transparent 30%), radial-gradient(circle at 70% 20%, #fff2 2px, transparent 60%)"
-          }}
-        />
+        <p className="mt-6 text-center text-purple-400">
+          Don&apos;t have an account?{" "}
+          <a
+            href="/auth/signup"
+            className="underline hover:text-white cursor-pointer"
+          >
+            Sign up here
+          </a>
+        </p>
       </div>
     </div>
   );
