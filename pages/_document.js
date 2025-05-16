@@ -42,13 +42,9 @@ export default class MyDocument extends Document {
           {/* Twitter Card */}
           <meta name="twitter:card" content="summary_large_image" />
 
-          {/* Favicon */}
-          <link
-            rel="icon"
-            href="/images/Lunara Company Favicon.png"
-            type="image/png"
-            sizes="any"
-          />
+          {/* Favicon - universal */}
+          <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+          <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
         </Head>
         <body className="font-sans bg-black text-white transition-colors">
           <Main />
