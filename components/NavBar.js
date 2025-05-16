@@ -1,5 +1,5 @@
 // components/NavBar.js
-import { useSession, signIn, signOut } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
 import Link from 'next/link'
 import { useState, useRef } from 'react'
 import ContactModal from './ContactModal'
@@ -106,12 +106,12 @@ export default function NavBar() {
               >
                 Sign Up
               </Link>
-              <button
-                onClick={() => signIn()}
+              <Link
+                href="/auth/signin"
                 className="bg-white text-purple-700 px-4 py-1 rounded-lg font-medium hover:opacity-90 focus:outline-none"
               >
                 Sign In
-              </button>
+              </Link>
             </>
           )}
         </div>
