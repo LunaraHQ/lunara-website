@@ -1,7 +1,6 @@
-// components/NavBar.js
-import { useSession, signOut } from 'next-auth/react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useState, useRef } from 'react'
+import { supabase } from '../utils/supabaseClient'
 import ContactModal from './ContactModal'
 
 const features = [
@@ -17,18 +16,38 @@ const features = [
 ]
 
 export default function NavBar() {
-  const { data: session, status } = useSession()
+  const [session, setSession] = useState(null)
+  const [userName, setUserName] = useState(null)
   const [isContactOpen, setContactOpen] = useState(false)
   const [showFeatures, setShowFeatures] = useState(false)
-  const dropdownRef = useRef(null)
-  const timeout = useRef()
 
-  const openDropdown = () => {
-    clearTimeout(timeout.current)
-    setShowFeatures(true)
-  }
-  const closeDropdown = () => {
-    timeout.current = setTimeout(() => setShowFeatures(false), 120)
+  useEffect(() => {
+    const loadSession = async () => {
+      const { data } = await supabase.auth.getSession()
+      if (data.session) {
+        setSession(data.session)
+        setUserName(data.session.user.user_metadata?.name || data.session.user.email)
+      }
+    }
+
+    loadSession()
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+      if (session) {
+        setUserName(session.user.user_metadata?.name || session.user.email)
+      }
+    })
+
+    return () => {
+      listener.subscription.unsubscribe()
+    }
+  }, [])
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    setSession(null)
+    window.location.href = '/'
   }
 
   return (
@@ -44,8 +63,8 @@ export default function NavBar() {
           {/* Features Dropdown */}
           <div
             className="relative"
-            onMouseEnter={openDropdown}
-            onMouseLeave={closeDropdown}
+            onMouseEnter={() => setShowFeatures(true)}
+            onMouseLeave={() => setShowFeatures(false)}
           >
             <button className="hover:underline flex items-center space-x-1 focus:outline-none">
               <span>Features</span>
@@ -53,10 +72,7 @@ export default function NavBar() {
             </button>
             {showFeatures && (
               <div
-                ref={dropdownRef}
                 className="absolute left-0 mt-2 bg-white text-purple-800 rounded-lg shadow-xl w-64 z-50 transition"
-                onMouseEnter={openDropdown}
-                onMouseLeave={closeDropdown}
               >
                 {features.map((feat) => (
                   <Link
@@ -76,10 +92,7 @@ export default function NavBar() {
           <Link href="/#pricing" className="hover:underline focus:outline-none">
             Pricing
           </Link>
-          <Link
-            href="/pilot"
-            className="hover:underline focus:outline-none text-white"
-          >
+          <Link href="/pilot" className="hover:underline focus:outline-none">
             Pilot Programme
           </Link>
           <button
@@ -91,11 +104,11 @@ export default function NavBar() {
         </div>
 
         <div className="flex items-center space-x-4">
-          {status === 'loading' ? null : session ? (
+          {session ? (
             <>
-              <span className="hidden sm:inline">Hi, {session.user.name}</span>
+              <span className="hidden sm:inline">Hi, {userName}</span>
               <button
-                onClick={() => signOut()}
+                onClick={handleLogout}
                 className="bg-white text-purple-700 px-4 py-1 rounded-lg font-medium hover:opacity-90 focus:outline-none"
               >
                 Sign Out

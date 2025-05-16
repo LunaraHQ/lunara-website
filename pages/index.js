@@ -1,8 +1,11 @@
 // pages/index.js
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
 import HeroSection from '../components/HeroSection'
 import HomeContent from '../components/HomeContent'
+import { supabase } from '../utils/supabaseClient'
 
 // Lazy-load below-the-fold components
 const HowItWorks = dynamic(() => import('../components/HowItWorks'), {
@@ -14,6 +17,18 @@ const Footer = dynamic(() => import('../components/Footer'), {
 })
 
 export default function Home() {
+  const router = useRouter()
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data } = await supabase.auth.getSession()
+      if (data.session) {
+        router.push('/dashboard')
+      }
+    }
+    checkSession()
+  }, [router])
+
   return (
     <>
       <Head>
@@ -26,7 +41,6 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {/* Main content anchor for Skip link */}
       <main id="main-content">
         <HeroSection />
         <HomeContent />
