@@ -11,7 +11,6 @@ import {
   Bot,
   ShoppingCart,
   Gift,
-  Settings,
   PlusCircle,
   LogOut,
   ChevronsLeft,
@@ -35,7 +34,6 @@ export default function DashboardSidebar() {
   const [loading, setLoading] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
 
-  // Persist sidebar collapse state
   useEffect(() => {
     const saved = window.localStorage.getItem("lunaraSidebarCollapsed");
     if (saved) setCollapsed(saved === "true");
@@ -44,7 +42,6 @@ export default function DashboardSidebar() {
     window.localStorage.setItem("lunaraSidebarCollapsed", collapsed ? "true" : "false");
   }, [collapsed]);
 
-  // Fetch profile and features array
   useEffect(() => {
     const fetchProfile = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -52,12 +49,11 @@ export default function DashboardSidebar() {
         setLoading(false);
         return;
       }
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("profiles")
         .select("id, name, features")
         .eq("id", session.user.id)
         .single();
-
       setProfile(data);
       setLoading(false);
     };
@@ -69,12 +65,10 @@ export default function DashboardSidebar() {
     router.push("/");
   };
 
-  // Map user's features (as lowercased slugs) for fast check
   const userFeatures = Array.isArray(profile?.features)
     ? profile.features.map((f) => f.toLowerCase())
     : [];
 
-  // For sidebar greeting
   const firstName = profile?.name
     ? profile.name.split(" ")[0]
     : null;
@@ -118,10 +112,10 @@ export default function DashboardSidebar() {
       >
         {collapsed ? <ChevronsRight size={22} /> : <ChevronsLeft size={22} />}
       </button>
-      {/* Logo (Icon only) */}
+      {/* Logo (PNG only, never ICO) */}
       <Link href="/dashboard" className="flex items-center mb-10 mt-2 select-none">
         <img
-          src="/favicon.ico"
+          src="/lunara-favicon.png"
           alt="Lunara"
           className="h-10 w-10 rounded-xl"
         />

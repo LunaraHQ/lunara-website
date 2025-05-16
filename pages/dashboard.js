@@ -90,13 +90,13 @@ export default function Dashboard() {
     getSession()
   }, [router])
 
+  // Listen to sidebar collapse changes
   useEffect(() => {
-    // Sync with sidebar localStorage
     const handler = () => {
       setSidebarCollapsed(window.localStorage.getItem("lunaraSidebarCollapsed") === "true");
     };
     window.addEventListener('storage', handler);
-    handler();
+    handler(); // Initial check
     return () => window.removeEventListener('storage', handler);
   }, []);
 
@@ -111,10 +111,13 @@ export default function Dashboard() {
   return (
     <>
       <DashboardSidebar />
-      <div style={{
-        marginLeft: sidebarCollapsed ? 64 : 220,
-        transition: 'margin-left 0.3s'
-      }}>
+      <div
+        style={{
+          marginLeft: sidebarCollapsed ? 64 : 220,
+          width: `calc(100% - ${sidebarCollapsed ? 64 : 220}px)`,
+          transition: 'margin-left 0.3s, width 0.3s'
+        }}
+      >
         <div className="min-h-screen bg-gradient-to-b from-purple-800 via-purple-900 to-black py-12 px-4">
           <div className="max-w-5xl mx-auto">
             <div className="mb-10 text-center">
