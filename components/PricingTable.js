@@ -96,19 +96,12 @@ export default function PricingTable() {
         <p className="mt-3 text-2xl text-purple-300">Final Price: €{finalPrice.toFixed(2)}</p>
       </div>
 
-      <div className="mt-8 flex flex-col items-center gap-4">
-        <p className="text-center text-gray-300">
-          Want to try these out?{" "}
-          <Link href="/auth/signup">
-            <a className="text-purple-400 font-semibold hover:underline">Sign up now!</a>
-          </Link>
-        </p>
-        <button
-          disabled
-          className="px-8 py-3 rounded-full bg-gray-700 text-gray-400 cursor-not-allowed font-bold shadow"
-        >
-          Checkout & Continue
-        </button>
+      <div className="mt-8 text-center text-purple-300 font-semibold">
+        See how much it could cost your company.
+        <br />
+        <Link href="/auth/signup">
+          <a className="underline hover:text-white cursor-pointer">Sign up now!</a>
+        </Link>
       </div>
     </section>
   );
