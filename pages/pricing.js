@@ -20,31 +20,45 @@ const ALL_FEATURES = [
 export default function Pricing() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
-  const [profile, setProfile] = useState(null)
+  const [user, setUser]     = useState(null)
+  const [features, setFeatures] = useState([])
   const [updating, setUpdating] = useState(false)
 
+  // Load session + profile.features (or empty if none)
   useEffect(() => {
     ;(async () => {
-      const { data: { session } } = await supabase.auth.getSession()
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
       if (!session) return router.replace('/auth/signin')
+      setUser(session.user)
+
       const { data } = await supabase
         .from('profiles')
-        .select('id, features')
+        .select('features')
         .eq('id', session.user.id)
         .single()
-      setProfile(data)
+
+      setFeatures(Array.isArray(data?.features) ? data.features : [])
       setLoading(false)
     })()
   }, [router])
 
   const unlock = async (slug) => {
     setUpdating(true)
-    const updated = [...(profile.features || []), slug]
+    const updated = Array.from(new Set([...features, slug]))
     const { error } = await supabase
       .from('profiles')
-      .update({ features: updated })
-      .eq('id', profile.id)
-    if (!error) setProfile({ ...profile, features: updated })
+      .upsert(
+        { id: user.id, features: updated },
+        { onConflict: 'id' }
+      )
+    if (!error) {
+      setFeatures(updated)
+    } else {
+      console.error(error)
+      alert('Unlock failed')
+    }
     setUpdating(false)
   }
 
@@ -67,7 +81,7 @@ export default function Pricing() {
           </p>
           <ul className="space-y-3">
             {ALL_FEATURES.map(({ name, slug }) => {
-              const owned = profile.features?.includes(slug)
+              const owned = features.includes(slug)
               return (
                 <li key={slug} className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
