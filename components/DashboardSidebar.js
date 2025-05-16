@@ -1,3 +1,4 @@
+// components/DashboardSidebar.js
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -95,13 +96,16 @@ export default function DashboardSidebar() {
         {collapsed ? <ChevronsRight size={18} /> : <ChevronsLeft size={18} />}
       </button>
 
-      {/* Logo with PNG fallback */}
+      {/* Logo with safe fallback */}
       <Link href="/dashboard" className="flex items-center mt-4 mb-8 select-none">
         <img
           src="/lunara-favicon.png"
           alt="Lunara logo"
           className="h-10 w-10 rounded-xl"
-          onError={e => (e.currentTarget.src = "/favicon.ico")}
+          onError={e => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = "/favicon.ico";
+          }}
         />
         {!collapsed && (
           <span className="ml-2 text-white font-extrabold text-2xl tracking-wide">
