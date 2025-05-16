@@ -32,7 +32,6 @@ export default function NavBar({ onContactOpen, session }) {
   return (
     <header className="w-full bg-gradient-to-r from-[#1a103e] via-[#6E41FF] to-[#221446] shadow-xl z-50">
       <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        {/* Logo/Brand */}
         <Link
           href="/"
           className="flex items-center gap-2 font-extrabold text-2xl tracking-wider text-white drop-shadow-glow"
@@ -42,7 +41,6 @@ export default function NavBar({ onContactOpen, session }) {
           </span>
         </Link>
 
-        {/* Nav Links */}
         <div className="flex items-center gap-8">
           <Link
             href="/dashboard"
@@ -50,7 +48,6 @@ export default function NavBar({ onContactOpen, session }) {
           >
             Dashboard
           </Link>
-          {/* Features Dropdown */}
           <div
             className="relative"
             onMouseEnter={() => setFeaturesOpen(true)}
@@ -89,7 +86,6 @@ export default function NavBar({ onContactOpen, session }) {
             )}
           </div>
 
-          {/* Dynamic Pricing Link */}
           {session ? (
             <Link
               href="/pricing"
@@ -121,7 +117,6 @@ export default function NavBar({ onContactOpen, session }) {
           </button>
         </div>
 
-        {/* Auth/Account Buttons */}
         <div className="flex items-center gap-4">
           {!session && (
             <>
@@ -155,7 +150,6 @@ export default function NavBar({ onContactOpen, session }) {
           )}
         </div>
       </nav>
-      {/* Tiny space dust overlay for space vibes */}
       <div className="absolute left-0 right-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-[#6E41FF]/30 to-transparent opacity-50 pointer-events-none"></div>
     </header>
   );
