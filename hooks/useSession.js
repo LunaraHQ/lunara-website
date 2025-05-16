@@ -15,13 +15,11 @@ export function useSession() {
     };
     getSession();
 
-    // Listen for session changes (login/logout)
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setSession(session);
       }
     );
-
     return () => {
       listener?.subscription?.unsubscribe?.();
     };
