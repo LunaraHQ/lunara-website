@@ -1,5 +1,6 @@
 // components/CookieBanner.js
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 
 export default function CookieBanner() {
   const [visible, setVisible] = useState(false)
@@ -21,9 +22,9 @@ export default function CookieBanner() {
     <div className="fixed bottom-0 inset-x-0 bg-gray-800 text-gray-100 p-4 text-center z-50">
       <p className="text-sm">
         We use cookies to enhance your experience and analyze traffic. Read our{' '}
-        <a href="/cookie-policy" className="underline">
+        <Link href="/cookie-policy" className="underline">
           Cookie Policy
-        </a>.
+        </Link>.
       </p>
       <button
         onClick={accept}

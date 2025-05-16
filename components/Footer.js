@@ -7,23 +7,21 @@ export default function Footer() {
   return (
     <footer className="bg-black/50 text-gray-400 py-10 mt-32 border-t border-white/10">
       <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8 text-sm">
-        {/* Logo & copyright */}
         <div>
-          <Link href="/">
-            <a className="text-2xl font-bold text-white">Lunara</a>
+          <Link href="/" className="text-2xl font-bold text-white">
+            Lunara
           </Link>
           <p className="mt-2 text-gray-500">
             © {new Date().getFullYear()} LunaraHQ. All rights reserved.
           </p>
         </div>
 
-        {/* Company links */}
         <div>
           <h4 className="text-white font-semibold mb-2">Company</h4>
           <ul className="space-y-2">
             <li>
-              <Link href="/about">
-                <a className="hover:underline">About Us</a>
+              <Link href="/about" className="hover:underline">
+                About Us
               </Link>
             </li>
             <li>
@@ -32,24 +30,23 @@ export default function Footer() {
               </ContactModal>
             </li>
             <li>
-              <Link href="/terms">
-                <a className="hover:underline">Terms of Service</a>
+              <Link href="/terms" className="hover:underline">
+                Terms of Service
               </Link>
             </li>
             <li>
-              <Link href="/cookie-policy">
-                <a className="hover:underline">Cookie Policy</a>
+              <Link href="/cookie-policy" className="hover:underline">
+                Cookie Policy
               </Link>
             </li>
             <li>
-              <Link href="/privacy">
-                <a className="hover:underline">Privacy Policy</a>
+              <Link href="/privacy" className="hover:underline">
+                Privacy Policy
               </Link>
             </li>
           </ul>
         </div>
 
-        {/* Social / Follow */}
         <div>
           <h4 className="text-white font-semibold mb-2">Follow</h4>
           <ul className="space-y-2">
