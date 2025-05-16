@@ -3,15 +3,14 @@ import { useRouter } from "next/router";
 import { supabase } from "../utils/supabaseClient";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
-import FeatureCards from "../components/FeatureCards";
+// import FeatureCards from "../components/FeatureCards";
+// import Testimonials from "../components/Testimonials";
 import PricingTable from "../components/PricingTable";
-import Testimonials from "../components/Testimonials";
 // Import other sections/components as needed...
 
 export default function Home() {
   const router = useRouter();
 
-  // --- Redirect logged-in users to dashboard, let guests see landing page ---
   useEffect(() => {
     let mounted = true;
     const checkSession = async () => {
@@ -24,7 +23,6 @@ export default function Home() {
     return () => { mounted = false; };
   }, [router]);
 
-  // --- Real landing page content starts below ---
   return (
     <main>
       <NavBar />
@@ -55,13 +53,13 @@ export default function Home() {
       </section>
 
       {/* ---- SCROLLABLE FEATURES ---- */}
-      <FeatureCards />
+      {/* <FeatureCards /> */}
 
       {/* ---- PRICING ---- */}
       <PricingTable />
 
       {/* ---- TESTIMONIALS ---- */}
-      <Testimonials />
+      {/* <Testimonials /> */}
 
       {/* ---- FOOTER ---- */}
       <Footer />
