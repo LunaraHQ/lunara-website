@@ -1,16 +1,17 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { supabase } from "../utils/supabaseClient";
-import NavBar from "../components/NavBar";
+import FeatureCards from "../components/FeatureCards";
 import Footer from "../components/Footer";
-// import FeatureCards from "../components/FeatureCards";
-// import Testimonials from "../components/Testimonials";
 import PricingTable from "../components/PricingTable";
-// Import other sections/components as needed...
+import Testimonials from "../components/Testimonials";
+import Hero from "../components/Hero";
+// DO NOT import NavBar here—it is handled globally in _app.js!
 
 export default function Home() {
   const router = useRouter();
 
+  // Redirect logged-in users to dashboard
   useEffect(() => {
     let mounted = true;
     const checkSession = async () => {
@@ -24,47 +25,33 @@ export default function Home() {
   }, [router]);
 
   return (
-    <main>
-      <NavBar />
-      <section className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#140a29] via-[#341a66] to-[#6E41FF]">
-        <div className="max-w-4xl p-10 rounded-3xl shadow-2xl border border-[#6E41FF]/40 bg-[#1a1336]/95 text-center">
-          <h1 className="text-5xl font-extrabold text-[#B09CFF] mb-4 tracking-wide">Lunara</h1>
-          <p className="text-lg text-[#B09CFF]/80 mb-8">
-            Welcome to the future of sales and lead management.<br />
-            <span className="text-[#6E41FF] font-semibold">
-              Sign in or create an account to access your dashboard.
-            </span>
-          </p>
-          <div className="mt-8 flex justify-center gap-6">
-            <a
-              href="/auth/signin"
-              className="bg-[#6E41FF] text-white font-bold px-8 py-3 rounded-xl shadow-md hover:bg-[#4b299c] transition text-lg"
-            >
-              Sign In
-            </a>
-            <a
-              href="/auth/signup"
-              className="bg-[#201845] text-[#B09CFF] font-bold px-8 py-3 rounded-xl border border-[#6E41FF] hover:bg-[#321e5c] transition text-lg"
-            >
-              Sign Up
-            </a>
-          </div>
+    <main className="bg-gradient-to-br from-[#140a29] via-[#341a66] to-[#6E41FF] min-h-screen">
+      {/* HERO/HEADER SECTION */}
+      <Hero />
+
+      {/* 9x FEATURE CARDS */}
+      <section id="features" className="py-16">
+        <div className="max-w-7xl mx-auto px-4">
+          <FeatureCards />
         </div>
       </section>
 
-      {/* ---- SCROLLABLE FEATURES ---- */}
-      {/* <FeatureCards /> */}
+      {/* PRICING TABLE */}
+      <section id="pricing" className="py-16">
+        <div className="max-w-4xl mx-auto px-4">
+          <PricingTable />
+        </div>
+      </section>
 
-      {/* ---- PRICING ---- */}
-      <PricingTable />
+      {/* TESTIMONIALS */}
+      <section id="testimonials" className="py-16 bg-[#221843]/60">
+        <div className="max-w-4xl mx-auto px-4">
+          <Testimonials />
+        </div>
+      </section>
 
-      {/* ---- TESTIMONIALS ---- */}
-      {/* <Testimonials /> */}
-
-      {/* ---- FOOTER ---- */}
+      {/* FOOTER */}
       <Footer />
-
-      {/* Add any other sections/components you were using here! */}
     </main>
   );
 }
