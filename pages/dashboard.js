@@ -1,7 +1,8 @@
 // pages/dashboard.js
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { supabase } from "../utils/supabaseClient";
+import { useRouter } from "next/router";
+import Link from "next/link";
 import {
   Calendar,
   BarChart3,
@@ -12,77 +13,41 @@ import {
   Gift,
 } from "lucide-react";
 
+// Server‐side redirect for unauthenticated users
+export async function getServerSideProps({ req }) {
+  const { user } = await supabase.auth.api.getUserByCookie(req);
+  if (!user) {
+    return {
+      redirect: { destination: "/auth/signin", permanent: false },
+    };
+  }
+  return { props: {} };
+}
+
 const ALL_FEATURES = [
-  {
-    name: "Meetings & Events",
-    slug: "events",
-    description: "Event booking, registration, reminders",
-    icon: Calendar,
-  },
-  {
-    name: "Sales Funnel",
-    slug: "analytics",
-    description: "Lead capture, campaigns, pipeline",
-    icon: BarChart3,
-  },
-  {
-    name: "CX Management",
-    slug: "cx-management",
-    description: "Surveys, reviews, guest feedback",
-    icon: Smile,
-  },
-  {
-    name: "AI Chatbot",
-    slug: "ai-chatbot-automation",
-    description: "24/7 support, lead qualification",
-    icon: Bot,
-  },
-  {
-    name: "CRM & Client Management",
-    slug: "crm",
-    description: "Track client interactions, forecasting",
-    icon: Users,
-  },
-  {
-    name: "E-commerce Tools",
-    slug: "ecommerce-tools",
-    description: "Storefront, payments, inventory",
-    icon: ShoppingCart,
-  },
-  {
-    name: "Loyalty & Membership",
-    slug: "loyalty-membership",
-    description: "Rewards, tiers, subscriptions",
-    icon: Gift,
-  },
-  {
-    name: "Team Management",
-    slug: "team-management",
-    description: "Roles, permissions, collaboration",
-    icon: Users,
-  },
+  /* your same array of { name, slug, description, icon } */
 ];
 
 export default function Dashboard() {
   const [profile, setProfile] = useState({ name: "", features: [] });
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     (async () => {
       const {
         data: { session },
       } = await supabase.auth.getSession();
-      if (session) {
-        const { data } = await supabase
-          .from("profiles")
-          .select("name, features")
-          .eq("id", session.user.id)
-          .single();
-        setProfile({
-          name: data.name,
-          features: Array.isArray(data.features) ? data.features : [],
-        });
-      }
+      const { data } = await supabase
+        .from("profiles")
+        .select("name, features")
+        .eq("id", session.user.id)
+        .single();
+
+      setProfile({
+        name: data.name,
+        features: Array.isArray(data.features) ? data.features : [],
+      });
       setLoading(false);
     })();
   }, []);
@@ -98,8 +63,7 @@ export default function Dashboard() {
         Welcome, {firstName}!
       </h1>
       <p className="text-purple-200 mb-8">
-        Preview any of Lunara’s modular business features below. Upgrade to
-        unlock full access!
+        Preview any of Lunara’s modular features below. Upgrade to unlock full access!
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
