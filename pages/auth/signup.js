@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 
 export default function SignUp() {
-  const [form, setForm] = useState({ name: '', email: '', password: '' })
+  const [form, setForm] = useState({ name: '', email: '', password: '', password2: '' })
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -18,12 +18,21 @@ export default function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
+
+    if (form.password !== form.password2) {
+      setError('Passwords do not match. Please re-enter.')
+      return
+    }
     setLoading(true)
     try {
       const res = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          password: form.password
+        }),
       })
       const data = await res.json()
       setLoading(false)
@@ -87,6 +96,15 @@ export default function SignUp() {
                 name="password"
                 placeholder="Password"
                 value={form.password}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 rounded-full border border-gray-700 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+              <input
+                type="password"
+                name="password2"
+                placeholder="Repeat Password"
+                value={form.password2}
                 onChange={handleChange}
                 required
                 className="w-full px-4 py-3 rounded-full border border-gray-700 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
