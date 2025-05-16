@@ -1,8 +1,7 @@
-// pages/dashboard.js
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { useSession } from 'next-auth/react'
 import Link from 'next/link'
+import { supabase } from '../utils/supabaseClient'
 import {
   Calendar,
   TrendingUp,
@@ -72,18 +71,22 @@ const features = [
 ]
 
 export default function Dashboard() {
-  const { data: session, status } = useSession()
   const router = useRouter()
   const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState(null)
 
   useEffect(() => {
-    if (status === "loading") return // Wait for session to load
-    if (!session) {
-      router.push("/auth/signin")
-    } else {
-      setLoading(false)
+    const getSession = async () => {
+      const { data } = await supabase.auth.getSession()
+      if (!data.session) {
+        router.push("/auth/signin")
+      } else {
+        setUser(data.session.user)
+        setLoading(false)
+      }
     }
-  }, [session, status, router])
+    getSession()
+  }, [router])
 
   if (loading) {
     return (
@@ -98,7 +101,7 @@ export default function Dashboard() {
       <div className="max-w-5xl mx-auto">
         <div className="mb-10 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold text-purple-200 mb-2">
-            Welcome{session?.user?.name ? `, ${session.user.name}` : ''}!
+            Welcome{user?.email ? `, ${user.email}` : ''}!
           </h1>
           <p className="text-gray-300">
             Preview any of Lunara’s modular business features below. Upgrade to unlock full access!
