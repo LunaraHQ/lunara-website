@@ -1,91 +1,62 @@
-// pages/dashboard.js
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
-import Link from 'next/link'
-import { supabase } from '../utils/supabaseClient'
-import {
-  Calendar,
-  BarChart3,
-  Smile,
-  Bot,
-  Users,
-  ShoppingCart,
-  Gift,
-} from 'lucide-react'
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
-const ALL_FEATURES = [
-  { name: 'Meetings & Events',      slug: 'meetings-events',        description: 'Host events, manage RSVPs, send reminders.',      icon: Calendar },
-  { name: 'Sales Funnel',           slug: 'sales-funnel',           description: 'Lead capture, campaigns, pipeline.',              icon: BarChart3 },
-  { name: 'CX Management',          slug: 'cx-management',          description: 'Surveys, reviews, guest feedback.',              icon: Smile },
-  { name: 'AI Chatbot',             slug: 'ai-chatbot-automation',   description: '24/7 support, lead qualification.',              icon: Bot },
-  { name: 'CRM & Client Mgmt.',     slug: 'crm',                    description: 'Track client interactions, forecasting.',         icon: Users },
-  { name: 'Analytics & Reporting',  slug: 'analytics',              description: 'Dashboards, KPIs, predictions.',                 icon: BarChart3 },
-  { name: 'E-commerce Tools',       slug: 'ecommerce-tools',        description: 'Storefront, payments, inventory.',                icon: ShoppingCart },
-  { name: 'Loyalty & Membership',   slug: 'loyalty-membership',     description: 'Rewards, tiers, subscriptions.',                  icon: Gift },
-  { name: 'Team Management',        slug: 'team-management',        description: 'Roles, permissions, collaboration.',              icon: Users },
-]
+const FEATURE_CARDS = [
+  { name: "Meetings & Events", slug: "meetings-events", desc: "Automate bookings & reminders." },
+  { name: "Sales Funnel", slug: "sales-funnel", desc: "Lead capture and pipeline tools." },
+  { name: "CX Management", slug: "cx-management", desc: "Collect feedback & boost loyalty." },
+  { name: "CRM", slug: "crm", desc: "Track every client touchpoint." },
+  { name: "AI Chatbot", slug: "ai-chatbot", desc: "24/7 support and lead automation." },
+  { name: "Analytics", slug: "analytics", desc: "Dashboards and predictive insights." },
+  { name: "Team Management", slug: "team-management", desc: "Shifts, tasks, and comms." },
+  { name: "E-commerce Tools", slug: "ecommerce", desc: "Recover carts, optimize checkout." },
+  { name: "Loyalty", slug: "loyalty", desc: "Membership & rewards programs." },
+];
 
-export async function getServerSideProps({ req }) {
-  const { user } = await supabase.auth.api.getUserByCookie(req)
-  if (!user) {
-    return { redirect: { destination: '/auth/signin', permanent: false } }
-  }
-  return { props: {} }
-}
-
-export default function Dashboard() {
-  const [profile, setProfile] = useState({ name: '', features: [] })
-  const [loading, setLoading] = useState(true)
+export default function Dashboard({ session }) {
+  const router = useRouter();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (!data.session) return setLoading(false)
-      supabase
-        .from('profiles')
-        .select('name,features')
-        .eq('id', data.session.user.id)
-        .single()
-        .then(({ data }) => {
-          setProfile({ name: data.name, features: Array.isArray(data.features) ? data.features : [] })
-          setLoading(false)
-        })
-    })
-  }, [])
+    if (!session) {
+      router.replace("/auth/signin");
+    }
+  }, [session, router]);
 
-  if (loading) return <p className="p-6">Loading…</p>
+  if (!session) return null; // Loading state handled by _app.js
 
-  const firstName = profile.name.split(' ')[0] || ''
-  const unlocked = profile.features.map((f) => f.toLowerCase())
+  const firstName =
+    session?.user?.user_metadata?.full_name?.split(" ")[0] ||
+    session?.user?.email?.split("@")[0];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-900 to-purple-700 p-6">
-      <h1 className="text-3xl font-bold text-white mb-2">Welcome, {firstName}!</h1>
-      <p className="text-purple-200 mb-8">
-        Preview any of Lunara’s modules below. Upgrade to unlock full access!
-      </p>
+    <div className="py-10 px-4 md:px-12">
+      <div className="bg-gradient-to-r from-[#6E41FF] via-[#8C64FF] to-[#322769] rounded-3xl p-8 mb-10 text-white shadow-xl">
+        <h1 className="text-3xl md:text-4xl font-bold mb-2">
+          Welcome, {firstName}!
+        </h1>
+        <p className="text-lg">All your features. One dashboard. Get more from every connection.</p>
+      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {ALL_FEATURES.map(({ name, slug, description, icon: Icon }) => {
-          const isUnlocked = unlocked.includes(slug)
-          const href = isUnlocked ? `/features/${slug}` : '/dashboard/add-features'
-          return (
-            <Link key={slug} href={href}>
-              <a className="block group">
-                <div className="relative p-6 bg-purple-800 rounded-lg hover:bg-purple-700 transition">
-                  <Icon className="w-10 h-10 text-purple-300 mb-4" />
-                  <h2 className="text-xl font-semibold text-white mb-1">{name}</h2>
-                  <p className="text-purple-200">{description}</p>
-                  {!isUnlocked && (
-                    <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                      <span className="px-3 py-1 bg-purple-600 text-white rounded">Click to Unlock</span>
-                    </div>
-                  )}
-                </div>
-              </a>
-            </Link>
-          )
-        })}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        {FEATURE_CARDS.map((feature) => (
+          <div
+            key={feature.slug}
+            className="bg-white rounded-2xl shadow hover:shadow-xl transition p-6 cursor-pointer flex flex-col justify-between"
+            onClick={() => router.push(`/features/${feature.slug}`)}
+          >
+            <div>
+              <h2 className="font-bold text-xl text-[#6E41FF] mb-2">{feature.name}</h2>
+              <p className="text-gray-500">{feature.desc}</p>
+            </div>
+            <div className="mt-4 flex justify-end">
+              <button className="text-[#8C64FF] font-bold hover:underline">
+                {/** Add conditional logic if unlocked/locked */}
+                View Feature
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
-  )
+  );
 }
