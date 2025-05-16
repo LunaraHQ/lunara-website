@@ -1,124 +1,130 @@
-// components/PricingTable.js
-import React, { useState } from 'react'
-import { ShoppingCart } from 'lucide-react'
+import { useState } from "react";
+import Link from "next/link";
 
-const allFeatures = [
-  { name: 'Meetings & Events', price: 19, key: 'meetings-events' },
-  { name: 'Sales Funnel', price: 29, key: 'sales-funnel' },
-  { name: 'CX Management', price: 25, key: 'cx-management' },
-  { name: 'CRM & Client Management', price: 35, key: 'crm-client-management' },
-  { name: 'AI Chatbot & Automation', price: 39, key: 'ai-chatbot-automation' },
-  { name: 'Analytics & Reporting', price: 19, key: 'analytics-reporting' },
-  { name: 'Team Management', price: 14, key: 'team-management' },
-  { name: 'E-commerce Tools', price: 29, key: 'ecommerce-tools' },
-  { name: 'Loyalty & Membership', price: 19, key: 'loyalty-membership' },
-]
+const FEATURES = [
+  { slug: "meetings-events", name: "Meetings & Events", price: 50 },
+  { slug: "sales-funnel", name: "Sales Funnel", price: 40 },
+  { slug: "cx-management", name: "CX Management", price: 30 },
+  { slug: "crm", name: "CRM & Client Management", price: 45 },
+  { slug: "ai-chatbot", name: "AI Chatbot & Automation", price: 60 },
+  { slug: "analytics", name: "Analytics & Reporting", price: 55 },
+  { slug: "team-management", name: "Team Management", price: 35 },
+  { slug: "ecommerce", name: "E-commerce Tools", price: 50 },
+  { slug: "loyalty", name: "Loyalty & Membership", price: 40 },
+];
 
-export default function PricingTable() {
-  const [selected, setSelected] = useState([])
-  const [showCart, setShowCart] = useState(false)
+function getDiscountRate(count) {
+  if (count >= 6) return 0.2;
+  if (count >= 4) return 0.15;
+  if (count >= 2) return 0.1;
+  return 0;
+}
 
-  const toggleFeature = (key) => {
-    setSelected((prev) =>
-      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
-    )
-    setShowCart(true)
-  }
+export default function PricingTable({ session }) {
+  const [selectedFeatures, setSelectedFeatures] = useState([]);
 
-  const getTotal = () => {
-    const total = selected
-      .map((k) => allFeatures.find((f) => f.key === k).price)
-      .reduce((a, b) => a + b, 0)
-    if (selected.length >= 3) return Math.round(total * 0.8)
-    return total
-  }
+  const toggleFeature = (slug) => {
+    setSelectedFeatures((prev) =>
+      prev.includes(slug) ? prev.filter((f) => f !== slug) : [...prev, slug]
+    );
+  };
 
-  const cartFeatures = allFeatures.filter(f => selected.includes(f.key))
+  const totalPrice = selectedFeatures.reduce((sum, slug) => {
+    const feature = FEATURES.find((f) => f.slug === slug);
+    return sum + (feature ? feature.price : 0);
+  }, 0);
 
-  const handleCheckout = () => {
-    sessionStorage.setItem('lunaraBasket', JSON.stringify(selected))
-    window.location.href = '/checkout'
-  }
+  const discountRate = getDiscountRate(selectedFeatures.length);
+  const discountAmount = totalPrice * discountRate;
+  const finalPrice = totalPrice - discountAmount;
 
   return (
-    <div className="relative">
-      {/* Sticky Basket Icon */}
-      {selected.length > 0 && (
-        <div
-          className="fixed top-6 right-6 z-50 flex items-center bg-purple-700 rounded-full shadow-lg px-4 py-2 cursor-pointer transition hover:bg-purple-600"
-          style={{ minWidth: '60px' }}
-          onClick={() => setShowCart(v => !v)}
-        >
-          <ShoppingCart className="text-white w-6 h-6" />
-          <span className="ml-2 text-white font-bold">{selected.length}</span>
-        </div>
-      )}
+    <section
+      id="pricing"
+      className="max-w-5xl mx-auto p-8 bg-black/60 backdrop-blur-md rounded-3xl text-white"
+      aria-label="Pricing Table"
+    >
+      <h2 className="text-3xl font-bold mb-6 text-center text-purple-300">
+        Simple, Scalable Pricing
+      </h2>
+      <p className="mb-8 text-center text-gray-300">
+        Select the features you want. Pay only for what you use — with discounts for bundling!
+      </p>
 
-      {/* Cart Popup */}
-      {showCart && selected.length > 0 && (
-        <div className="fixed top-20 right-6 z-50 bg-gray-900 border border-purple-500 rounded-2xl p-6 shadow-2xl w-80">
-          <h3 className="text-lg font-semibold mb-4 text-white">Your Basket</h3>
-          <ul className="mb-4 space-y-2 text-gray-200">
-            {cartFeatures.map(f => (
-              <li key={f.key} className="flex justify-between items-center">
-                {f.name}
-                <span className="ml-2">€{f.price}</span>
-              </li>
-            ))}
-          </ul>
-          {selected.length >= 3 && (
-            <div className="text-green-400 mb-2 text-sm">
-              20% Bundle Discount Applied!
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {FEATURES.map(({ slug, name, price }) => (
+          <label
+            key={slug}
+            className="cursor-pointer rounded-lg border border-gray-700 p-4 flex flex-col items-center hover:border-purple-500 transition"
+          >
+            <input
+              type="checkbox"
+              className="hidden"
+              checked={selectedFeatures.includes(slug)}
+              onChange={() => toggleFeature(slug)}
+            />
+            <div
+              className={`w-6 h-6 mb-3 rounded border-2 border-purple-500 flex items-center justify-center ${
+                selectedFeatures.includes(slug) ? "bg-purple-600" : "bg-transparent"
+              }`}
+            >
+              {selectedFeatures.includes(slug) && (
+                <svg
+                  className="w-4 h-4 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              )}
             </div>
-          )}
-          <div className="text-xl font-bold mb-4 text-white">
-            Total: €{getTotal()}/mo
-          </div>
-          <button
-            className="w-full bg-purple-600 hover:bg-purple-500 text-white font-semibold py-2 rounded-full transition"
-            onClick={handleCheckout}
-          >
-            Proceed to Checkout
-          </button>
-        </div>
-      )}
-
-      <h3 className="text-lg mb-4 text-gray-200">
-        Pick only the features you need. <span className="text-purple-300">Add 3 or more and save 20%!</span>
-      </h3>
-      <div className="grid gap-5 sm:grid-cols-3 mb-8">
-        {allFeatures.map((feat) => (
-          <div
-            key={feat.key}
-            onClick={() => toggleFeature(feat.key)}
-            className={`cursor-pointer rounded-xl p-6 transition
-              border-2 ${selected.includes(feat.key) ? 'border-purple-400 bg-purple-900' : 'border-gray-700 bg-gray-800'}
-              hover:border-purple-300 hover:bg-purple-800 shadow-lg text-left`}
-          >
-            <h4 className="text-xl font-semibold mb-2">{feat.name}</h4>
-            <div className="text-2xl font-bold mb-2">€{feat.price}/mo</div>
-            <span className={`inline-block px-2 py-1 text-xs rounded ${selected.includes(feat.key) ? 'bg-purple-400 text-black' : 'bg-gray-700 text-gray-300'}`}>
-              {selected.includes(feat.key) ? 'Selected' : 'Click to add'}
-            </span>
-          </div>
+            <span className="font-semibold text-lg">{name}</span>
+            <span className="text-purple-400 mt-1">€{price} / month</span>
+          </label>
         ))}
       </div>
-      <div className="mb-4 text-lg text-gray-100">
-        <strong>
-          Total: {selected.length === 0 ? '€0' : `€${getTotal()}/mo`}
-          {selected.length >= 3 && (
-            <span className="ml-2 text-green-400">(20% Bundle Discount Applied!)</span>
-          )}
-        </strong>
+
+      <div className="mt-10 text-center text-xl font-semibold">
+        <p>Total Price: €{totalPrice.toFixed(2)}</p>
+        {discountRate > 0 && (
+          <p className="text-green-400">
+            Discount: {Math.round(discountRate * 100)}% (-€{discountAmount.toFixed(2)})
+          </p>
+        )}
+        <p className="mt-3 text-2xl text-purple-300">Final Price: €{finalPrice.toFixed(2)}</p>
       </div>
-      <button
-        className={`w-full py-3 rounded-full font-semibold text-lg transition 
-          ${selected.length > 0 ? 'bg-purple-500 hover:bg-purple-400 text-white' : 'bg-gray-500 text-gray-300 cursor-not-allowed'}`}
-        disabled={selected.length === 0}
-        onClick={selected.length > 0 ? handleCheckout : undefined}
-      >
-        {selected.length > 0 ? 'Proceed to Checkout' : 'Select Features Above'}
-      </button>
-    </div>
-  )
+
+      <div className="mt-8 flex flex-col items-center gap-4">
+        {session ? (
+          <button
+            onClick={() =>
+              alert("Proceeding to checkout... (replace with real checkout logic)")
+            }
+            className="px-8 py-3 rounded-full bg-gradient-to-r from-[#6E41FF] to-[#8C64FF] text-white font-bold shadow hover:scale-105 transition"
+          >
+            Checkout & Continue
+          </button>
+        ) : (
+          <>
+            <p className="text-center text-gray-300">
+              Want to try these out?{" "}
+              <Link href="/auth/signup">
+                <a className="text-purple-400 font-semibold hover:underline">
+                  Sign up now!
+                </a>
+              </Link>
+            </p>
+            <button
+              disabled
+              className="px-8 py-3 rounded-full bg-gray-700 text-gray-400 cursor-not-allowed font-bold shadow"
+            >
+              Checkout & Continue
+            </button>
+          </>
+        )}
+      </div>
+    </section>
+  );
 }
