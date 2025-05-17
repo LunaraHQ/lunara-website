@@ -42,7 +42,6 @@ export default function PricingTable() {
     <div
       className="
         mx-auto
-        mt-0
         mb-0
         p-5
         max-w-3xl
@@ -53,12 +52,8 @@ export default function PricingTable() {
         border border-[#322769]/60
         flex flex-col items-center
       "
-      style={{
-        marginTop: "-3rem",
-      }}
+      // Removed marginTop style entirely!
     >
-      {/* Removed heading from here */}
-
       <p className="mb-5 text-center text-[#d2c6f7] text-base md:text-lg">
         Select the features you want. Pay only for what you use — with discounts for bundling!
       </p>
