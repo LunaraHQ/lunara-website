@@ -3,13 +3,31 @@ import { useRouter } from "next/router";
 import { supabase } from "../../utils/supabaseClient";
 import { useSession } from "../../hooks/useSession";
 
+// Password strength calculation
+function getPasswordStrength(password) {
+  let score = 0;
+  if (password.length > 7) score++;
+  if (password.length > 11) score++;
+  if (/[A-Z]/.test(password)) score++;
+  if (/[a-z]/.test(password)) score++;
+  if (/[0-9]/.test(password)) score++;
+  if (/[^A-Za-z0-9]/.test(password)) score++;
+  if (score <= 2) return { label: "Weak", color: "#e53e3e", percent: 30 };
+  if (score <= 4) return { label: "Medium", color: "#ecc94b", percent: 60 };
+  return { label: "Strong", color: "#38a169", percent: 100 };
+}
+
 export default function SignUp() {
   const router = useRouter();
   const { session, loading } = useSession();
+
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (!loading && session) {
@@ -17,18 +35,38 @@ export default function SignUp() {
     }
   }, [session, loading, router]);
 
+  const strength = getPasswordStrength(password);
+
   const handleSignUp = async (e) => {
     e.preventDefault();
     setErrorMsg("");
     setSuccessMsg("");
+
+    if (!name.trim()) {
+      setErrorMsg("Name is required.");
+      return;
+    }
+    if (password !== confirm) {
+      setErrorMsg("Passwords do not match.");
+      return;
+    }
+    if (strength.label === "Weak") {
+      setErrorMsg("Password is too weak.");
+      return;
+    }
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: { data: { full_name: name.trim() } },
     });
+
     if (error) {
       setErrorMsg(error.message);
     } else {
-      setSuccessMsg("Check your email for a confirmation link to activate your account.");
+      setSuccessMsg(
+        "Check your email for a confirmation link to activate your account."
+      );
     }
   };
 
@@ -43,10 +81,28 @@ export default function SignUp() {
             SaaS Sign Up
           </span>
         </div>
-        <h1 className="text-xl font-semibold text-center text-[#B09CFF] mb-8">Create your account</h1>
+        <h1 className="text-xl font-semibold text-center text-[#B09CFF] mb-8">
+          Create your account
+        </h1>
         <form onSubmit={handleSignUp} className="space-y-6">
           <div>
-            <label className="block mb-1 text-sm font-medium text-[#6E41FF]">Email</label>
+            <label className="block mb-1 text-sm font-medium text-[#6E41FF]">
+              Name
+            </label>
+            <input
+              type="text"
+              className="w-full px-4 py-2 bg-[#2b2051] border border-[#6E41FF]/40 rounded-lg text-[#E6E6FA] placeholder-[#8c7abf] focus:outline-none focus:ring-2 focus:ring-[#6E41FF] transition"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              autoComplete="name"
+              placeholder="Your full name"
+            />
+          </div>
+          <div>
+            <label className="block mb-1 text-sm font-medium text-[#6E41FF]">
+              Email
+            </label>
             <input
               type="email"
               className="w-full px-4 py-2 bg-[#2b2051] border border-[#6E41FF]/40 rounded-lg text-[#E6E6FA] placeholder-[#8c7abf] focus:outline-none focus:ring-2 focus:ring-[#6E41FF] transition"
@@ -59,19 +115,79 @@ export default function SignUp() {
             />
           </div>
           <div>
-            <label className="block mb-1 text-sm font-medium text-[#6E41FF]">Password</label>
+            <label className="block mb-1 text-sm font-medium text-[#6E41FF]">
+              Password
+            </label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                className="w-full px-4 py-2 bg-[#2b2051] border border-[#6E41FF]/40 rounded-lg text-[#E6E6FA] placeholder-[#8c7abf] focus:outline-none focus:ring-2 focus:ring-[#6E41FF] transition"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                autoComplete="new-password"
+                placeholder="Choose a password"
+                minLength={8}
+              />
+              <button
+                type="button"
+                className="absolute right-2 top-2 text-[#6E41FF] text-xs"
+                onClick={() => setShowPassword((v) => !v)}
+                tabIndex={-1}
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
+            </div>
+            {/* Password Strength Meter */}
+            {password && (
+              <div className="mt-2">
+                <div className="w-full h-2 rounded bg-[#2b2051]">
+                  <div
+                    className="h-2 rounded transition-all duration-300"
+                    style={{
+                      width: `${strength.percent}%`,
+                      background: strength.color,
+                    }}
+                  />
+                </div>
+                <div
+                  className="text-xs font-semibold mt-1"
+                  style={{ color: strength.color }}
+                >
+                  {strength.label} password
+                </div>
+              </div>
+            )}
+          </div>
+          <div>
+            <label className="block mb-1 text-sm font-medium text-[#6E41FF]">
+              Confirm Password
+            </label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               className="w-full px-4 py-2 bg-[#2b2051] border border-[#6E41FF]/40 rounded-lg text-[#E6E6FA] placeholder-[#8c7abf] focus:outline-none focus:ring-2 focus:ring-[#6E41FF] transition"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
               required
               autoComplete="new-password"
-              placeholder="Choose a password"
+              placeholder="Retype your password"
             />
+            {confirm && confirm !== password && (
+              <div className="text-red-400 text-xs mt-1 font-medium">
+                Passwords do not match.
+              </div>
+            )}
           </div>
-          {errorMsg && <div className="text-red-400 text-sm text-center font-medium">{errorMsg}</div>}
-          {successMsg && <div className="text-green-400 text-sm text-center font-medium">{successMsg}</div>}
+          {errorMsg && (
+            <div className="text-red-400 text-sm text-center font-medium">
+              {errorMsg}
+            </div>
+          )}
+          {successMsg && (
+            <div className="text-green-400 text-sm text-center font-medium">
+              {successMsg}
+            </div>
+          )}
           <button
             type="submit"
             className="w-full py-3 mt-2 bg-[#6E41FF] text-white font-bold rounded-lg shadow-lg hover:bg-[#4b299c] transition text-lg tracking-wide"
