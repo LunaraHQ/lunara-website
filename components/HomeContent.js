@@ -40,10 +40,8 @@ const howItWorksSteps = [
 
 export default function HomeContent() {
   const { scrollY } = useScroll()
-  // Use a nearly-black, purple-tinged space background
   const hue = useTransform(scrollY, [0, 500], [260, 300], { clamp: false })
   const hueSpring = useSpring(hue, { stiffness: 10, damping: 50 })
-  // PURE black-purplish background for "space"
   const background = useTransform(hueSpring, h => `hsl(${h}, 34%, 5%)`)
 
   const canvas1 = useRef(null)
@@ -51,6 +49,7 @@ export default function HomeContent() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return
+
     const initLayer = (canvas, speed, count) => {
       const ctx = canvas.getContext('2d')
       const stars = Array.from({ length: count }, () => ({
@@ -61,19 +60,27 @@ export default function HomeContent() {
       }))
       canvas.width = window.innerWidth
       canvas.height = window.innerHeight
-      const draw = () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
-        stars.forEach(star => {
-          star.y += star.s * speed
-          if (star.y > canvas.height) star.y = 0
-          ctx.beginPath()
-          ctx.arc(star.x, star.y, star.r, 0, 2 * Math.PI)
-          ctx.fillStyle = '#fff'
-          ctx.globalAlpha = 0.85
-          ctx.shadowColor = '#6E41FF'
-          ctx.shadowBlur = 12
-          ctx.fill()
-        })
+
+      let lastDraw = 0
+      const FPS = 30
+
+      const draw = (now = 0) => {
+        if (now - lastDraw > 1000 / FPS) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height)
+          stars.forEach(star => {
+            star.y += star.s * speed
+            if (star.y > canvas.height) star.y = 0
+            ctx.beginPath()
+            ctx.arc(star.x, star.y, star.r, 0, 2 * Math.PI)
+            ctx.fillStyle = '#fff'
+            ctx.globalAlpha = 0.85
+            // SHADOW REMOVED FOR PERFORMANCE:
+            // ctx.shadowColor = '#6E41FF'
+            // ctx.shadowBlur = 12
+            ctx.fill()
+          })
+          lastDraw = now
+        }
         requestAnimationFrame(draw)
       }
       draw()
