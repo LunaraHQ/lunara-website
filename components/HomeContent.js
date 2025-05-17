@@ -19,7 +19,6 @@ import {
 } from 'lucide-react'
 import PricingTable from './PricingTable'
 
-// Features list
 const features = [
   { title: 'Meetings & Events', desc: 'Effortlessly manage bookings, registration, and reminders for any event.', icon: Calendar, slug: 'meetings-events' },
   { title: 'Sales Funnel', desc: 'Capture leads, automate outreach, and visualize your entire pipeline.', icon: TrendingUp, slug: 'sales-funnel' },
@@ -81,26 +80,25 @@ export default function HomeContent() {
   }, [])
 
   return (
-    <section className="relative z-10 overflow-x-clip">
-      {/* Decorative background layers - now only behind this section */}
+    <section className="relative z-10 min-h-screen overflow-x-clip">
+      {/* Decorative background layers always cover the whole HomeContent area */}
       <motion.div
         style={{ background }}
-        className="absolute inset-0 -z-30"
+        className="absolute inset-0 -z-30 h-full w-full"
         aria-hidden="true"
       />
       <canvas
         ref={canvas1}
-        className="absolute inset-0 -z-20 opacity-80"
+        className="absolute inset-0 -z-20 opacity-80 h-full w-full"
         aria-hidden="true"
       />
       <canvas
         ref={canvas2}
-        className="absolute inset-0 -z-20 opacity-60"
+        className="absolute inset-0 -z-20 opacity-60 h-full w-full"
         aria-hidden="true"
       />
 
       <main id="main-content" className="relative z-10 text-white font-sans">
-
         {/* Features */}
         <section
           id="features"
