@@ -57,9 +57,8 @@ export default function PricingTable() {
         marginTop: "-3rem",
       }}
     >
-      <h2 className="text-2xl md:text-3xl font-bold mb-4 text-center text-purple-300">
-        Simple, Scalable Pricing
-      </h2>
+      {/* Removed heading from here */}
+
       <p className="mb-5 text-center text-[#d2c6f7] text-base md:text-lg">
         Select the features you want. Pay only for what you use — with discounts for bundling!
       </p>
