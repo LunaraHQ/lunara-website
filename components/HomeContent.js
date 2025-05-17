@@ -240,31 +240,63 @@ export default function HomeContent() {
         </section>
 
         {/* HOW IT WORKS */}
-        <section id="howitworks" className="py-20 px-6 bg-gradient-to-br from-[#23194b]/70 to-[#12092e]/80 backdrop-blur-lg">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-white drop-shadow-glow">
+        <section
+          id="howitworks"
+          className="py-12 px-6 bg-gradient-to-br from-[#23194b]/70 to-[#12092e]/80 backdrop-blur-lg"
+        >
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 text-white drop-shadow-glow">
               How It Works
             </h2>
-            <div className="grid gap-8 md:gap-12 grid-cols-1 md:grid-cols-3">
+            <div className="grid gap-6 md:gap-8 grid-cols-1 md:grid-cols-3">
               {howItWorksSteps.map(({ icon: Icon, title, desc }) => (
                 <div
                   key={title}
-                  className="flex flex-col items-center text-center p-8 bg-gradient-to-br from-[#2a1745]/80 via-[#27134e]/60 to-[#130b24]/70 border border-[#38296b]/70 shadow-[0_8px_48px_rgba(110,65,255,0.10)] rounded-2xl backdrop-blur-md"
-                  style={{ minHeight: '320px', display: 'flex', justifyContent: 'center' }}
+                  className="relative flex flex-col items-center text-center p-6 md:p-7 bg-gradient-to-br from-[#2a1745]/90 via-[#6E41FF33]/60 to-[#130b24]/80 border border-[#38296b]/60 rounded-2xl shadow-lg overflow-hidden"
+                  style={{
+                    minHeight: '220px',
+                    maxWidth: '350px',
+                    margin: '0 auto',
+                    justifyContent: 'center',
+                  }}
                 >
-                  <span className="flex items-center justify-center w-16 h-16 mb-5 rounded-2xl bg-gradient-to-tr from-[#6E41FF22] via-[#8C64FF22] to-[#1a103e44] border border-[#8C64FF33] shadow-inner">
-                    <Icon className="w-9 h-9 text-[#8C64FF]" />
+                  {/* Shimmer Overlay */}
+                  <span className="pointer-events-none absolute inset-0 rounded-2xl shimmer" />
+                  <span className="flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-tr from-[#6E41FF22] via-[#8C64FF22] to-[#1a103e44] border border-[#8C64FF33] shadow-inner">
+                    <Icon className="w-7 h-7 text-[#8C64FF]" />
                   </span>
-                  <h3 className="text-xl font-semibold text-white mb-2 drop-shadow">
+                  <h3 className="text-base md:text-lg font-semibold text-white mb-1 drop-shadow">
                     {title}
                   </h3>
-                  <p className="text-[#d2c6f7]">{desc}</p>
+                  <p className="text-[#d2c6f7] text-sm">{desc}</p>
                 </div>
               ))}
             </div>
           </div>
+          {/* Shimmer Animation */}
+          <style jsx>{`
+            .shimmer {
+              background: linear-gradient(
+                120deg,
+                transparent 30%,
+                #8C64FF33 45%,
+                #fff2 55%,
+                transparent 70%
+              );
+              animation: shimmer-move 1.8s infinite linear;
+              opacity: 0.38;
+              z-index: 2;
+            }
+            @keyframes shimmer-move {
+              0% {
+                transform: translateX(-80%);
+              }
+              100% {
+                transform: translateX(110%);
+              }
+            }
+          `}</style>
         </section>
-
       </main>
     </>
   )
