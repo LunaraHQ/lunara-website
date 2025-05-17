@@ -4,9 +4,8 @@ import { supabase } from "../utils/supabaseClient";
 import HeroSection from "../components/HeroSection";
 import HomeContent from "../components/HomeContent";
 import HowItWorks from "../components/HowItWorks";
-import PricingTable from "../components/PricingTable";
 import Footer from "../components/Footer";
-// import FeatureCards from "../components/features/FeatureCards"; // Uncomment when ready
+// import FeatureCards from "../components/features/FeatureCards"; // If needed
 
 export default function Home() {
   const router = useRouter();
@@ -29,7 +28,7 @@ export default function Home() {
       <HomeContent />
       <HowItWorks />
       {/* <FeatureCards /> */}
-      <PricingTable />
+      {/* <PricingTable /> REMOVE THIS LINE */}
       <Footer />
     </main>
   );
