@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { supabase } from "../utils/supabaseClient";
 
 const FEATURES = [
@@ -29,9 +29,16 @@ export default function NavBar({ onContactOpen, session }) {
     router.push("/");
   };
 
+  // Dropdown sticky logic
+  const dropdownRef = useRef(null);
+
+  // Handle keeping dropdown open when mouse is over button or dropdown menu
+  const handleDropdownMouseEnter = () => setFeaturesOpen(true);
+  const handleDropdownMouseLeave = () => setFeaturesOpen(false);
+
   return (
     <header className="w-full bg-gradient-to-r from-[#1a103e] via-[#6E41FF] to-[#221446] shadow-xl z-50">
-      <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between relative">
         <Link
           href="/"
           className="flex items-center gap-2 font-extrabold text-2xl tracking-wider text-white drop-shadow-glow"
@@ -48,15 +55,18 @@ export default function NavBar({ onContactOpen, session }) {
           >
             Dashboard
           </Link>
+
+          {/* Sticky Dropdown Parent */}
           <div
             className="relative"
-            onMouseEnter={() => setFeaturesOpen(true)}
-            onMouseLeave={() => setFeaturesOpen(false)}
+            onMouseEnter={handleDropdownMouseEnter}
+            onMouseLeave={handleDropdownMouseLeave}
           >
             <button
               className="text-[#e0d3fc] hover:text-white font-semibold text-lg flex items-center gap-1 transition"
               aria-haspopup="true"
               aria-expanded={featuresOpen}
+              type="button"
             >
               Features
               <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
@@ -69,13 +79,20 @@ export default function NavBar({ onContactOpen, session }) {
               </svg>
             </button>
             {featuresOpen && (
-              <div className="absolute left-0 mt-2 w-60 rounded-xl bg-[#130b24] shadow-2xl z-50 border border-[#352a5c] backdrop-blur-sm">
-                <ul className="py-2">
+              <div
+                ref={dropdownRef}
+                className="absolute left-0 mt-3 w-64 rounded-2xl
+                  bg-gradient-to-br from-[#251654ee] via-[#221446cc] to-[#6E41FF22]
+                  shadow-[0_6px_32px_rgba(140,100,255,0.22)] z-50 border border-[#352a5c]
+                  backdrop-blur-md ring-1 ring-[#6E41FF33] ring-inset"
+              >
+                <ul className="py-3">
                   {FEATURES.map((feature) => (
                     <li key={feature.slug}>
                       <Link
                         href={`/features/${feature.slug}`}
-                        className="block px-5 py-2 text-[#bb9cff] hover:bg-[#23194b] hover:text-white transition rounded"
+                        className="block px-5 py-2 text-[#bb9cff] hover:bg-[#6E41FF33] hover:text-white font-semibold transition rounded-xl"
+                        onClick={() => setFeaturesOpen(false)}
                       >
                         {feature.name}
                       </Link>
