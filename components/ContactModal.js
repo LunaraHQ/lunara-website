@@ -45,16 +45,18 @@ export default function ContactModal({ open, onClose }) {
             initial={{ opacity: 0, scale: 0.92, y: 32 }}
             animate={{ opacity: 1, scale: 1, y: 0, transition: { type: "spring", stiffness: 280, damping: 22 } }}
             exit={{ opacity: 0, scale: 0.97, y: 20, transition: { duration: 0.16 } }}
-            className="relative w-full max-w-md rounded-2xl shadow-[0_6px_32px_rgba(110,65,255,0.23)] bg-gradient-to-br from-[#23194b] via-[#27134e] to-[#130b24] border border-[#352a5c] p-8 outline-none"
+            className="relative w-full max-w-md rounded-2xl shadow-[0_6px_32px_rgba(110,65,255,0.23)] bg-gradient-to-br from-[#23194b] via-[#27134e] to-[#130b24] border border-[#352a5c] p-8 outline-none focus:outline-none focus:ring-2 focus:ring-[#8C64FF]/80 focus:ring-offset-0"
             aria-modal="true"
             role="dialog"
+            style={{ outline: "none", boxShadow: "none" }}
           >
             {/* Close icon */}
             <button
-              className="absolute top-4 right-4 text-[#b7a6e5] hover:text-white transition p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-[#8C64FF]/70"
+              className="absolute top-4 right-4 text-[#b7a6e5] hover:text-white transition p-2 rounded-full outline-none focus:outline-none focus:ring-2 focus:ring-[#8C64FF]/80 focus:ring-offset-0"
               onClick={onClose}
               aria-label="Close modal"
               tabIndex={0}
+              style={{ outline: "none", boxShadow: "none" }}
             >
               <X className="w-6 h-6" />
             </button>
