@@ -6,6 +6,7 @@ import HomeContent from "../components/HomeContent";
 import Footer from "../components/Footer";
 import ScrollToTop from "../components/ScrollToTop";
 // import FeatureCards from "../components/features/FeatureCards"; // If needed
+// import HowItWorks from "../components/HowItWorks"; // <-- DELETE or comment out
 
 export default function Home() {
   const router = useRouter();
@@ -35,7 +36,7 @@ export default function Home() {
         </svg>
       </div>
 
-      <HowItWorks />
+      {/* <HowItWorks />  <-- REMOVE THIS LINE */}
 
       {/* Another SVG Separator before Footer (optional) */}
       <div className="w-full">
