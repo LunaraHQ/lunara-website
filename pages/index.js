@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { supabase } from "../utils/supabaseClient";
 import HeroSection from "../components/HeroSection";
 import HomeContent from "../components/HomeContent";
-import HowItWorks from "../components/HowItWorks";
 import Footer from "../components/Footer";
 import ScrollToTop from "../components/ScrollToTop";
 // import FeatureCards from "../components/features/FeatureCards"; // If needed
