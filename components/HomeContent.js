@@ -19,80 +19,23 @@ import {
 } from 'lucide-react'
 import PricingTable from './PricingTable'
 
-// Map features to their slugs for URL use
+// Features list
 const features = [
-  {
-    title: 'Meetings & Events',
-    desc: 'Effortlessly manage bookings, registration, and reminders for any event.',
-    icon: Calendar,
-    slug: 'meetings-events',
-  },
-  {
-    title: 'Sales Funnel',
-    desc: 'Capture leads, automate outreach, and visualize your entire pipeline.',
-    icon: TrendingUp,
-    slug: 'sales-funnel',
-  },
-  {
-    title: 'CX Management',
-    desc: 'Collect feedback, manage reviews, and analyze guest experience in real-time.',
-    icon: Smile,
-    slug: 'cx-management',
-  },
-  {
-    title: 'CRM & Client Management',
-    desc: 'Track interactions, centralize contacts, and forecast your sales.',
-    icon: Users,
-    slug: 'crm-client-management',
-  },
-  {
-    title: 'AI Chatbot & Automation',
-    desc: 'Provide instant support, qualify leads, and automate routine tasks.',
-    icon: Bot,
-    slug: 'ai-chatbot-automation',
-  },
-  {
-    title: 'Analytics & Reporting',
-    desc: 'Build custom dashboards and uncover actionable business insights.',
-    icon: BarChart3,
-    slug: 'analytics-reporting',
-  },
-  {
-    title: 'Team Management',
-    desc: 'Schedule shifts, assign tasks, and streamline team communication.',
-    icon: Users,
-    slug: 'team-management',
-  },
-  {
-    title: 'E-commerce Tools',
-    desc: 'Recover abandoned carts and boost conversions with smart offers.',
-    icon: ShoppingCart,
-    slug: 'ecommerce-tools',
-  },
-  {
-    title: 'Loyalty & Membership',
-    desc: 'Reward returning customers and manage memberships with ease.',
-    icon: Gift,
-    slug: 'loyalty-membership',
-  },
+  { title: 'Meetings & Events', desc: 'Effortlessly manage bookings, registration, and reminders for any event.', icon: Calendar, slug: 'meetings-events' },
+  { title: 'Sales Funnel', desc: 'Capture leads, automate outreach, and visualize your entire pipeline.', icon: TrendingUp, slug: 'sales-funnel' },
+  { title: 'CX Management', desc: 'Collect feedback, manage reviews, and analyze guest experience in real-time.', icon: Smile, slug: 'cx-management' },
+  { title: 'CRM & Client Management', desc: 'Track interactions, centralize contacts, and forecast your sales.', icon: Users, slug: 'crm-client-management' },
+  { title: 'AI Chatbot & Automation', desc: 'Provide instant support, qualify leads, and automate routine tasks.', icon: Bot, slug: 'ai-chatbot-automation' },
+  { title: 'Analytics & Reporting', desc: 'Build custom dashboards and uncover actionable business insights.', icon: BarChart3, slug: 'analytics-reporting' },
+  { title: 'Team Management', desc: 'Schedule shifts, assign tasks, and streamline team communication.', icon: Users, slug: 'team-management' },
+  { title: 'E-commerce Tools', desc: 'Recover abandoned carts and boost conversions with smart offers.', icon: ShoppingCart, slug: 'ecommerce-tools' },
+  { title: 'Loyalty & Membership', desc: 'Reward returning customers and manage memberships with ease.', icon: Gift, slug: 'loyalty-membership' },
 ]
 
 const howItWorksSteps = [
-  {
-    icon: UserPlus,
-    title: 'Sign Up',
-    desc: 'Get on the waitlist in under 60 seconds—no credit card required.',
-  },
-  {
-    icon: Link2,
-    title: 'Stay in the Loop',
-    desc: 'We’ll email you product updates, early access invites, and launch news.',
-  },
-  {
-    icon: Zap,
-    title: 'Be First to Launch',
-    desc: 'When we go live, you’ll be one of the very first to try Lunara’s AI funnels.',
-  },
+  { icon: UserPlus, title: 'Sign Up', desc: 'Get on the waitlist in under 60 seconds—no credit card required.' },
+  { icon: Link2, title: 'Stay in the Loop', desc: 'We’ll email you product updates, early access invites, and launch news.' },
+  { icon: Zap, title: 'Be First to Launch', desc: 'When we go live, you’ll be one of the very first to try Lunara’s AI funnels.' },
 ]
 
 export default function HomeContent() {
@@ -124,9 +67,9 @@ export default function HomeContent() {
           ctx.beginPath()
           ctx.arc(star.x, star.y, star.r, 0, 2 * Math.PI)
           ctx.fillStyle = '#fff'
-          ctx.globalAlpha = 0.85 // a bit more visible
+          ctx.globalAlpha = 0.85
           ctx.shadowColor = '#6E41FF'
-          ctx.shadowBlur = 12 // stronger glow
+          ctx.shadowBlur = 12
           ctx.fill()
         })
         requestAnimationFrame(draw)
@@ -138,21 +81,21 @@ export default function HomeContent() {
   }, [])
 
   return (
-    <>
-      {/* Decorative background layers */}
+    <section className="relative z-10 overflow-x-clip">
+      {/* Decorative background layers - now only behind this section */}
       <motion.div
         style={{ background }}
-        className="fixed inset-0 -z-30"
+        className="absolute inset-0 -z-30"
         aria-hidden="true"
       />
       <canvas
         ref={canvas1}
-        className="fixed inset-0 -z-20 opacity-80"
+        className="absolute inset-0 -z-20 opacity-80"
         aria-hidden="true"
       />
       <canvas
         ref={canvas2}
-        className="fixed inset-0 -z-20 opacity-60"
+        className="absolute inset-0 -z-20 opacity-60"
         aria-hidden="true"
       />
 
@@ -204,21 +147,9 @@ export default function HomeContent() {
           </h2>
           <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8 text-center">
             {[
-              {
-                icon: Cloud,
-                title: 'Global CDN',
-                desc: 'Lightning-fast performance worldwide via Vercel’s edge network.',
-              },
-              {
-                icon: ShieldCheck,
-                title: 'SOC 2 & GDPR',
-                desc: 'Built-in compliance to keep your data—and your guests—secure.',
-              },
-              {
-                icon: Lock,
-                title: 'Data Encryption',
-                desc: 'All data encrypted in transit (TLS) and at rest.',
-              },
+              { icon: Cloud, title: 'Global CDN', desc: 'Lightning-fast performance worldwide via Vercel’s edge network.' },
+              { icon: ShieldCheck, title: 'SOC 2 & GDPR', desc: 'Built-in compliance to keep your data—and your guests—secure.' },
+              { icon: Lock, title: 'Data Encryption', desc: 'All data encrypted in transit (TLS) and at rest.' },
             ].map(({ icon: Icon, title, desc }) => (
               <div
                 key={title}
@@ -257,12 +188,8 @@ export default function HomeContent() {
               z-index: 2;
             }
             @keyframes shimmer-move {
-              0% {
-                transform: translateX(-80%);
-              }
-              100% {
-                transform: translateX(110%);
-              }
+              0% { transform: translateX(-80%); }
+              100% { transform: translateX(110%); }
             }
           `}</style>
         </section>
@@ -333,16 +260,12 @@ export default function HomeContent() {
               z-index: 2;
             }
             @keyframes shimmer-move {
-              0% {
-                transform: translateX(-80%);
-              }
-              100% {
-                transform: translateX(110%);
-              }
+              0% { transform: translateX(-80%); }
+              100% { transform: translateX(110%); }
             }
           `}</style>
         </section>
       </main>
-    </>
+    </section>
   )
 }
