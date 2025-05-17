@@ -41,13 +41,13 @@ export default function PricingTable() {
   return (
     <section
       id="pricing"
-      className="max-w-5xl mx-auto p-8 bg-black/60 backdrop-blur-md rounded-3xl text-white"
+      className="max-w-5xl mx-auto p-10 bg-gradient-to-br from-[#251654]/70 via-[#27134e]/60 to-[#130b24]/50 backdrop-blur-md rounded-3xl text-white shadow-lg mt-10"
       aria-label="Pricing Table"
     >
       <h2 className="text-3xl font-bold mb-6 text-center text-purple-300">
         Simple, Scalable Pricing
       </h2>
-      <p className="mb-8 text-center text-gray-300">
+      <p className="mb-8 text-center text-[#d2c6f7]">
         Select the features you want. Pay only for what you use — with discounts for bundling!
       </p>
 
@@ -55,7 +55,7 @@ export default function PricingTable() {
         {FEATURES.map(({ slug, name, price }) => (
           <label
             key={slug}
-            className="cursor-pointer rounded-lg border border-gray-700 p-4 flex flex-col items-center hover:border-purple-500 transition"
+            className="cursor-pointer rounded-xl border border-[#322769]/50 p-5 flex flex-col items-center bg-[#201845]/60 hover:border-[#8C64FF] transition"
           >
             <input
               type="checkbox"
@@ -64,8 +64,8 @@ export default function PricingTable() {
               onChange={() => toggleFeature(slug)}
             />
             <div
-              className={`w-6 h-6 mb-3 rounded border-2 border-purple-500 flex items-center justify-center ${
-                selectedFeatures.includes(slug) ? "bg-purple-600" : "bg-transparent"
+              className={`w-7 h-7 mb-3 rounded border-2 border-[#8C64FF] flex items-center justify-center ${
+                selectedFeatures.includes(slug) ? "bg-[#8C64FF]" : "bg-transparent"
               }`}
             >
               {selectedFeatures.includes(slug) && (
@@ -99,8 +99,8 @@ export default function PricingTable() {
       <div className="mt-8 text-center text-purple-300 font-semibold">
         See how much it could cost your company.
         <br />
-        <Link href="/auth/signup">
-          <a className="underline hover:text-white cursor-pointer">Sign up now!</a>
+        <Link href="/auth/signup" className="underline hover:text-white cursor-pointer">
+          Sign up now!
         </Link>
       </div>
     </section>
