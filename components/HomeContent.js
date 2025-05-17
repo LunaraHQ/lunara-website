@@ -158,31 +158,6 @@ export default function HomeContent() {
 
       <main id="main-content" className="relative z-10 text-white font-sans">
 
-        {/* HOW IT WORKS */}
-        <section id="howitworks" className="py-24 px-6 bg-gradient-to-br from-[#23194b]/70 to-[#12092e]/80 backdrop-blur-lg">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 text-white drop-shadow-glow">
-              How It Works
-            </h2>
-            <div className="grid gap-8 md:gap-12 grid-cols-1 md:grid-cols-3">
-              {howItWorksSteps.map(({ icon: Icon, title, desc }) => (
-                <div
-                  key={title}
-                  className="flex flex-col items-center text-center p-8 bg-gradient-to-br from-[#2a1745]/80 via-[#27134e]/60 to-[#130b24]/70 border border-[#38296b]/70 shadow-[0_8px_48px_rgba(110,65,255,0.10)] rounded-2xl backdrop-blur-md"
-                >
-                  <span className="flex items-center justify-center w-16 h-16 mb-5 rounded-2xl bg-gradient-to-tr from-[#6E41FF22] via-[#8C64FF22] to-[#1a103e44] border border-[#8C64FF33] shadow-inner">
-                    <Icon className="w-9 h-9 text-[#8C64FF]" />
-                  </span>
-                  <h3 className="text-xl font-semibold text-white mb-2 drop-shadow">
-                    {title}
-                  </h3>
-                  <p className="text-[#d2c6f7]">{desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* Features */}
         <section
           id="features"
@@ -263,6 +238,33 @@ export default function HomeContent() {
             <PricingTable />
           </div>
         </section>
+
+        {/* HOW IT WORKS */}
+        <section id="howitworks" className="py-20 px-6 bg-gradient-to-br from-[#23194b]/70 to-[#12092e]/80 backdrop-blur-lg">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-white drop-shadow-glow">
+              How It Works
+            </h2>
+            <div className="grid gap-8 md:gap-12 grid-cols-1 md:grid-cols-3">
+              {howItWorksSteps.map(({ icon: Icon, title, desc }) => (
+                <div
+                  key={title}
+                  className="flex flex-col items-center text-center p-8 bg-gradient-to-br from-[#2a1745]/80 via-[#27134e]/60 to-[#130b24]/70 border border-[#38296b]/70 shadow-[0_8px_48px_rgba(110,65,255,0.10)] rounded-2xl backdrop-blur-md"
+                  style={{ minHeight: '320px', display: 'flex', justifyContent: 'center' }}
+                >
+                  <span className="flex items-center justify-center w-16 h-16 mb-5 rounded-2xl bg-gradient-to-tr from-[#6E41FF22] via-[#8C64FF22] to-[#1a103e44] border border-[#8C64FF33] shadow-inner">
+                    <Icon className="w-9 h-9 text-[#8C64FF]" />
+                  </span>
+                  <h3 className="text-xl font-semibold text-white mb-2 drop-shadow">
+                    {title}
+                  </h3>
+                  <p className="text-[#d2c6f7]">{desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
       </main>
     </>
   )
