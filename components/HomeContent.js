@@ -38,7 +38,6 @@ const howItWorksSteps = [
 ]
 
 export default function HomeContent() {
-  // Optional: color shift with scroll, if you want to keep the theme dynamic.
   const { scrollY } = useScroll()
   const hue = useTransform(scrollY, [0, 500], [260, 300], { clamp: false })
   const hueSpring = useSpring(hue, { stiffness: 10, damping: 50 })
@@ -52,7 +51,6 @@ export default function HomeContent() {
         aria-hidden="true"
         style={{
           background:
-            // Layered gradients: deep space + dense white/purple/blue/yellow stars
             `
               linear-gradient(120deg, #100a22 70%, #1a1336 100%),
               repeating-radial-gradient(circle at 12% 18%, #fff 0 1px, transparent 1px 100%),
@@ -122,8 +120,15 @@ export default function HomeContent() {
                   justifyContent: 'center',
                 }}
               >
-                {/* Shimmer Overlay */}
-                <span className="pointer-events-none absolute inset-0 rounded-2xl shimmer" />
+                {/* Static shimmer overlay (NO animation) */}
+                <span className="pointer-events-none absolute inset-0 rounded-2xl"
+                  style={{
+                    background:
+                      'linear-gradient(120deg, transparent 60%, #8C64FF33 80%, transparent 100%)',
+                    opacity: 0.23,
+                    zIndex: 2,
+                  }}
+                />
                 <span className="flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-tr from-[#6E41FF22] via-[#8C64FF22] to-[#1a103e44] border border-[#8C64FF33] shadow-inner">
                   <Icon className="w-7 h-7 text-[#8C64FF]" />
                 </span>
@@ -134,25 +139,6 @@ export default function HomeContent() {
               </div>
             ))}
           </div>
-          {/* Shimmer Animation */}
-          <style jsx>{`
-            .shimmer {
-              background: linear-gradient(
-                120deg,
-                transparent 30%,
-                #8C64FF33 45%,
-                #fff2 55%,
-                transparent 70%
-              );
-              animation: shimmer-move 1.8s infinite linear;
-              opacity: 0.38;
-              z-index: 2;
-            }
-            @keyframes shimmer-move {
-              0% { transform: translateX(-80%); }
-              100% { transform: translateX(110%); }
-            }
-          `}</style>
         </section>
 
         {/* Pricing */}
@@ -193,8 +179,15 @@ export default function HomeContent() {
                     justifyContent: 'center',
                   }}
                 >
-                  {/* Shimmer Overlay */}
-                  <span className="pointer-events-none absolute inset-0 rounded-2xl shimmer" />
+                  {/* Static shimmer overlay (NO animation) */}
+                  <span className="pointer-events-none absolute inset-0 rounded-2xl"
+                    style={{
+                      background:
+                        'linear-gradient(120deg, transparent 60%, #8C64FF33 80%, transparent 100%)',
+                      opacity: 0.23,
+                      zIndex: 2,
+                    }}
+                  />
                   <span className="flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-tr from-[#6E41FF22] via-[#8C64FF22] to-[#1a103e44] border border-[#8C64FF33] shadow-inner">
                     <Icon className="w-7 h-7 text-[#8C64FF]" />
                   </span>
@@ -206,25 +199,6 @@ export default function HomeContent() {
               ))}
             </div>
           </div>
-          {/* Shimmer Animation */}
-          <style jsx>{`
-            .shimmer {
-              background: linear-gradient(
-                120deg,
-                transparent 30%,
-                #8C64FF33 45%,
-                #fff2 55%,
-                transparent 70%
-              );
-              animation: shimmer-move 1.8s infinite linear;
-              opacity: 0.38;
-              z-index: 2;
-            }
-            @keyframes shimmer-move {
-              0% { transform: translateX(-80%); }
-              100% { transform: translateX(110%); }
-            }
-          `}</style>
         </section>
       </main>
     </section>
