@@ -39,19 +39,19 @@ export default function PricingTable() {
   const finalPrice = totalPrice - discountAmount;
 
   return (
-    <section id="pricing" className="py-20 px-6 max-w-7xl mx-auto text-white">
-      <h2 className="text-3xl font-bold mb-6 text-center text-purple-300">
+    <section id="pricing" className="py-8 px-2 max-w-7xl mx-auto text-white">
+      <h2 className="text-3xl font-bold mb-4 text-center text-purple-300">
         Simple, Scalable Pricing
       </h2>
-      <p className="mb-10 text-center text-[#d2c6f7]">
+      <p className="mb-6 text-center text-[#d2c6f7]">
         Select the features you want. Pay only for what you use — with discounts for bundling!
       </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {FEATURES.map(({ slug, name, price }) => (
           <label
             key={slug}
-            className="cursor-pointer group bg-gradient-to-br from-[#251654]/80 via-[#27134e]/80 to-[#130b24]/90 backdrop-blur-md rounded-2xl p-8 flex flex-col items-center text-center aspect-square transform transition-all duration-300 hover:scale-105 hover:-translate-y-1 hover:shadow-[0_6px_32px_rgba(140,100,255,0.28)] border border-[#322769]/60"
+            className="cursor-pointer group bg-gradient-to-br from-[#251654]/80 via-[#27134e]/80 to-[#130b24]/90 backdrop-blur-md rounded-2xl p-6 flex flex-col items-center text-center transition-all duration-300 hover:scale-105 hover:-translate-y-1 hover:shadow-[0_6px_32px_rgba(140,100,255,0.28)] border border-[#322769]/60"
           >
             <input
               type="checkbox"
@@ -82,17 +82,17 @@ export default function PricingTable() {
         ))}
       </div>
 
-      <div className="mt-10 text-center text-xl font-semibold">
+      <div className="mt-4 text-center text-xl font-semibold">
         <p>Total Price: €{totalPrice.toFixed(2)}</p>
         {discountRate > 0 && (
           <p className="text-green-400">
             Discount: {Math.round(discountRate * 100)}% (-€{discountAmount.toFixed(2)})
           </p>
         )}
-        <p className="mt-3 text-2xl text-purple-300">Final Price: €{finalPrice.toFixed(2)}</p>
+        <p className="mt-2 text-2xl text-purple-300">Final Price: €{finalPrice.toFixed(2)}</p>
       </div>
 
-      <div className="mt-8 text-center text-purple-300 font-semibold">
+      <div className="mt-4 text-center text-purple-300 font-semibold">
         See how much it could cost your company.
         <br />
         <Link href="/auth/signup" className="underline hover:text-white cursor-pointer">
