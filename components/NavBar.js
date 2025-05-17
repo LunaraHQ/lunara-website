@@ -18,6 +18,9 @@ const FEATURES = [
 export default function NavBar({ onContactOpen, session }) {
   const router = useRouter();
   const [featuresOpen, setFeaturesOpen] = useState(false);
+  const closeTimer = useRef(null);
+  const buttonRef = useRef(null);
+  const dropdownRef = useRef(null);
 
   const displayName =
     session?.user?.user_metadata?.full_name ||
@@ -29,33 +32,34 @@ export default function NavBar({ onContactOpen, session }) {
     router.push("/");
   };
 
-  // To prevent flicker, handle dropdown open state with mouse events AND focus
-  const buttonRef = useRef(null);
-  const dropdownRef = useRef(null);
+  // -- Dropdown open/close with delay
+  const openDropdown = () => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+    setFeaturesOpen(true);
+  };
 
-  // Close dropdown if click occurs outside menu
-  // (Optional improvement, but helps on mobile)
-  // useEffect(() => {
-  //   function handleClickOutside(event) {
-  //     if (
-  //       dropdownRef.current &&
-  //       !dropdownRef.current.contains(event.target) &&
-  //       !buttonRef.current.contains(event.target)
-  //     ) {
-  //       setFeaturesOpen(false);
-  //     }
-  //   }
-  //   if (featuresOpen) {
-  //     document.addEventListener("mousedown", handleClickOutside);
-  //   }
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   };
-  // }, [featuresOpen]);
+  const closeDropdown = () => {
+    closeTimer.current = setTimeout(() => {
+      setFeaturesOpen(false);
+    }, 150); // ms delay
+  };
 
-  // Keep open on hover/focus; close on mouse leave and blur
-  const handleDropdownOpen = () => setFeaturesOpen(true);
-  const handleDropdownClose = () => setFeaturesOpen(false);
+  // -- Keyboard accessibility
+  const handleButtonBlur = (e) => {
+    setTimeout(() => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(document.activeElement) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(document.activeElement)
+      ) {
+        setFeaturesOpen(false);
+      }
+    }, 10);
+  };
 
   return (
     <header className="w-full bg-gradient-to-r from-[#1a103e] via-[#6E41FF] to-[#221446] shadow-xl z-50">
@@ -80,8 +84,8 @@ export default function NavBar({ onContactOpen, session }) {
           {/* Features Dropdown */}
           <div
             className="relative"
-            onMouseEnter={handleDropdownOpen}
-            onMouseLeave={handleDropdownClose}
+            onMouseEnter={openDropdown}
+            onMouseLeave={closeDropdown}
           >
             <button
               ref={buttonRef}
@@ -89,18 +93,8 @@ export default function NavBar({ onContactOpen, session }) {
               aria-haspopup="true"
               aria-expanded={featuresOpen}
               tabIndex={0}
-              onFocus={handleDropdownOpen}
-              onBlur={(e) => {
-                // Only close if focus is moving outside the dropdown
-                setTimeout(() => {
-                  if (
-                    dropdownRef.current &&
-                    !dropdownRef.current.contains(document.activeElement)
-                  ) {
-                    handleDropdownClose();
-                  }
-                }, 0);
-              }}
+              onFocus={openDropdown}
+              onBlur={handleButtonBlur}
               type="button"
             >
               Features
@@ -119,21 +113,12 @@ export default function NavBar({ onContactOpen, session }) {
                 className="absolute left-0 mt-3 w-64 rounded-2xl
                   bg-gradient-to-br from-[#251654ee] via-[#221446cc] to-[#6E41FF22]
                   shadow-[0_6px_32px_rgba(140,100,255,0.22)] z-50 border border-[#352a5c]
-                  backdrop-blur-md ring-1 ring-[#6E41FF33] ring-inset"
+                  backdrop-blur-md ring-1 ring-[#6E41FF33] ring-inset animate-fadeIn"
                 tabIndex={-1}
-                onFocus={handleDropdownOpen}
-                onBlur={(e) => {
-                  // Only close if focus is moving outside button
-                  setTimeout(() => {
-                    if (
-                      buttonRef.current &&
-                      !buttonRef.current.contains(document.activeElement) &&
-                      !dropdownRef.current.contains(document.activeElement)
-                    ) {
-                      handleDropdownClose();
-                    }
-                  }, 0);
-                }}
+                onMouseEnter={openDropdown}
+                onMouseLeave={closeDropdown}
+                onFocus={openDropdown}
+                onBlur={handleButtonBlur}
               >
                 <ul className="py-3">
                   {FEATURES.map((feature) => (
@@ -218,6 +203,16 @@ export default function NavBar({ onContactOpen, session }) {
         </div>
       </nav>
       <div className="absolute left-0 right-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-[#6E41FF]/30 to-transparent opacity-50 pointer-events-none"></div>
+      {/* Optional fade-in animation for dropdown */}
+      <style jsx global>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(8px);}
+          to { opacity: 1; transform: translateY(0);}
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.19s cubic-bezier(.36,1.29,.4,1) both;
+        }
+      `}</style>
     </header>
   );
 }
