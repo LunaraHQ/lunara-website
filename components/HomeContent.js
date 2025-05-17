@@ -103,17 +103,17 @@ export default function HomeContent() {
           ctx.beginPath()
           ctx.arc(star.x, star.y, star.r, 0, 2 * Math.PI)
           ctx.fillStyle = '#fff'
-          ctx.globalAlpha = 0.7
+          ctx.globalAlpha = 0.85 // a bit more visible
           ctx.shadowColor = '#6E41FF'
-          ctx.shadowBlur = 5
+          ctx.shadowBlur = 12 // stronger glow
           ctx.fill()
         })
         requestAnimationFrame(draw)
       }
       draw()
     }
-    initLayer(canvas1.current, 1, 150)
-    initLayer(canvas2.current, 0.5, 100)
+    initLayer(canvas1.current, 1, 180)
+    initLayer(canvas2.current, 0.5, 120)
   }, [])
 
   return (
@@ -126,16 +126,17 @@ export default function HomeContent() {
       />
       <canvas
         ref={canvas1}
-        className="fixed inset-0 -z-20 opacity-60"
+        className="fixed inset-0 -z-20 opacity-80"
         aria-hidden="true"
       />
       <canvas
         ref={canvas2}
-        className="fixed inset-0 -z-20 opacity-40"
+        className="fixed inset-0 -z-20 opacity-60"
         aria-hidden="true"
       />
 
       <main id="main-content" className="relative z-10 text-white font-sans">
+
         {/* Features */}
         <section
           id="features"
@@ -146,7 +147,7 @@ export default function HomeContent() {
             <Link
               key={idx}
               href={`/features/${slug}`}
-              className="group bg-gradient-to-br from-[#251654]/80 via-[#27134e]/80 to-[#130b24]/90 backdrop-blur-md rounded-2xl p-8 flex flex-col items-center text-center aspect-square transform transition-all duration-300 hover:scale-105 hover:-translate-y-1 hover:shadow-[0_6px_32px_rgba(140,100,255,0.28)] focus:outline-none border border-[#322769]/60"
+              className="group bg-gradient-to-br from-[#251654]/70 via-[#27134e]/60 to-[#130b24]/50 backdrop-blur-md rounded-2xl p-8 flex flex-col items-center text-center aspect-square transform transition-all duration-300 hover:scale-105 hover:-translate-y-1 hover:shadow-[0_6px_32px_rgba(140,100,255,0.28)] focus:outline-none border border-[#322769]/60"
             >
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -171,7 +172,7 @@ export default function HomeContent() {
         {/* Tech & Security */}
         <section
           id="security"
-          className="py-20 px-6 bg-gradient-to-br from-[#23194b]/80 to-[#12092e]/95"
+          className="py-20 px-6 bg-gradient-to-br from-[#23194b]/70 to-[#12092e]/80 backdrop-blur-lg"
           aria-labelledby="security-heading"
         >
           <h2
@@ -182,19 +183,17 @@ export default function HomeContent() {
           </h2>
 
           <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8 text-center">
-            <div className="text-white p-4 rounded-2xl bg-gradient-to-br from-[#1a103e] via-[#6E41FF33] to-[#130b24]">
+            <div className="text-white p-4 rounded-2xl bg-gradient-to-br from-[#1a103e]/60 via-[#6E41FF33]/60 to-[#130b24]/40">
               <Cloud className="mx-auto mb-4 w-12 h-12 text-[#8C64FF]" />
               <h3 className="text-xl font-semibold mb-2">Global CDN</h3>
               <p>Lightning-fast performance worldwide via Vercel’s edge network.</p>
             </div>
-
-            <div className="text-white p-4 rounded-2xl bg-gradient-to-br from-[#1a103e] via-[#6E41FF22] to-[#130b24]">
+            <div className="text-white p-4 rounded-2xl bg-gradient-to-br from-[#1a103e]/50 via-[#6E41FF22]/50 to-[#130b24]/40">
               <ShieldCheck className="mx-auto mb-4 w-12 h-12 text-[#8C64FF]" />
               <h3 className="text-xl font-semibold mb-2">SOC 2 & GDPR</h3>
               <p>Built-in compliance to keep your data—and your guests—secure.</p>
             </div>
-
-            <div className="text-white p-4 rounded-2xl bg-gradient-to-br from-[#1a103e] via-[#6E41FF22] to-[#130b24]">
+            <div className="text-white p-4 rounded-2xl bg-gradient-to-br from-[#1a103e]/50 via-[#6E41FF22]/50 to-[#130b24]/40">
               <Lock className="mx-auto mb-4 w-12 h-12 text-[#8C64FF]" />
               <h3 className="text-xl font-semibold mb-2">Data Encryption</h3>
               <p>All data encrypted in transit (TLS) and at rest.</p>
@@ -205,7 +204,7 @@ export default function HomeContent() {
         {/* Pricing */}
         <section
           id="pricing"
-          className="py-20 bg-gradient-to-br from-[#23194b]/85 to-[#130b24]/95 text-center"
+          className="py-20 bg-gradient-to-br from-[#23194b]/60 to-[#130b24]/70 text-center backdrop-blur-md"
           aria-labelledby="pricing-heading"
         >
           <h2
