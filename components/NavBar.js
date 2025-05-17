@@ -74,12 +74,23 @@ export default function NavBar({ onContactOpen, session }) {
         </Link>
 
         <div className="flex items-center gap-8">
-          <Link
-            href="/dashboard"
-            className="text-[#e0d3fc] hover:text-white font-semibold text-lg transition focus:outline-none focus:ring-2 focus:ring-[#8C64FF] focus:ring-offset-2"
-          >
-            Dashboard
-          </Link>
+          {session ? (
+            <Link
+              href="/dashboard"
+              className="text-[#e0d3fc] hover:text-white font-semibold text-lg transition focus:outline-none focus:ring-2 focus:ring-[#8C64FF] focus:ring-offset-2"
+            >
+              Dashboard
+            </Link>
+          ) : (
+            <button
+              className="text-[#e0d3fc] hover:text-white font-semibold text-lg transition focus:outline-none focus:ring-2 focus:ring-[#8C64FF] focus:ring-offset-2 bg-transparent"
+              onClick={() => router.push("/auth/signin")}
+              type="button"
+              style={{ padding: 0, background: "none", border: "none", cursor: "pointer" }}
+            >
+              Dashboard
+            </button>
+          )}
 
           {/* Features Dropdown */}
           <div
