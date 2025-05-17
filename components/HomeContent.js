@@ -1,5 +1,4 @@
-import { useEffect, useRef } from 'react'
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
+import { useScroll, useTransform, useSpring } from 'framer-motion'
 import Link from 'next/link'
 import {
   Calendar,
@@ -39,75 +38,34 @@ const howItWorksSteps = [
 ]
 
 export default function HomeContent() {
+  // Optional: color shift with scroll, if you want to keep the theme dynamic.
   const { scrollY } = useScroll()
   const hue = useTransform(scrollY, [0, 500], [260, 300], { clamp: false })
   const hueSpring = useSpring(hue, { stiffness: 10, damping: 50 })
   const background = useTransform(hueSpring, h => `hsl(${h}, 34%, 5%)`)
 
-  const canvas1 = useRef(null)
-  const canvas2 = useRef(null)
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-
-    const initLayer = (canvas, speed, count) => {
-      const ctx = canvas.getContext('2d')
-      const stars = Array.from({ length: count }, () => ({
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        r: Math.random() * 1.2 + 0.2,
-        s: Math.random() * 0.2 + 0.05,
-      }))
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
-
-      let lastDraw = 0
-      const FPS = 30
-
-      const draw = (now = 0) => {
-        if (now - lastDraw > 1000 / FPS) {
-          ctx.clearRect(0, 0, canvas.width, canvas.height)
-          stars.forEach(star => {
-            star.y += star.s * speed
-            if (star.y > canvas.height) star.y = 0
-            ctx.beginPath()
-            ctx.arc(star.x, star.y, star.r, 0, 2 * Math.PI)
-            ctx.fillStyle = '#fff'
-            ctx.globalAlpha = 0.85
-            // SHADOW REMOVED FOR PERFORMANCE:
-            // ctx.shadowColor = '#6E41FF'
-            // ctx.shadowBlur = 12
-            ctx.fill()
-          })
-          lastDraw = now
-        }
-        requestAnimationFrame(draw)
-      }
-      draw()
-    }
-    initLayer(canvas1.current, 1, 180)
-    initLayer(canvas2.current, 0.5, 120)
-  }, [])
-
   return (
     <section className="relative z-10 min-h-screen overflow-x-clip">
-      {/* Decorative background layers always cover the whole HomeContent area */}
-      <motion.div
-        style={{ background }}
+      {/* Static, dense starry CSS background */}
+      <div
         className="absolute inset-0 -z-30 h-full w-full"
         aria-hidden="true"
+        style={{
+          background:
+            // Layered gradients: deep space + dense white/purple/blue/yellow stars
+            `
+              linear-gradient(120deg, #100a22 70%, #1a1336 100%),
+              repeating-radial-gradient(circle at 12% 18%, #fff 0 1px, transparent 1px 100%),
+              repeating-radial-gradient(circle at 40% 70%, #e0d9ff 0 1.1px, transparent 1.1px 100%),
+              repeating-radial-gradient(circle at 88% 50%, #8c64ff 0 1.2px, transparent 1.2px 100%),
+              repeating-radial-gradient(circle at 67% 12%, #fffbe6 0 0.8px, transparent 0.8px 100%),
+              repeating-radial-gradient(circle at 30% 50%, #a9b6ff 0 0.7px, transparent 0.7px 100%),
+              repeating-radial-gradient(circle at 52% 38%, #fff 0 1.4px, transparent 1.4px 100%)
+            `,
+          backgroundSize: '100% 100%, 250px 250px, 300px 300px, 380px 380px, 280px 280px, 350px 350px, 200px 200px',
+          backgroundRepeat: 'repeat'
+        }}
       />
-      <canvas
-        ref={canvas1}
-        className="absolute inset-0 -z-20 opacity-80 h-full w-full"
-        aria-hidden="true"
-      />
-      <canvas
-        ref={canvas2}
-        className="absolute inset-0 -z-20 opacity-60 h-full w-full"
-        aria-hidden="true"
-      />
-
       <main id="main-content" className="relative z-10 text-white font-sans">
 
         {/* Features */}
@@ -122,13 +80,7 @@ export default function HomeContent() {
               href={`/features/${slug}`}
               className="group bg-gradient-to-br from-[#251654]/70 via-[#27134e]/60 to-[#130b24]/50 backdrop-blur-md rounded-2xl p-8 flex flex-col items-center text-center aspect-square transform transition-all duration-300 hover:scale-105 hover:-translate-y-1 hover:shadow-[0_6px_32px_rgba(140,100,255,0.28)] focus:outline-none border border-[#322769]/60"
             >
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                viewport={{ once: true }}
-                className="flex flex-col items-center"
-              >
+              <div className="flex flex-col items-center">
                 <Icon
                   className="w-20 h-20 md:w-24 md:h-24 text-[#8C64FF] opacity-90 group-hover:opacity-100 transition duration-300 drop-shadow-[0_8px_32px_#8C64FF44]"
                   strokeWidth={1.4}
@@ -137,7 +89,7 @@ export default function HomeContent() {
                 <p className="mt-2 text-[#d2c6f7] text-sm max-w-[14rem]">
                   {desc}
                 </p>
-              </motion.div>
+              </div>
             </Link>
           ))}
         </section>
