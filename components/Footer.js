@@ -1,9 +1,8 @@
-import React from 'react'
 import Link from 'next/link'
 
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-r from-[#1a103e] via-[#221446] to-[#27134e] text-white py-10 mt-32 border-t border-[#352a5c]">
+    <footer className="relative bg-gradient-to-r from-[#1a103e] via-[#221446] to-[#27134e] text-white py-14 border-t border-[#352a5c] mt-24">
       <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8 text-sm">
         {/* Brand */}
         <div>
@@ -77,7 +76,7 @@ export default function Footer() {
       </div>
       {/* Subtle star/nebula overlay */}
       <div
-        className="pointer-events-none absolute left-0 right-0 bottom-0 h-28 opacity-15"
+        className="pointer-events-none absolute left-0 right-0 bottom-0 h-28 opacity-20"
         style={{
           background:
             "radial-gradient(circle at 80% 40%, #8C64FF66 0%, transparent 70%), radial-gradient(circle at 15% 60%, #fff2 1.5px, transparent 60%)",
