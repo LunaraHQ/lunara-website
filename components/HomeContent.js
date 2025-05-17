@@ -19,6 +19,7 @@ import {
 } from 'lucide-react'
 import PricingTable from './PricingTable'
 
+// Features list
 const features = [
   { title: 'Meetings & Events', desc: 'Effortlessly manage bookings, registration, and reminders for any event.', icon: Calendar, slug: 'meetings-events' },
   { title: 'Sales Funnel', desc: 'Capture leads, automate outreach, and visualize your entire pipeline.', icon: TrendingUp, slug: 'sales-funnel' },
@@ -39,9 +40,11 @@ const howItWorksSteps = [
 
 export default function HomeContent() {
   const { scrollY } = useScroll()
+  // Use a nearly-black, purple-tinged space background
   const hue = useTransform(scrollY, [0, 500], [260, 300], { clamp: false })
   const hueSpring = useSpring(hue, { stiffness: 10, damping: 50 })
-  const background = useTransform(hueSpring, h => `hsl(${h}, 34%, 9%)`)
+  // PURE black-purplish background for "space"
+  const background = useTransform(hueSpring, h => `hsl(${h}, 34%, 5%)`)
 
   const canvas1 = useRef(null)
   const canvas2 = useRef(null)
@@ -99,6 +102,7 @@ export default function HomeContent() {
       />
 
       <main id="main-content" className="relative z-10 text-white font-sans">
+
         {/* Features */}
         <section
           id="features"
