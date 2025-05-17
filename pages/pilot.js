@@ -11,8 +11,8 @@ export default function Pilot() {
       </Head>
       <main className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-[#6E41FF] via-[#231350] to-black px-4 py-16">
         <section className="relative bg-black/80 backdrop-blur-xl border border-purple-800 p-10 rounded-2xl shadow-2xl max-w-xl w-full flex flex-col items-center text-center">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-br from-purple-300 via-purple-200 to-white drop-shadow-xl leading-tight break-words">
-            Lunara Pilot Programme
+          <h1 className="text-3xl md:text-4xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-br from-purple-300 via-purple-200 to-white drop-shadow-xl leading-snug">
+            Lunara Pilot<br />Programme
           </h1>
           <p className="mb-6 text-lg text-gray-200 font-medium">
             Be among the first to shape the future of business management.<br /><br />
