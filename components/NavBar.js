@@ -66,7 +66,8 @@ export default function NavBar({ onContactOpen, session }) {
       <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between relative">
         <Link
           href="/"
-          className="flex items-center gap-2 font-extrabold text-2xl tracking-wider text-white drop-shadow-glow"
+          className="flex items-center gap-2 font-extrabold text-2xl tracking-wider text-white drop-shadow-glow outline-none focus:outline-none focus:ring-2 focus:ring-[#8C64FF]/80 focus:ring-offset-0"
+          style={{ outline: "none", boxShadow: "none" }}
         >
           <span className="bg-gradient-to-r from-[#8C64FF] to-[#6E41FF] text-white px-4 py-2 rounded-2xl shadow-inner">
             Lunara
@@ -77,16 +78,24 @@ export default function NavBar({ onContactOpen, session }) {
           {session ? (
             <Link
               href="/dashboard"
-              className="text-[#e0d3fc] hover:text-white font-semibold text-lg transition focus:outline-none focus:ring-2 focus:ring-[#8C64FF] focus:ring-offset-2"
+              className="text-[#e0d3fc] hover:text-white font-semibold text-lg transition outline-none focus:outline-none focus:ring-2 focus:ring-[#8C64FF]/80 focus:ring-offset-0"
+              style={{ outline: "none", boxShadow: "none" }}
             >
               Dashboard
             </Link>
           ) : (
             <button
-              className="text-[#e0d3fc] hover:text-white font-semibold text-lg transition focus:outline-none focus:ring-2 focus:ring-[#8C64FF] focus:ring-offset-2 bg-transparent"
+              className="text-[#e0d3fc] hover:text-white font-semibold text-lg transition bg-transparent outline-none focus:outline-none focus:ring-2 focus:ring-[#8C64FF]/80 focus:ring-offset-0"
               onClick={() => router.push("/auth/signin")}
               type="button"
-              style={{ padding: 0, background: "none", border: "none", cursor: "pointer" }}
+              style={{
+                padding: 0,
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                outline: "none",
+                boxShadow: "none",
+              }}
             >
               Dashboard
             </button>
@@ -100,13 +109,14 @@ export default function NavBar({ onContactOpen, session }) {
           >
             <button
               ref={buttonRef}
-              className="text-[#e0d3fc] hover:text-white font-semibold text-lg flex items-center gap-1 transition focus:outline-none focus:ring-2 focus:ring-[#8C64FF] focus:ring-offset-2"
+              className="text-[#e0d3fc] hover:text-white font-semibold text-lg flex items-center gap-1 transition outline-none focus:outline-none focus:ring-2 focus:ring-[#8C64FF]/80 focus:ring-offset-0"
               aria-haspopup="true"
               aria-expanded={featuresOpen}
               tabIndex={0}
               onFocus={openDropdown}
               onBlur={handleButtonBlur}
               type="button"
+              style={{ outline: "none", boxShadow: "none" }}
             >
               Features
               <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
@@ -130,15 +140,17 @@ export default function NavBar({ onContactOpen, session }) {
                 onMouseLeave={closeDropdown}
                 onFocus={openDropdown}
                 onBlur={handleButtonBlur}
+                style={{ outline: "none", boxShadow: "none" }}
               >
                 <ul className="py-3">
                   {FEATURES.map((feature) => (
                     <li key={feature.slug}>
                       <Link
                         href={`/features/${feature.slug}`}
-                        className="block px-5 py-2 text-[#bb9cff] hover:bg-[#6E41FF33] hover:text-white font-semibold transition rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8C64FF] focus:ring-offset-2"
+                        className="block px-5 py-2 text-[#bb9cff] hover:bg-[#6E41FF33] hover:text-white font-semibold transition rounded-xl outline-none focus:outline-none focus:ring-2 focus:ring-[#8C64FF]/80 focus:ring-offset-0"
                         onClick={() => setFeaturesOpen(false)}
                         tabIndex={0}
+                        style={{ outline: "none", boxShadow: "none" }}
                       >
                         {feature.name}
                       </Link>
@@ -152,14 +164,16 @@ export default function NavBar({ onContactOpen, session }) {
           {session ? (
             <Link
               href="/pricing"
-              className="text-[#e0d3fc] hover:text-white font-semibold text-lg transition focus:outline-none focus:ring-2 focus:ring-[#8C64FF] focus:ring-offset-2"
+              className="text-[#e0d3fc] hover:text-white font-semibold text-lg transition outline-none focus:outline-none focus:ring-2 focus:ring-[#8C64FF]/80 focus:ring-offset-0"
+              style={{ outline: "none", boxShadow: "none" }}
             >
               Pricing
             </Link>
           ) : (
             <Link
               href="/#pricing"
-              className="text-[#e0d3fc] hover:text-white font-semibold text-lg transition focus:outline-none focus:ring-2 focus:ring-[#8C64FF] focus:ring-offset-2"
+              className="text-[#e0d3fc] hover:text-white font-semibold text-lg transition outline-none focus:outline-none focus:ring-2 focus:ring-[#8C64FF]/80 focus:ring-offset-0"
+              style={{ outline: "none", boxShadow: "none" }}
             >
               Pricing
             </Link>
@@ -167,14 +181,16 @@ export default function NavBar({ onContactOpen, session }) {
 
           <Link
             href="/pilot"
-            className="text-[#e0d3fc] hover:text-white font-semibold text-lg transition focus:outline-none focus:ring-2 focus:ring-[#8C64FF] focus:ring-offset-2"
+            className="text-[#e0d3fc] hover:text-white font-semibold text-lg transition outline-none focus:outline-none focus:ring-2 focus:ring-[#8C64FF]/80 focus:ring-offset-0"
+            style={{ outline: "none", boxShadow: "none" }}
           >
             Pilot
           </Link>
           <button
-            className="text-[#e0d3fc] hover:text-white font-semibold text-lg transition focus:outline-none focus:ring-2 focus:ring-[#8C64FF] focus:ring-offset-2"
+            className="text-[#e0d3fc] hover:text-white font-semibold text-lg transition outline-none focus:outline-none focus:ring-2 focus:ring-[#8C64FF]/80 focus:ring-offset-0"
             onClick={onContactOpen}
             type="button"
+            style={{ outline: "none", boxShadow: "none" }}
           >
             Contact
           </button>
@@ -185,13 +201,15 @@ export default function NavBar({ onContactOpen, session }) {
             <>
               <Link
                 href="/auth/signin"
-                className="px-5 py-2 rounded-2xl bg-gradient-to-r from-[#6E41FF] to-[#8C64FF] text-white font-bold shadow hover:scale-105 transition focus:outline-none focus:ring-2 focus:ring-[#8C64FF] focus:ring-offset-2"
+                className="px-5 py-2 rounded-2xl bg-gradient-to-r from-[#6E41FF] to-[#8C64FF] text-white font-bold shadow hover:scale-105 transition outline-none focus:outline-none focus:ring-2 focus:ring-[#8C64FF]/80 focus:ring-offset-0"
+                style={{ outline: "none", boxShadow: "none" }}
               >
                 Sign In
               </Link>
               <Link
                 href="/auth/signup"
-                className="px-5 py-2 rounded-2xl border border-[#6E41FF] text-[#6E41FF] font-bold bg-[#130b24] hover:bg-gradient-to-r hover:from-[#6E41FF] hover:to-[#8C64FF] hover:text-white transition focus:outline-none focus:ring-2 focus:ring-[#8C64FF] focus:ring-offset-2"
+                className="px-5 py-2 rounded-2xl border border-[#6E41FF] text-[#6E41FF] font-bold bg-[#130b24] hover:bg-gradient-to-r hover:from-[#6E41FF] hover:to-[#8C64FF] hover:text-white transition outline-none focus:outline-none focus:ring-2 focus:ring-[#8C64FF]/80 focus:ring-offset-0"
+                style={{ outline: "none", boxShadow: "none" }}
               >
                 Sign Up
               </Link>
@@ -203,9 +221,10 @@ export default function NavBar({ onContactOpen, session }) {
                 Hi, {displayName}
               </span>
               <button
-                className="px-4 py-2 rounded-2xl bg-gradient-to-r from-[#8C64FF] to-[#6E41FF] text-white font-bold shadow hover:scale-105 transition focus:outline-none focus:ring-2 focus:ring-[#8C64FF] focus:ring-offset-2"
+                className="px-4 py-2 rounded-2xl bg-gradient-to-r from-[#8C64FF] to-[#6E41FF] text-white font-bold shadow hover:scale-105 transition outline-none focus:outline-none focus:ring-2 focus:ring-[#8C64FF]/80 focus:ring-offset-0"
                 onClick={handleSignOut}
                 type="button"
+                style={{ outline: "none", boxShadow: "none" }}
               >
                 Sign Out
               </button>
