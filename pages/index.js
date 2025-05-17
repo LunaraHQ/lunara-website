@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { supabase } from "../utils/supabaseClient";
 import HeroSection from "../components/HeroSection";
 import HomeContent from "../components/HomeContent";
-import Footer from "../components/Footer";
 import ScrollToTop from "../components/ScrollToTop";
 // import FeatureCards from "../components/features/FeatureCards"; // If needed
 // import HowItWorks from "../components/HowItWorks"; // <-- DELETE or comment out
@@ -43,7 +42,6 @@ export default function Home() {
         </svg>
       </div>
 
-      <Footer />
       <ScrollToTop />
     </main>
   );
