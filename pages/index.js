@@ -24,24 +24,22 @@ export default function Home() {
   }, [router]);
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-[#1a1336] via-[#231350] to-black">
+    <main className="min-h-screen bg-gradient-to-br from-[#100a22] via-[#1a1336] to-black">
       <HeroSection />
 
       <HomeContent />
 
-      {/* SVG Separator */}
+      {/* SVG Separator - seamless, deep color, no opacity */}
       <div className="w-full">
         <svg width="100%" height="60" viewBox="0 0 1920 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0 60C400 20 1520 100 1920 60V0H0V60Z" fill="#1a1336" fillOpacity="0.16"/>
+          <path d="M0 60C400 20 1520 100 1920 60V0H0V60Z" fill="#1a1336" fillOpacity="1"/>
         </svg>
       </div>
 
-      {/* <HowItWorks />  <-- REMOVE THIS LINE */}
-
-      {/* Another SVG Separator before Footer (optional) */}
+      {/* Second SVG Separator before Footer (optional, adjust color for smooth blend) */}
       <div className="w-full">
         <svg width="100%" height="60" viewBox="0 0 1920 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0 0C400 40 1520 -40 1920 0V60H0V0Z" fill="#1a1336" fillOpacity="0.18"/>
+          <path d="M0 0C400 40 1520 -40 1920 0V60H0V0Z" fill="#100a22" fillOpacity="1"/>
         </svg>
       </div>
 
