@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8 text-sm">
         {/* Brand */}
         <div>
-          <Link href="/" className="text-2xl font-extrabold text-white tracking-wide">
+          <Link href="/" className="text-2xl font-extrabold text-white tracking-wide hover:text-[#B299FF] transition">
             Lunara
           </Link>
           <p className="mt-2 text-[#b2a1e3]">
@@ -23,12 +23,9 @@ export default function Footer() {
               </Link>
             </li>
             <li>
-              <a
-                href="mailto:nathan@lunarahq.com"
-                className="hover:text-[#8C64FF] transition"
-              >
-                Contact Us
-              </a>
+              <Link href="/contact" className="hover:text-[#8C64FF] transition">
+                Contact
+              </Link>
             </li>
             <li>
               <Link href="/terms" className="hover:text-[#8C64FF] transition">
@@ -53,17 +50,17 @@ export default function Footer() {
           <ul className="space-y-2">
             <li>
               <a
-                href="https://twitter.com/yourhandle"
+                href="https://twitter.com/LunaraHQ"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-[#8C64FF] transition"
               >
-                Twitter
+                Twitter/X
               </a>
             </li>
             <li>
               <a
-                href="https://linkedin.com/yourcompany"
+                href="https://linkedin.com/company/lunarahq"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-[#8C64FF] transition"
