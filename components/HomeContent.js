@@ -202,21 +202,21 @@ export default function HomeContent() {
         </section>
 
         {/* Pricing */}
-        <section
-          id="pricing"
-          className="py-20 bg-gradient-to-br from-[#23194b]/60 to-[#130b24]/70 text-center backdrop-blur-md"
-          aria-labelledby="pricing-heading"
-        >
-          <h2
-            id="pricing-heading"
-            className="text-3xl font-bold text-[#8C64FF] mb-8"
-          >
-            Simple, Scalable Pricing
-          </h2>
-          <div className="max-w-4xl mx-auto px-6">
-            <PricingTable />
-          </div>
-        </section>
+       <section
+  id="pricing"
+  className="py-20 text-center" // <--- NO bg-gradient, NO blur here!
+  aria-labelledby="pricing-heading"
+>
+  <h2
+    id="pricing-heading"
+    className="text-3xl font-bold text-[#8C64FF] mb-8"
+  >
+    Simple, Scalable Pricing
+  </h2>
+  <div className="max-w-4xl mx-auto px-6">
+    <PricingTable />
+  </div>
+</section>
       </main>
     </>
   )
