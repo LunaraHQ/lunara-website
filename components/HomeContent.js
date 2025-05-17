@@ -202,24 +202,69 @@ export default function HomeContent() {
           >
             Enterprise-Grade Tech & Security
           </h2>
-
           <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8 text-center">
-            <div className="text-white p-4 rounded-2xl bg-gradient-to-br from-[#1a103e]/60 via-[#6E41FF33]/60 to-[#130b24]/40">
-              <Cloud className="mx-auto mb-4 w-12 h-12 text-[#8C64FF]" />
-              <h3 className="text-xl font-semibold mb-2">Global CDN</h3>
-              <p>Lightning-fast performance worldwide via Vercel’s edge network.</p>
-            </div>
-            <div className="text-white p-4 rounded-2xl bg-gradient-to-br from-[#1a103e]/50 via-[#6E41FF22]/50 to-[#130b24]/40">
-              <ShieldCheck className="mx-auto mb-4 w-12 h-12 text-[#8C64FF]" />
-              <h3 className="text-xl font-semibold mb-2">SOC 2 & GDPR</h3>
-              <p>Built-in compliance to keep your data—and your guests—secure.</p>
-            </div>
-            <div className="text-white p-4 rounded-2xl bg-gradient-to-br from-[#1a103e]/50 via-[#6E41FF22]/50 to-[#130b24]/40">
-              <Lock className="mx-auto mb-4 w-12 h-12 text-[#8C64FF]" />
-              <h3 className="text-xl font-semibold mb-2">Data Encryption</h3>
-              <p>All data encrypted in transit (TLS) and at rest.</p>
-            </div>
+            {[
+              {
+                icon: Cloud,
+                title: 'Global CDN',
+                desc: 'Lightning-fast performance worldwide via Vercel’s edge network.',
+              },
+              {
+                icon: ShieldCheck,
+                title: 'SOC 2 & GDPR',
+                desc: 'Built-in compliance to keep your data—and your guests—secure.',
+              },
+              {
+                icon: Lock,
+                title: 'Data Encryption',
+                desc: 'All data encrypted in transit (TLS) and at rest.',
+              },
+            ].map(({ icon: Icon, title, desc }) => (
+              <div
+                key={title}
+                className="relative flex flex-col items-center text-center p-6 md:p-7 bg-gradient-to-br from-[#2a1745]/90 via-[#6E41FF33]/60 to-[#130b24]/80 border border-[#38296b]/60 rounded-2xl shadow-lg overflow-hidden"
+                style={{
+                  minHeight: '220px',
+                  maxWidth: '350px',
+                  margin: '0 auto',
+                  justifyContent: 'center',
+                }}
+              >
+                {/* Shimmer Overlay */}
+                <span className="pointer-events-none absolute inset-0 rounded-2xl shimmer" />
+                <span className="flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-tr from-[#6E41FF22] via-[#8C64FF22] to-[#1a103e44] border border-[#8C64FF33] shadow-inner">
+                  <Icon className="w-7 h-7 text-[#8C64FF]" />
+                </span>
+                <h3 className="text-base md:text-lg font-semibold text-white mb-1 drop-shadow">
+                  {title}
+                </h3>
+                <p className="text-[#d2c6f7] text-sm">{desc}</p>
+              </div>
+            ))}
           </div>
+          {/* Shimmer Animation */}
+          <style jsx>{`
+            .shimmer {
+              background: linear-gradient(
+                120deg,
+                transparent 30%,
+                #8C64FF33 45%,
+                #fff2 55%,
+                transparent 70%
+              );
+              animation: shimmer-move 1.8s infinite linear;
+              opacity: 0.38;
+              z-index: 2;
+            }
+            @keyframes shimmer-move {
+              0% {
+                transform: translateX(-80%);
+              }
+              100% {
+                transform: translateX(110%);
+              }
+            }
+          `}</style>
         </section>
 
         {/* Pricing */}
