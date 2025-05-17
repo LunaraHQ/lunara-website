@@ -24,7 +24,7 @@ export default function Home() {
   }, [router]);
 
   return (
-    <main className="bg-gradient-to-br from-[#140a29] via-[#341a66] to-[#6E41FF] min-h-screen">
+    <main className="min-h-screen">
       <HeroSection />
 
       <HomeContent />
