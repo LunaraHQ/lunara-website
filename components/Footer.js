@@ -1,11 +1,11 @@
 import Link from 'next/link'
 
-export default function Footer() {
+export default function Footer({ onContactOpen }) {
   return (
     <footer className="relative bg-gradient-to-r from-[#1a103e] via-[#221446] to-[#27134e] text-white py-14 border-t border-[#352a5c] mt-24">
-      <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8 text-sm">
+      <div className="max-w-6xl mx-auto px-6 flex flex-col md:grid md:grid-cols-3 gap-8 text-sm">
         {/* Brand */}
-        <div>
+        <div className="mb-8 md:mb-0">
           <Link href="/" className="text-2xl font-extrabold text-white tracking-wide hover:text-[#B299FF] transition">
             Lunara
           </Link>
@@ -14,7 +14,7 @@ export default function Footer() {
           </p>
         </div>
         {/* Company Links */}
-        <div>
+        <nav aria-label="Company" className="mb-8 md:mb-0">
           <h4 className="text-white font-semibold mb-2">Company</h4>
           <ul className="space-y-2">
             <li>
@@ -23,9 +23,16 @@ export default function Footer() {
               </Link>
             </li>
             <li>
-              <Link href="/contact" className="hover:text-[#8C64FF] transition">
+              {/* Button triggers contact modal */}
+              <button
+                type="button"
+                onClick={onContactOpen}
+                className="hover:text-[#8C64FF] transition bg-transparent border-none outline-none cursor-pointer p-0 m-0"
+                aria-label="Contact Lunara"
+                tabIndex={0}
+              >
                 Contact
-              </Link>
+              </button>
             </li>
             <li>
               <Link href="/terms" className="hover:text-[#8C64FF] transition">
@@ -43,9 +50,9 @@ export default function Footer() {
               </Link>
             </li>
           </ul>
-        </div>
+        </nav>
         {/* Social */}
-        <div>
+        <nav aria-label="Social">
           <h4 className="text-white font-semibold mb-2">Follow</h4>
           <ul className="space-y-2">
             <li>
@@ -69,7 +76,7 @@ export default function Footer() {
               </a>
             </li>
           </ul>
-        </div>
+        </nav>
       </div>
       {/* Subtle star/nebula overlay */}
       <div
