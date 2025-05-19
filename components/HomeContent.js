@@ -64,6 +64,40 @@ export default function HomeContent() {
       />
       <main id="main-content" className="relative z-10 text-white font-sans">
 
+        {/* HOW IT WORKS — Moved to top */}
+        <section id="howitworks" className="py-12 px-6 bg-gradient-to-br from-[#23194b]/70 to-[#12092e]/80 backdrop-blur-lg">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 text-white drop-shadow-glow">
+              How It Works
+            </h2>
+            <div className="grid gap-6 md:gap-8 grid-cols-1 md:grid-cols-3">
+              {howItWorksSteps.map(({ icon: Icon, title, desc }) => (
+                <div
+                  key={title}
+                  className="relative flex flex-col items-center text-center p-6 md:p-7 bg-gradient-to-br from-[#2a1745]/90 via-[#6E41FF33]/60 to-[#130b24]/80 border border-[#38296b]/60 rounded-2xl shadow-lg overflow-hidden"
+                  style={{
+                    minHeight: '220px',
+                    maxWidth: '350px',
+                    margin: '0 auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <span className="pointer-events-none absolute inset-0 rounded-2xl" style={{
+                    background: 'linear-gradient(120deg, transparent 60%, #8C64FF33 80%, transparent 100%)',
+                    opacity: 0.23,
+                    zIndex: 2,
+                  }} />
+                  <span className="flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-tr from-[#6E41FF22] via-[#8C64FF22] to-[#1a103e44] border border-[#8C64FF33] shadow-inner">
+                    <Icon className="w-7 h-7 text-[#8C64FF]" />
+                  </span>
+                  <h3 className="text-base md:text-lg font-semibold text-white mb-1 drop-shadow">{title}</h3>
+                  <p className="text-[#d2c6f7] text-sm">{desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Features */}
         <section id="features" className="py-24 px-6 max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
           <h2 className="sr-only">Our Key Features</h2>
@@ -86,11 +120,7 @@ export default function HomeContent() {
         </section>
 
         {/* Tech & Security */}
-        <section
-          id="security"
-          className="py-20 px-6 bg-gradient-to-br from-[#23194b]/70 to-[#12092e]/80 backdrop-blur-lg"
-          aria-labelledby="security-heading"
-        >
+        <section id="security" className="py-20 px-6 bg-gradient-to-br from-[#23194b]/70 to-[#12092e]/80 backdrop-blur-lg" aria-labelledby="security-heading">
           <h2 id="security-heading" className="text-3xl font-bold text-center text-white mb-8">
             Enterprise-Grade Tech & Security
           </h2>
@@ -132,40 +162,6 @@ export default function HomeContent() {
           </h2>
           <div className="max-w-4xl mx-auto px-6">
             <PricingTable />
-          </div>
-        </section>
-
-        {/* HOW IT WORKS */}
-        <section id="howitworks" className="py-12 px-6 bg-gradient-to-br from-[#23194b]/70 to-[#12092e]/80 backdrop-blur-lg">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 text-white drop-shadow-glow">
-              How It Works
-            </h2>
-            <div className="grid gap-6 md:gap-8 grid-cols-1 md:grid-cols-3">
-              {howItWorksSteps.map(({ icon: Icon, title, desc }) => (
-                <div
-                  key={title}
-                  className="relative flex flex-col items-center text-center p-6 md:p-7 bg-gradient-to-br from-[#2a1745]/90 via-[#6E41FF33]/60 to-[#130b24]/80 border border-[#38296b]/60 rounded-2xl shadow-lg overflow-hidden"
-                  style={{
-                    minHeight: '220px',
-                    maxWidth: '350px',
-                    margin: '0 auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <span className="pointer-events-none absolute inset-0 rounded-2xl" style={{
-                    background: 'linear-gradient(120deg, transparent 60%, #8C64FF33 80%, transparent 100%)',
-                    opacity: 0.23,
-                    zIndex: 2,
-                  }} />
-                  <span className="flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-tr from-[#6E41FF22] via-[#8C64FF22] to-[#1a103e44] border border-[#8C64FF33] shadow-inner">
-                    <Icon className="w-7 h-7 text-[#8C64FF]" />
-                  </span>
-                  <h3 className="text-base md:text-lg font-semibold text-white mb-1 drop-shadow">{title}</h3>
-                  <p className="text-[#d2c6f7] text-sm">{desc}</p>
-                </div>
-              ))}
-            </div>
           </div>
         </section>
       </main>
