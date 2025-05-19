@@ -18,17 +18,17 @@ import {
 } from 'lucide-react'
 import PricingTable from './PricingTable'
 
-// Features list
+// Features list — FIXED SLUGS TO MATCH FEATURE ROUTES
 const features = [
   { title: 'Meetings & Events', desc: 'Effortlessly manage bookings, registration, and reminders for any event.', icon: Calendar, slug: 'meetings-events' },
   { title: 'Sales Funnel', desc: 'Capture leads, automate outreach, and visualize your entire pipeline.', icon: TrendingUp, slug: 'sales-funnel' },
   { title: 'CX Management', desc: 'Collect feedback, manage reviews, and analyze guest experience in real-time.', icon: Smile, slug: 'cx-management' },
-  { title: 'CRM & Client Management', desc: 'Track interactions, centralize contacts, and forecast your sales.', icon: Users, slug: 'crm-client-management' },
-  { title: 'AI Chatbot & Automation', desc: 'Provide instant support, qualify leads, and automate routine tasks.', icon: Bot, slug: 'ai-chatbot-automation' },
-  { title: 'Analytics & Reporting', desc: 'Build custom dashboards and uncover actionable business insights.', icon: BarChart3, slug: 'analytics-reporting' },
+  { title: 'CRM & Client Management', desc: 'Track interactions, centralize contacts, and forecast your sales.', icon: Users, slug: 'crm' },
+  { title: 'AI Chatbot & Automation', desc: 'Provide instant support, qualify leads, and automate routine tasks.', icon: Bot, slug: 'ai-chatbot' },
+  { title: 'Analytics & Reporting', desc: 'Build custom dashboards and uncover actionable business insights.', icon: BarChart3, slug: 'analytics' },
   { title: 'Team Management', desc: 'Schedule shifts, assign tasks, and streamline team communication.', icon: Users, slug: 'team-management' },
-  { title: 'E-commerce Tools', desc: 'Recover abandoned carts and boost conversions with smart offers.', icon: ShoppingCart, slug: 'ecommerce-tools' },
-  { title: 'Loyalty & Membership', desc: 'Reward returning customers and manage memberships with ease.', icon: Gift, slug: 'loyalty-membership' },
+  { title: 'E-commerce Tools', desc: 'Recover abandoned carts and boost conversions with smart offers.', icon: ShoppingCart, slug: 'ecommerce' },
+  { title: 'Loyalty & Membership', desc: 'Reward returning customers and manage memberships with ease.', icon: Gift, slug: 'loyalty' },
 ]
 
 const howItWorksSteps = [
@@ -51,15 +51,13 @@ export default function HomeContent() {
         aria-hidden="true"
         style={{
           background:
-            `
-              linear-gradient(120deg, #100a22 70%, #1a1336 100%),
-              repeating-radial-gradient(circle at 12% 18%, #fff 0 1px, transparent 1px 100%),
-              repeating-radial-gradient(circle at 40% 70%, #e0d9ff 0 1.1px, transparent 1.1px 100%),
-              repeating-radial-gradient(circle at 88% 50%, #8c64ff 0 1.2px, transparent 1.2px 100%),
-              repeating-radial-gradient(circle at 67% 12%, #fffbe6 0 0.8px, transparent 0.8px 100%),
-              repeating-radial-gradient(circle at 30% 50%, #a9b6ff 0 0.7px, transparent 0.7px 100%),
-              repeating-radial-gradient(circle at 52% 38%, #fff 0 1.4px, transparent 1.4px 100%)
-            `,
+            `linear-gradient(120deg, #100a22 70%, #1a1336 100%),
+            repeating-radial-gradient(circle at 12% 18%, #fff 0 1px, transparent 1px 100%),
+            repeating-radial-gradient(circle at 40% 70%, #e0d9ff 0 1.1px, transparent 1.1px 100%),
+            repeating-radial-gradient(circle at 88% 50%, #8c64ff 0 1.2px, transparent 1.2px 100%),
+            repeating-radial-gradient(circle at 67% 12%, #fffbe6 0 0.8px, transparent 0.8px 100%),
+            repeating-radial-gradient(circle at 30% 50%, #a9b6ff 0 0.7px, transparent 0.7px 100%),
+            repeating-radial-gradient(circle at 52% 38%, #fff 0 1.4px, transparent 1.4px 100%)`,
           backgroundSize: '100% 100%, 250px 250px, 300px 300px, 380px 380px, 280px 280px, 350px 350px, 200px 200px',
           backgroundRepeat: 'repeat'
         }}
@@ -67,10 +65,7 @@ export default function HomeContent() {
       <main id="main-content" className="relative z-10 text-white font-sans">
 
         {/* Features */}
-        <section
-          id="features"
-          className="py-24 px-6 max-w-7xl mx-auto grid md:grid-cols-3 gap-8"
-        >
+        <section id="features" className="py-24 px-6 max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
           <h2 className="sr-only">Our Key Features</h2>
           {features.map(({ title, desc, icon: Icon, slug }, idx) => (
             <Link
@@ -84,9 +79,7 @@ export default function HomeContent() {
                   strokeWidth={1.4}
                 />
                 <h3 className="mt-6 text-lg font-semibold">{title}</h3>
-                <p className="mt-2 text-[#d2c6f7] text-sm max-w-[14rem]">
-                  {desc}
-                </p>
+                <p className="mt-2 text-[#d2c6f7] text-sm max-w-[14rem]">{desc}</p>
               </div>
             </Link>
           ))}
@@ -98,10 +91,7 @@ export default function HomeContent() {
           className="py-20 px-6 bg-gradient-to-br from-[#23194b]/70 to-[#12092e]/80 backdrop-blur-lg"
           aria-labelledby="security-heading"
         >
-          <h2
-            id="security-heading"
-            className="text-3xl font-bold text-center text-white mb-8"
-          >
+          <h2 id="security-heading" className="text-3xl font-bold text-center text-white mb-8">
             Enterprise-Grade Tech & Security
           </h2>
           <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8 text-center">
@@ -120,21 +110,15 @@ export default function HomeContent() {
                   justifyContent: 'center',
                 }}
               >
-                {/* Static shimmer overlay (NO animation) */}
-                <span className="pointer-events-none absolute inset-0 rounded-2xl"
-                  style={{
-                    background:
-                      'linear-gradient(120deg, transparent 60%, #8C64FF33 80%, transparent 100%)',
-                    opacity: 0.23,
-                    zIndex: 2,
-                  }}
-                />
+                <span className="pointer-events-none absolute inset-0 rounded-2xl" style={{
+                  background: 'linear-gradient(120deg, transparent 60%, #8C64FF33 80%, transparent 100%)',
+                  opacity: 0.23,
+                  zIndex: 2,
+                }} />
                 <span className="flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-tr from-[#6E41FF22] via-[#8C64FF22] to-[#1a103e44] border border-[#8C64FF33] shadow-inner">
                   <Icon className="w-7 h-7 text-[#8C64FF]" />
                 </span>
-                <h3 className="text-base md:text-lg font-semibold text-white mb-1 drop-shadow">
-                  {title}
-                </h3>
+                <h3 className="text-base md:text-lg font-semibold text-white mb-1 drop-shadow">{title}</h3>
                 <p className="text-[#d2c6f7] text-sm">{desc}</p>
               </div>
             ))}
@@ -142,15 +126,8 @@ export default function HomeContent() {
         </section>
 
         {/* Pricing */}
-        <section
-          id="pricing"
-          className="py-20 text-center"
-          aria-labelledby="pricing-heading"
-        >
-          <h2
-            id="pricing-heading"
-            className="text-3xl font-bold text-[#8C64FF] mb-8"
-          >
+        <section id="pricing" className="py-20 text-center" aria-labelledby="pricing-heading">
+          <h2 id="pricing-heading" className="text-3xl font-bold text-[#8C64FF] mb-8">
             Simple, Scalable Pricing
           </h2>
           <div className="max-w-4xl mx-auto px-6">
@@ -159,10 +136,7 @@ export default function HomeContent() {
         </section>
 
         {/* HOW IT WORKS */}
-        <section
-          id="howitworks"
-          className="py-12 px-6 bg-gradient-to-br from-[#23194b]/70 to-[#12092e]/80 backdrop-blur-lg"
-        >
+        <section id="howitworks" className="py-12 px-6 bg-gradient-to-br from-[#23194b]/70 to-[#12092e]/80 backdrop-blur-lg">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 text-white drop-shadow-glow">
               How It Works
@@ -179,21 +153,15 @@ export default function HomeContent() {
                     justifyContent: 'center',
                   }}
                 >
-                  {/* Static shimmer overlay (NO animation) */}
-                  <span className="pointer-events-none absolute inset-0 rounded-2xl"
-                    style={{
-                      background:
-                        'linear-gradient(120deg, transparent 60%, #8C64FF33 80%, transparent 100%)',
-                      opacity: 0.23,
-                      zIndex: 2,
-                    }}
-                  />
+                  <span className="pointer-events-none absolute inset-0 rounded-2xl" style={{
+                    background: 'linear-gradient(120deg, transparent 60%, #8C64FF33 80%, transparent 100%)',
+                    opacity: 0.23,
+                    zIndex: 2,
+                  }} />
                   <span className="flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gradient-to-tr from-[#6E41FF22] via-[#8C64FF22] to-[#1a103e44] border border-[#8C64FF33] shadow-inner">
                     <Icon className="w-7 h-7 text-[#8C64FF]" />
                   </span>
-                  <h3 className="text-base md:text-lg font-semibold text-white mb-1 drop-shadow">
-                    {title}
-                  </h3>
+                  <h3 className="text-base md:text-lg font-semibold text-white mb-1 drop-shadow">{title}</h3>
                   <p className="text-[#d2c6f7] text-sm">{desc}</p>
                 </div>
               ))}
