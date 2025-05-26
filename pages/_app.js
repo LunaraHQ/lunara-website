@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { supabase } from '../utils/supabaseClient'
 import NavBar from '../components/NavBar'
-import DashboardSidebar from '../components/DashboardSidebar'
+import Footer from '../components/Footer'
 import ContactModal from '../components/ContactModal'
 import LoadingSpinner from '../components/LoadingSpinner'
 
@@ -24,6 +24,7 @@ export default function MyApp({ Component, pageProps }) {
     return () => listener.subscription.unsubscribe()
   }, [])
 
+  // "isApp" means pages that should look like the SaaS app, not the landing/marketing site
   const isApp =
     router.pathname.startsWith('/dashboard') ||
     (router.pathname.startsWith('/features') && session) ||
@@ -33,16 +34,25 @@ export default function MyApp({ Component, pageProps }) {
     return <LoadingSpinner />
   }
 
+  // Use one handler for all modals
+  const handleContactOpen = () => setContactOpen(true)
+  const handleContactClose = () => setContactOpen(false)
+
   return (
     <>
-      {!isApp && <NavBar onContactOpen={() => setContactOpen(true)} session={session} />}
-      {isApp && <DashboardSidebar session={session} />}
+      {/* NavBar only for marketing/public pages */}
+      {!isApp && <NavBar onContactOpen={handleContactOpen} session={session} />}
 
-      <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
+      {/* Contact Modal (global, always available) */}
+      <ContactModal open={contactOpen} onClose={handleContactClose} />
 
+      {/* Main Page Content */}
       <div className={`transition-all duration-300 ${isApp ? 'ml-16 md:ml-64' : ''}`}>
-        <Component {...pageProps} session={session}/>
+        <Component {...pageProps} session={session} onContactOpen={handleContactOpen} />
       </div>
+
+      {/* Footer only on marketing/public pages */}
+      {!isApp && <Footer onContactOpen={handleContactOpen} />}
     </>
   )
 }

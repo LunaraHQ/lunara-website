@@ -15,16 +15,13 @@ export default function HeroSection() {
         setUserName(data.session.user.user_metadata?.name || data.session.user.email)
       }
     }
-
     loadSession()
-
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
       if (session) {
         setUserName(session.user.user_metadata?.name || session.user.email)
       }
     })
-
     return () => {
       listener.subscription.unsubscribe()
     }
@@ -37,14 +34,14 @@ export default function HeroSection() {
   }
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden">
+    <section className="relative flex flex-col items-center justify-center text-center px-6 pt-32 pb-24 min-h-[70vh] overflow-hidden">
       {/* Space gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#1a103e] via-[#6E41FFee] to-[#130b24] opacity-90" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#1a103e]/90 via-[#6E41FFee]/90 to-[#130b24]/90 pointer-events-none" />
       {/* Nebula/star accent overlays */}
       <div className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(circle at 70% 15%, #8C64FF44 0%, transparent 50%)," +
+            "radial-gradient(circle at 70% 15%, #8C64FF33 0%, transparent 50%)," +
             "radial-gradient(circle at 25% 80%, #6E41FF22 0%, transparent 60%)," +
             "radial-gradient(circle at 60% 60%, #fff3 1.5px, transparent 40%)," +
             "radial-gradient(circle at 25% 20%, #fff1 1.2px, transparent 30%)"
@@ -56,7 +53,7 @@ export default function HeroSection() {
         <motion.img
           src="/images/lunara-logo.png"
           alt="Lunara"
-          className="w-auto h-[8rem] md:h-[11rem] mx-auto mb-8 object-contain drop-shadow-[0_8px_36px_#8C64FF77]"
+          className="w-auto h-[8rem] md:h-[11rem] mx-auto mb-8 object-contain drop-shadow-[0_8px_36px_#8C64FF55]"
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}

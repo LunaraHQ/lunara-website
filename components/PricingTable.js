@@ -1,124 +1,117 @@
-// components/PricingTable.js
-import React, { useState } from 'react'
-import { ShoppingCart } from 'lucide-react'
+import Link from "next/link";
+import { useState } from "react";
 
-const allFeatures = [
-  { name: 'Meetings & Events', price: 19, key: 'meetings-events' },
-  { name: 'Sales Funnel', price: 29, key: 'sales-funnel' },
-  { name: 'CX Management', price: 25, key: 'cx-management' },
-  { name: 'CRM & Client Management', price: 35, key: 'crm-client-management' },
-  { name: 'AI Chatbot & Automation', price: 39, key: 'ai-chatbot-automation' },
-  { name: 'Analytics & Reporting', price: 19, key: 'analytics-reporting' },
-  { name: 'Team Management', price: 14, key: 'team-management' },
-  { name: 'E-commerce Tools', price: 29, key: 'ecommerce-tools' },
-  { name: 'Loyalty & Membership', price: 19, key: 'loyalty-membership' },
-]
+const FEATURES = [
+  { slug: "meetings-events", name: "Meetings & Events", price: 50 },
+  { slug: "sales-funnel", name: "Sales Funnel", price: 40 },
+  { slug: "cx-management", name: "CX Management", price: 30 },
+  { slug: "crm", name: "CRM & Client Management", price: 45 },
+  { slug: "ai-chatbot", name: "AI Chatbot & Automation", price: 60 },
+  { slug: "analytics", name: "Analytics & Reporting", price: 55 },
+  { slug: "team-management", name: "Team Management", price: 35 },
+  { slug: "ecommerce", name: "E-commerce Tools", price: 50 },
+  { slug: "loyalty", name: "Loyalty & Membership", price: 40 },
+];
+
+function getDiscountRate(count) {
+  if (count >= 6) return 0.2;
+  if (count >= 4) return 0.15;
+  if (count >= 2) return 0.1;
+  return 0;
+}
 
 export default function PricingTable() {
-  const [selected, setSelected] = useState([])
-  const [showCart, setShowCart] = useState(false)
+  const [selectedFeatures, setSelectedFeatures] = useState([]);
 
-  const toggleFeature = (key) => {
-    setSelected((prev) =>
-      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
-    )
-    setShowCart(true)
-  }
+  const toggleFeature = (slug) => {
+    setSelectedFeatures((prev) =>
+      prev.includes(slug) ? prev.filter((f) => f !== slug) : [...prev, slug]
+    );
+  };
 
-  const getTotal = () => {
-    const total = selected
-      .map((k) => allFeatures.find((f) => f.key === k).price)
-      .reduce((a, b) => a + b, 0)
-    if (selected.length >= 3) return Math.round(total * 0.8)
-    return total
-  }
+  const totalPrice = selectedFeatures.reduce((sum, slug) => {
+    const feature = FEATURES.find((f) => f.slug === slug);
+    return sum + (feature ? feature.price : 0);
+  }, 0);
 
-  const cartFeatures = allFeatures.filter(f => selected.includes(f.key))
-
-  const handleCheckout = () => {
-    sessionStorage.setItem('lunaraBasket', JSON.stringify(selected))
-    window.location.href = '/checkout'
-  }
+  const discountRate = getDiscountRate(selectedFeatures.length);
+  const discountAmount = totalPrice * discountRate;
+  const finalPrice = totalPrice - discountAmount;
 
   return (
-    <div className="relative">
-      {/* Sticky Basket Icon */}
-      {selected.length > 0 && (
-        <div
-          className="fixed top-6 right-6 z-50 flex items-center bg-purple-700 rounded-full shadow-lg px-4 py-2 cursor-pointer transition hover:bg-purple-600"
-          style={{ minWidth: '60px' }}
-          onClick={() => setShowCart(v => !v)}
-        >
-          <ShoppingCart className="text-white w-6 h-6" />
-          <span className="ml-2 text-white font-bold">{selected.length}</span>
-        </div>
-      )}
+    <div
+      className="
+        mx-auto
+        mb-0
+        p-5
+        max-w-3xl
+        bg-gradient-to-br from-[#251654]/70 via-[#27134e]/60 to-[#130b24]/50
+        backdrop-blur-md
+        rounded-2xl
+        shadow-[0_6px_32px_rgba(140,100,255,0.12)]
+        border border-[#322769]/60
+        flex flex-col items-center
+      "
+      // Removed marginTop style entirely!
+    >
+      <p className="mb-5 text-center text-[#d2c6f7] text-base md:text-lg">
+        Select the features you want. Pay only for what you use — with discounts for bundling!
+      </p>
 
-      {/* Cart Popup */}
-      {showCart && selected.length > 0 && (
-        <div className="fixed top-20 right-6 z-50 bg-gray-900 border border-purple-500 rounded-2xl p-6 shadow-2xl w-80">
-          <h3 className="text-lg font-semibold mb-4 text-white">Your Basket</h3>
-          <ul className="mb-4 space-y-2 text-gray-200">
-            {cartFeatures.map(f => (
-              <li key={f.key} className="flex justify-between items-center">
-                {f.name}
-                <span className="ml-2">€{f.price}</span>
-              </li>
-            ))}
-          </ul>
-          {selected.length >= 3 && (
-            <div className="text-green-400 mb-2 text-sm">
-              20% Bundle Discount Applied!
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {FEATURES.map(({ slug, name, price }) => (
+          <label
+            key={slug}
+            className="cursor-pointer group bg-transparent hover:bg-[#251654]/40 transition
+              rounded-2xl p-4 flex flex-col items-center text-center border border-[#322769]/50
+              shadow-[0_2px_12px_rgba(140,100,255,0.06)]"
+          >
+            <input
+              type="checkbox"
+              className="hidden"
+              checked={selectedFeatures.includes(slug)}
+              onChange={() => toggleFeature(slug)}
+            />
+            <div
+              className={`w-7 h-7 mb-2 rounded border-2 border-[#8C64FF] flex items-center justify-center ${
+                selectedFeatures.includes(slug) ? "bg-[#8C64FF]" : "bg-transparent"
+              }`}
+            >
+              {selectedFeatures.includes(slug) && (
+                <svg
+                  className="w-4 h-4 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              )}
             </div>
-          )}
-          <div className="text-xl font-bold mb-4 text-white">
-            Total: €{getTotal()}/mo
-          </div>
-          <button
-            className="w-full bg-purple-600 hover:bg-purple-500 text-white font-semibold py-2 rounded-full transition"
-            onClick={handleCheckout}
-          >
-            Proceed to Checkout
-          </button>
-        </div>
-      )}
-
-      <h3 className="text-lg mb-4 text-gray-200">
-        Pick only the features you need. <span className="text-purple-300">Add 3 or more and save 20%!</span>
-      </h3>
-      <div className="grid gap-5 sm:grid-cols-3 mb-8">
-        {allFeatures.map((feat) => (
-          <div
-            key={feat.key}
-            onClick={() => toggleFeature(feat.key)}
-            className={`cursor-pointer rounded-xl p-6 transition
-              border-2 ${selected.includes(feat.key) ? 'border-purple-400 bg-purple-900' : 'border-gray-700 bg-gray-800'}
-              hover:border-purple-300 hover:bg-purple-800 shadow-lg text-left`}
-          >
-            <h4 className="text-xl font-semibold mb-2">{feat.name}</h4>
-            <div className="text-2xl font-bold mb-2">€{feat.price}/mo</div>
-            <span className={`inline-block px-2 py-1 text-xs rounded ${selected.includes(feat.key) ? 'bg-purple-400 text-black' : 'bg-gray-700 text-gray-300'}`}>
-              {selected.includes(feat.key) ? 'Selected' : 'Click to add'}
-            </span>
-          </div>
+            <span className="font-semibold text-base md:text-lg">{name}</span>
+            <span className="text-purple-400 mt-1 text-sm">€{price} / month</span>
+          </label>
         ))}
       </div>
-      <div className="mb-4 text-lg text-gray-100">
-        <strong>
-          Total: {selected.length === 0 ? '€0' : `€${getTotal()}/mo`}
-          {selected.length >= 3 && (
-            <span className="ml-2 text-green-400">(20% Bundle Discount Applied!)</span>
-          )}
-        </strong>
+
+      <div className="mt-4 text-center text-lg md:text-xl font-semibold">
+        <p>Total Price: €{totalPrice.toFixed(2)}</p>
+        {discountRate > 0 && (
+          <p className="text-green-400">
+            Discount: {Math.round(discountRate * 100)}% (-€{discountAmount.toFixed(2)})
+          </p>
+        )}
+        <p className="mt-2 text-xl md:text-2xl text-purple-300">Final Price: €{finalPrice.toFixed(2)}</p>
       </div>
-      <button
-        className={`w-full py-3 rounded-full font-semibold text-lg transition 
-          ${selected.length > 0 ? 'bg-purple-500 hover:bg-purple-400 text-white' : 'bg-gray-500 text-gray-300 cursor-not-allowed'}`}
-        disabled={selected.length === 0}
-        onClick={selected.length > 0 ? handleCheckout : undefined}
-      >
-        {selected.length > 0 ? 'Proceed to Checkout' : 'Select Features Above'}
-      </button>
+
+      <div className="mt-4 text-center text-purple-300 font-semibold">
+        See how much it could cost your company.
+        <br />
+        <Link href="/auth/signup" className="underline hover:text-white cursor-pointer">
+          Sign up now!
+        </Link>
+      </div>
     </div>
-  )
+  );
 }

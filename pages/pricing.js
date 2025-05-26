@@ -1,68 +1,123 @@
-import { useState } from "react";
+// pages/pricing.js
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import Link from "next/link";
 
-const ALL_FEATURES = [
-  { name: "Meetings & Events", slug: "meetings-events", desc: "Automate bookings & reminders." },
-  { name: "Sales Funnel", slug: "sales-funnel", desc: "Lead capture and pipeline tools." },
-  { name: "CX Management", slug: "cx-management", desc: "Collect feedback & boost loyalty." },
-  { name: "CRM", slug: "crm", desc: "Track every client touchpoint." },
-  { name: "AI Chatbot", slug: "ai-chatbot", desc: "24/7 support and lead automation." },
-  { name: "Analytics", slug: "analytics", desc: "Dashboards and predictive insights." },
-  { name: "Team Management", slug: "team-management", desc: "Shifts, tasks, and comms." },
-  { name: "E-commerce Tools", slug: "ecommerce", desc: "Recover carts, optimize checkout." },
-  { name: "Loyalty", slug: "loyalty", desc: "Membership & rewards programs." },
+const FEATURES = [
+  { slug: "meetings-events", name: "Meetings & Events", desc: "Automate bookings & reminders." },
+  { slug: "sales-funnel", name: "Sales Funnel", desc: "Lead capture and pipeline tools." },
+  { slug: "cx-management", name: "CX Management", desc: "Collect feedback & boost loyalty." },
+  { slug: "crm", name: "CRM & Client Management", desc: "Track every client touchpoint." },
+  { slug: "ai-chatbot", name: "AI Chatbot & Automation", desc: "24/7 support and lead automation." },
+  { slug: "analytics", name: "Analytics & Reporting", desc: "Dashboards and predictive insights." },
+  { slug: "team-management", name: "Team Management", desc: "Shifts, tasks, and comms." },
+  { slug: "ecommerce", name: "E-commerce Tools", desc: "Recover carts, optimize checkout." },
+  { slug: "loyalty", name: "Loyalty & Membership", desc: "Membership & rewards programs." },
 ];
 
 export default function Pricing({ session }) {
   const router = useRouter();
-  const [selected, setSelected] = useState([]);
+  const [userFeatures, setUserFeatures] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedFeatures, setSelectedFeatures] = useState([]);
 
-  const handleSelect = (slug) => {
-    setSelected((prev) =>
-      prev.includes(slug)
-        ? prev.filter((s) => s !== slug)
-        : [...prev, slug]
+  useEffect(() => {
+    if (!session) {
+      router.replace("/auth/signin");
+      return;
+    }
+    // Simulate fetching user’s unlocked features (replace with real API call)
+    // For now assume none unlocked, all locked
+    setUserFeatures([]); 
+    setLoading(false);
+  }, [session, router]);
+
+  const toggleFeature = (slug) => {
+    setSelectedFeatures((prev) =>
+      prev.includes(slug) ? prev.filter((f) => f !== slug) : [...prev, slug]
     );
   };
 
-  const handleCheckout = () => {
-    // Placeholder for payment logic
-    router.push(`/checkout?features=${selected.join(",")}`);
-  };
+  if (loading) {
+    return <p className="text-center p-10 text-white">Loading...</p>;
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1a103e] via-[#6E41FF] to-[#130b24] py-12 px-4">
-      <div className="max-w-4xl mx-auto rounded-3xl shadow-2xl bg-gradient-to-br from-[#23194b] via-[#27134e] to-[#130b24] p-10 border border-[#352a5c]">
-        <h1 className="text-4xl font-extrabold text-white mb-2 text-center drop-shadow-glow">Choose Your Features</h1>
-        <p className="mb-8 text-[#e0d3fc] text-lg text-center">Only pay for what you need. Start with a pilot or build your ideal Lunara suite.</p>
-        <form className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-8">
-          {ALL_FEATURES.map((feature) => (
+    <main className="min-h-screen bg-gradient-to-br from-[#1a103e] via-[#322769] to-[#130b24] p-8 text-white max-w-5xl mx-auto">
+      <h1 className="text-4xl font-extrabold mb-8 text-center">Upgrade Your Plan</h1>
+
+      <p className="mb-6 text-center text-gray-300">
+        Select new features to add to your account. Features you already have are marked below.
+      </p>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {FEATURES.map(({ slug, name, desc }) => {
+          const unlocked = userFeatures.includes(slug);
+          const checked = unlocked || selectedFeatures.includes(slug);
+          return (
             <label
-              key={feature.slug}
-              className={`flex items-center gap-4 rounded-xl p-5 border-2 cursor-pointer transition-all ${selected.includes(feature.slug) ? "border-[#6E41FF] bg-[#251654]/70" : "border-[#251654] hover:border-[#8C64FF]"}`}
+              key={slug}
+              className={`cursor-pointer rounded-lg p-4 border ${
+                unlocked ? "border-green-500 bg-green-900" : "border-gray-700 bg-black/40"
+              } flex flex-col`}
             >
               <input
                 type="checkbox"
-                checked={selected.includes(feature.slug)}
-                onChange={() => handleSelect(feature.slug)}
-                className="accent-[#8C64FF] w-5 h-5"
+                className="hidden"
+                disabled={unlocked}
+                checked={checked}
+                onChange={() => toggleFeature(slug)}
               />
-              <div>
-                <span className="font-bold text-white">{feature.name}</span>
-                <p className="text-[#b2a1e3] text-sm">{feature.desc}</p>
-              </div>
+              <span className="font-semibold text-lg">
+                {name} {unlocked && <span className="text-green-400 text-sm">(Unlocked)</span>}
+              </span>
+              <p className="mt-1 text-gray-300 text-sm">{desc}</p>
             </label>
-          ))}
-        </form>
-        <button
-          type="button"
-          onClick={handleCheckout}
-          disabled={!selected.length}
-          className="w-full py-4 rounded-xl font-bold text-lg bg-gradient-to-r from-[#6E41FF] to-[#8C64FF] text-white hover:scale-105 transition disabled:opacity-50"
-        >
-          {selected.length ? "Checkout & Continue" : "Select features to continue"}
-        </button>
+          );
+        })}
       </div>
-    </div>
+
+      <div className="mt-10 flex justify-center gap-4">
+        <button
+          disabled={selectedFeatures.length === 0}
+          onClick={() => alert("Checkout flow goes here!")}
+          className={`px-8 py-3 rounded-full font-bold shadow transition ${
+            selectedFeatures.length > 0
+              ? "bg-gradient-to-r from-[#6E41FF] to-[#8C64FF] text-white hover:scale-105"
+              : "bg-gray-700 text-gray-400 cursor-not-allowed"
+          }`}
+        >
+          Checkout & Continue
+        </button>
+
+        <Link
+          href="/dashboard"
+          className="px-8 py-3 rounded-full border border-purple-600 font-semibold text-purple-400 hover:bg-purple-800 transition"
+        >
+          Back to Dashboard
+        </Link>
+      </div>
+    </main>
   );
+}
+
+export async function getServerSideProps(ctx) {
+  const supabase = createServerSupabaseClient(ctx);
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth/signin",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
 }
